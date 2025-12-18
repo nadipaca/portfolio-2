@@ -17,7 +17,7 @@ const skillCategoryColors = {
 
 export default function Skills() {
   return (
-    <section id="skills" className="py-20 bg-slate-50 relative overflow-hidden">
+    <section id="skills" className="py-20 bg-slate-50 relative overflow-hidden scroll-mt-24">
       <div className="absolute inset-0 section-glow pointer-events-none" />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div

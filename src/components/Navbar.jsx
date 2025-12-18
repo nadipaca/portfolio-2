@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Github, Linkedin, Mail, Menu, X } from 'lucide-react';
+import { Github, Linkedin, Mail, Menu, MessageCircle, X } from 'lucide-react';
 
-export default function Navbar() {
+export default function Navbar({ onOpenChat }) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -15,6 +15,7 @@ export default function Navbar() {
   }, []);
 
   const navItems = [
+    { label: 'Home', href: '#home' },
     { label: 'Projects', href: '#projects' },
     { label: 'Experience', href: '#experience' },
     { label: 'Skills', href: '#skills' },
@@ -27,7 +28,7 @@ export default function Navbar() {
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
           ? 'bg-slate-900/80 backdrop-blur-md shadow-lg border-b border-white/10'
-          : 'bg-transparent'
+          : 'bg-slate-900/30 backdrop-blur-md border-b border-white/5'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -51,6 +52,14 @@ export default function Navbar() {
                 {item.label}
               </a>
             ))}
+            <button
+              type="button"
+              onClick={() => onOpenChat?.()}
+              className="ml-1 inline-flex items-center gap-2 px-3 py-2 rounded-full bg-white/10 border border-white/10 text-slate-100 hover:bg-white/15 transition-colors"
+            >
+              <MessageCircle size={16} />
+              <span className="text-sm font-semibold">Chat with me</span>
+            </button>
             <div className="flex items-center space-x-4 ml-4">
               <a
                 href="https://github.com/nadipaca"
@@ -104,6 +113,17 @@ export default function Navbar() {
                 {item.label}
               </a>
             ))}
+            <button
+              type="button"
+              onClick={() => {
+                setMobileMenuOpen(false);
+                onOpenChat?.();
+              }}
+              className="w-full inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/10 text-slate-100 hover:bg-white/15 transition-colors"
+            >
+              <MessageCircle size={16} />
+              <span className="text-sm font-semibold">Chat with me</span>
+            </button>
             <div className="flex items-center space-x-4 pt-4">
               <a
                 href="https://github.com/nadipaca"

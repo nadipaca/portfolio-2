@@ -4,7 +4,7 @@ export const portfolioData = {
     role: "Senior Java Software Engineer",
     bio: "Full Stack Engineer transforming complex requirements into scalable microservices and AI-driven solutions. Specializing in Spring Boot, AWS, and Agentic AI workflows.",
     experience_years: "5+",
-    availability: "Available for Full-Time Opportunities",
+    availability: "Let's Build Something Intelligent.",
     socials: {
       github: "https://github.com/nadipaca",
       linkedin: "https://linkedin.com/in/charishma-nadipalli",

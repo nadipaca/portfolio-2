@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Briefcase, CheckCircle2, ArrowRight, ChevronLeft, ChevronRight, AlertTriangle, CheckCircle } from 'lucide-react';
 import { portfolioData } from '../constants';
+import ArchitectureFlowModal from './ArchitectureFlowModal';
 
 // Visual Card Component (for MCESC)
 function VisualCard({ experience, index, isActive }) {
@@ -146,6 +147,7 @@ function VisualCard({ experience, index, isActive }) {
 // Architectural Card Component (for Macy's & U.S. Bank)
 function ArchitecturalCard({ experience, index, isActive }) {
   const [flowIndex, setFlowIndex] = useState(0);
+  const [flowOpen, setFlowOpen] = useState(false);
 
   useEffect(() => {
     const steps = experience?.tech_stack_flow?.length || 0;
@@ -228,8 +230,24 @@ function ArchitecturalCard({ experience, index, isActive }) {
 
           {/* Section 2: System Flow - Pipeline Style */}
           <div>
-            <h4 className="text-base font-semibold text-gray-900 mb-4">System Architecture Flow</h4>
-            <div className="flex flex-wrap items-center justify-center gap-3 py-4">
+            <div className="flex items-center justify-between gap-3 mb-2">
+              <h4 className="text-base font-semibold text-gray-900">System Architecture Flow</h4>
+              <button
+                type="button"
+                onClick={() => setFlowOpen(true)}
+                className="text-xs font-semibold text-blue-600 hover:text-blue-700"
+              >
+                View diagram
+              </button>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setFlowOpen(true)}
+              className="w-full rounded-2xl border border-slate-200 bg-slate-50/70 hover:bg-slate-50 transition-colors py-4 px-4"
+              aria-label="Open architecture flow diagram"
+            >
+              <div className="flex flex-wrap items-center justify-center gap-3">
               {experience.tech_stack_flow.map((tech, idx) => (
                 <div key={idx} className="flex items-center gap-3">
                   <motion.span
@@ -271,7 +289,15 @@ function ArchitecturalCard({ experience, index, isActive }) {
                   )}
                 </div>
               ))}
-            </div>
+              </div>
+            </button>
+
+            <ArchitectureFlowModal
+              open={flowOpen}
+              onClose={() => setFlowOpen(false)}
+              title={`${experience.role} — ${experience.company}`}
+              flow={experience.tech_stack_flow}
+            />
           </div>
 
           {/* Section 3: Impact Metrics - Stat Counters */}
@@ -368,7 +394,7 @@ export default function Experience() {
   }, []);
 
   return (
-    <section id="experience" className="py-20 bg-gray-50/50">
+    <section id="experience" className="py-20 bg-gray-50/50 scroll-mt-24">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

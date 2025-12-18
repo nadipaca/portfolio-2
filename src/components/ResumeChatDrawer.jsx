@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Bot, Loader2, MessageCircle, Send, X } from 'lucide-react';
 
@@ -14,8 +14,13 @@ function isExternalUrl(url) {
   return typeof url === 'string' && /^https?:\/\//i.test(url);
 }
 
-export default function ResumeChatDrawer() {
+const ResumeChatDrawer = forwardRef(function ResumeChatDrawer(_props, ref) {
   const [open, setOpen] = useState(false);
+  useImperativeHandle(ref, () => ({
+    open: () => setOpen(true),
+    close: () => setOpen(false),
+    toggle: () => setOpen((v) => !v),
+  }));
   const [apiStatus, setApiStatus] = useState({ state: 'unknown', hasGroqKey: null });
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -323,6 +328,8 @@ export default function ResumeChatDrawer() {
       </AnimatePresence>
     </>
   );
-}
+});
+
+export default ResumeChatDrawer;
 
 
