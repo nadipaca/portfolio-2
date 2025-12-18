@@ -16,6 +16,7 @@ function isExternalUrl(url) {
 
 export default function ResumeChatDrawer() {
   const [open, setOpen] = useState(false);
+  const [apiStatus, setApiStatus] = useState({ state: 'unknown', hasGroqKey: null });
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -37,6 +38,29 @@ export default function ResumeChatDrawer() {
     if (!open) return;
     const t = window.setTimeout(() => inputRef.current?.focus(), 50);
     return () => window.clearTimeout(t);
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch('/api/health', { cache: 'no-store' });
+        const data = await res.json().catch(() => ({}));
+        if (cancelled) return;
+        if (!res.ok) throw new Error('Health check failed');
+        setApiStatus({
+          state: 'ok',
+          hasGroqKey: Boolean(data?.hasGroqKey),
+        });
+      } catch {
+        if (cancelled) return;
+        setApiStatus({ state: 'down', hasGroqKey: null });
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, [open]);
 
   useEffect(() => {
@@ -77,7 +101,11 @@ export default function ResumeChatDrawer() {
       const data = await res.json().catch(() => ({}));
 
       if (!res.ok) {
-        throw new Error(data?.error || 'Chat request failed');
+        const statusHint =
+          res.status === 404
+            ? 'API not found (local dev). Deploy to Vercel or run `vercel dev`.'
+            : `HTTP ${res.status}`;
+        throw new Error(data?.error || statusHint || 'Chat request failed');
       }
 
       setMessages((prev) => [
@@ -95,7 +123,7 @@ export default function ResumeChatDrawer() {
         ...prev,
         {
           role: 'assistant',
-          content: "I hit an error calling the AI. Please try again in a moment.",
+          content: `I couldn't reach the AI service.\n\nReason: ${e?.message || 'Unknown error'}`,
           citations: [],
         },
       ]);
@@ -156,6 +184,35 @@ export default function ResumeChatDrawer() {
                     </div>
                   </div>
                 </div>
+                <div className="flex items-center gap-2">
+                  <div
+                    className={`text-[11px] px-2 py-1 rounded-full border ${
+                      apiStatus.state === 'ok'
+                        ? apiStatus.hasGroqKey
+                          ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                          : 'bg-amber-50 text-amber-700 border-amber-200'
+                        : apiStatus.state === 'down'
+                        ? 'bg-red-50 text-red-700 border-red-200'
+                        : 'bg-slate-50 text-slate-600 border-slate-200'
+                    }`}
+                    title={
+                      apiStatus.state === 'ok'
+                        ? apiStatus.hasGroqKey
+                          ? 'API connected'
+                          : 'API connected but GROQ_API_KEY missing'
+                        : apiStatus.state === 'down'
+                        ? 'API not reachable'
+                        : 'Checking API…'
+                    }
+                  >
+                    {apiStatus.state === 'ok'
+                      ? apiStatus.hasGroqKey
+                        ? 'Connected'
+                        : 'Missing key'
+                      : apiStatus.state === 'down'
+                      ? 'Offline'
+                      : 'Checking…'}
+                  </div>
                 <button
                   type="button"
                   onClick={() => setOpen(false)}
@@ -164,6 +221,7 @@ export default function ResumeChatDrawer() {
                 >
                   <X size={18} />
                 </button>
+                </div>
               </div>
 
               {/* Messages */}

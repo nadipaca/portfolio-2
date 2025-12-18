@@ -162,52 +162,53 @@ function safeJsonParse(s) {
 }
 
 export default async function handler(req, res) {
-  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
-  if (!process.env.GROQ_API_KEY) return res.status(500).json({ error: 'Missing GROQ_API_KEY' });
-
-  const ip = getClientIp(req);
-  const rl = rateLimit(ip);
-  if (!rl.allowed) {
-    return res.status(429).json({ error: 'Rate limit exceeded. Please try again later.' });
-  }
-
-  const { message } = req.body || {};
-  const userMessage = String(message || '').trim();
-  if (!userMessage) return res.status(400).json({ error: 'Missing message' });
-
-  const cacheKey = normalizeText(userMessage);
-  const now = Date.now();
-  const cached = cache.get(cacheKey);
-  if (cached && now - cached.ts < CACHE_TTL_MS) {
-    return res.status(200).json({ ...cached.value, cached: true });
-  }
-
-  // Lightweight retrieval
-  const username = (portfolioData?.profile?.socials?.github || '').split('/').filter(Boolean).pop() || 'nadipaca';
-  let githubRepos = [];
   try {
-    githubRepos = await fetchGithubRepos(username);
-  } catch {
-    githubRepos = [];
-  }
-  const docs = buildDocs({ githubRepos });
-  const tokens = expandQueryTokens(userMessage);
-  const scored = docs
-    .map((d) => ({ d, s: scoreDoc(d, tokens) }))
-    .sort((a, b) => b.s - a.s)
-    .slice(0, 8)
-    .filter((x) => x.s > 0);
+    if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+    if (!process.env.GROQ_API_KEY) return res.status(500).json({ error: 'Missing GROQ_API_KEY' });
 
-  const context = scored.length
-    ? scored
-        .map(
-          ({ d }) =>
-            `SOURCE: ${d.source}\nURL: ${d.url}\nCONTENT: ${d.text}`
-        )
-        .join('\n\n---\n\n')
-    : 'No relevant context found.';
+    const ip = getClientIp(req);
+    const rl = rateLimit(ip);
+    if (!rl.allowed) {
+      return res.status(429).json({ error: 'Rate limit exceeded. Please try again later.' });
+    }
 
-  const system = `You are an assistant for a developer portfolio.
+    const { message } = req.body || {};
+    const userMessage = String(message || '').trim();
+    if (!userMessage) return res.status(400).json({ error: 'Missing message' });
+
+    const cacheKey = normalizeText(userMessage);
+    const now = Date.now();
+    const cached = cache.get(cacheKey);
+    if (cached && now - cached.ts < CACHE_TTL_MS) {
+      return res.status(200).json({ ...cached.value, cached: true });
+    }
+
+    // Lightweight retrieval
+    const username = (portfolioData?.profile?.socials?.github || '').split('/').filter(Boolean).pop() || 'nadipaca';
+    let githubRepos = [];
+    try {
+      githubRepos = await fetchGithubRepos(username);
+    } catch {
+      githubRepos = [];
+    }
+    const docs = buildDocs({ githubRepos });
+    const tokens = expandQueryTokens(userMessage);
+    const scored = docs
+      .map((d) => ({ d, s: scoreDoc(d, tokens) }))
+      .sort((a, b) => b.s - a.s)
+      .slice(0, 8)
+      .filter((x) => x.s > 0);
+
+    const context = scored.length
+      ? scored
+          .map(
+            ({ d }) =>
+              `SOURCE: ${d.source}\nURL: ${d.url}\nCONTENT: ${d.text}`
+          )
+          .join('\n\n---\n\n')
+      : 'No relevant context found.';
+
+    const system = `You are an assistant for a developer portfolio.
 You MUST answer using ONLY the provided CONTEXT.
 If the answer is not in the context, say: "I don't have enough information in this portfolio to answer that."
 
@@ -216,32 +217,41 @@ Return STRICT JSON (no markdown) with keys:
 - citations: array of { source: string, url: string }
 Keep citations limited to items you used.`;
 
-  const prompt = `CONTEXT:\n${context}\n\nQUESTION:\n${userMessage}`;
+    const prompt = `CONTEXT:\n${context}\n\nQUESTION:\n${userMessage}`;
 
-  const completion = await groq.chat.completions.create({
-    model: 'llama-3.3-70b-versatile',
-    messages: [
-      { role: 'system', content: system },
-      { role: 'user', content: prompt },
-    ],
-    temperature: 0.2,
-  });
+    const completion = await groq.chat.completions.create({
+      model: 'llama-3.3-70b-versatile',
+      messages: [
+        { role: 'system', content: system },
+        { role: 'user', content: prompt },
+      ],
+      temperature: 0.2,
+    });
 
-  const raw = completion?.choices?.[0]?.message?.content || '';
-  const parsed = safeJsonParse(raw);
-  const value =
-    parsed && typeof parsed.answer === 'string'
-      ? {
-          answer: parsed.answer,
-          citations: Array.isArray(parsed.citations) ? parsed.citations.slice(0, 6) : [],
-        }
-      : {
-          answer: raw || "I couldn't generate a response.",
-          citations: scored.map(({ d }) => ({ source: d.source, url: d.url })).slice(0, 4),
-        };
+    const raw = completion?.choices?.[0]?.message?.content || '';
+    const parsed = safeJsonParse(raw);
+    const value =
+      parsed && typeof parsed.answer === 'string'
+        ? {
+            answer: parsed.answer,
+            citations: Array.isArray(parsed.citations) ? parsed.citations.slice(0, 6) : [],
+          }
+        : {
+            answer: raw || "I couldn't generate a response.",
+            citations: scored.map(({ d }) => ({ source: d.source, url: d.url })).slice(0, 4),
+          };
 
-  cache.set(cacheKey, { ts: now, value });
-  return res.status(200).json({ ...value, cached: false });
+    cache.set(cacheKey, { ts: now, value });
+    return res.status(200).json({ ...value, cached: false });
+  } catch (e) {
+    // Never return secrets; only a safe message
+    const message =
+      e?.message?.includes('401') ? 'Groq auth failed (check GROQ_API_KEY).' :
+      e?.message?.includes('429') ? 'Groq rate limit hit. Try again later.' :
+      e?.message || 'Unexpected server error';
+
+    return res.status(500).json({ error: message });
+  }
 }
 
 
