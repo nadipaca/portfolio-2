@@ -78,7 +78,6 @@ function VisualCard({ experience, index, isActive, expanded, onToggle }) {
             </div>
           )}
 
-          <div className="mt-4 text-xs text-gray-500">Click to {expanded ? 'collapse' : 'expand'} details</div>
         </button>
 
         {/* Details (expanded) */}
@@ -320,8 +319,6 @@ function ArchitecturalCard({ experience, index, isActive, expanded, onToggle }) 
               </button>
             </div>
           )}
-
-          <div className="mt-4 text-xs text-gray-500">Click to {expanded ? 'collapse' : 'expand'} details</div>
         </button>
 
         <ArchitectureFlowModal
@@ -435,13 +432,13 @@ export default function Experience() {
         }
       });
 
-      setActiveIndex(closestIndex);
+      setActiveIndex((prev) => (prev === closestIndex ? prev : closestIndex));
 
       if (timelineRef.current && typeof closestTargetCenterY === 'number') {
         const timelineRect = timelineRef.current.getBoundingClientRect();
         const y = closestTargetCenterY - timelineRect.top;
         const clamped = Math.max(0, Math.min(y, timelineRect.height));
-        setProgressPx(clamped);
+        setProgressPx((prev) => (Math.abs(prev - clamped) < 1 ? prev : clamped));
       }
     };
 
@@ -467,7 +464,7 @@ export default function Experience() {
   }, []);
 
   return (
-    <section id="experience" className="py-20 bg-gray-50/50 scroll-mt-24">
+    <section className="py-20 bg-gray-50/50">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

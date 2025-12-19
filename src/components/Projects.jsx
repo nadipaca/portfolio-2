@@ -58,7 +58,7 @@ export default function Projects() {
 
   return (
     <>
-      <section id="projects" className="py-20 bg-white relative overflow-hidden scroll-mt-24">
+      <section className="py-20 bg-white relative overflow-hidden">
         <div className="absolute inset-0 section-glow pointer-events-none" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div

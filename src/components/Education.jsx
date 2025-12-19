@@ -7,21 +7,9 @@ export default function Education() {
   if (!edu) return null;
 
   return (
-    <section id="education" className="py-20 bg-white relative overflow-hidden scroll-mt-24">
+    <section className="py-20 bg-white relative overflow-hidden">
       <div className="absolute inset-0 section-glow pointer-events-none" />
       <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-10"
-        >
-          <h2 className="text-4xl font-bold text-slate-900 mb-4">Education</h2>
-          <p className="text-slate-600 max-w-2xl mx-auto">
-            Strong fundamentals to support real-world delivery.
-          </p>
-        </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 14 }}

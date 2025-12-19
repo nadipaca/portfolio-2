@@ -34,6 +34,19 @@ export const portfolioData = {
     // Optional per-repo owner overrides when curated repos live under other accounts
     repoOwners: {
       "spring-sentiment-analyzer": "charish37"
+    },
+    // Optional per-repo category overrides for the GitHub projects filter UI.
+    // Values: "AI/ML" | "Mobile" | "Web"
+    // (Used when GitHub topics/descriptions are missing or ambiguous.)
+    repoCategories: {
+      "ai-code-review-assistant": "AI/ML",
+      "healthcare-multi-agent": "AI/ML",
+      "spring-sentiment-analyzer": "AI/ML",
+      "playground-app": "Mobile",
+      "Naruto-Infinite-List": "Web",
+      "nova_mart": "Web",
+      "daily_weather_update": "Web",
+      "project_scout_hackathon": "Web"
     }
   },
   education: {
@@ -51,6 +64,67 @@ export const portfolioData = {
       "Cybersecurity"
     ]
   },
+  certifications: [
+    /**
+     * By default, the UI uses brand icons from `react-icons` for common issuers
+     * (e.g., Oracle, Microsoft). If you want pixel-perfect logos, you can optionally
+     * add images and set `issuerLogo`.
+     *
+     * Optional images:
+     * - Put issuer logos in: /public/certifications/logos/
+     * - Set: issuerLogo: "/certifications/logos/<file-name>.png"
+     */
+    // Example shape (replace with your real certifications + URLs):
+    // {
+    //   id: "aws-developer-associate",
+    //   title: "AWS Certified Developer – Associate",
+    //   issuer: "Amazon Web Services (AWS)",
+    //   issued: "Oct 2025",
+    //   expires: "Oct 2027",
+    //   credentialId: "ABC123XYZ",
+    //   credentialUrl: "https://www.credly.com/badges/...",
+    //   // Optional override image logo
+    //   issuerLogo: "/certifications/logos/aws.webp"
+    // }
+
+    // --- Your current certifications (fill in credentialUrl values) ---
+    {
+      id: "oci-ai-foundations-associate-2025",
+      title: "Oracle Cloud Infrastructure 2025 Certified AI Foundations Associate",
+      issuer: "Oracle",
+      issued: "Oct 2025",
+      expires: "Oct 2027",
+      credentialId: "",
+      credentialUrl: "https://catalog-education.oracle.com/pls/certview/sharebadge?id=A3FBF91ABB544C3048BFCA10D41C60E999FAA548BF9EEB12383C05250941FADB",
+    },
+    {
+      id: "oci-developer-professional-2025",
+      title: "Oracle Cloud Infrastructure 2025 Certified Developer Professional",
+      issuer: "Oracle",
+      issued: "Oct 2025",
+      expires: "Oct 2027",
+      credentialId: "",
+      credentialUrl: "https://catalog-education.oracle.com/pls/certview/sharebadge?id=C4252185CA2E9800DA0644A402BB7A59BA7D26EEAD3DFB2CA2B46E0024E112E9",
+    },
+    {
+      id: "oci-generative-ai-professional-2025",
+      title: "Oracle Cloud Infrastructure 2025 Certified Generative AI Professional",
+      issuer: "Oracle",
+      issued: "Oct 2025",
+      expires: "Oct 2027",
+      credentialId: "",
+      credentialUrl: "https://catalog-education.oracle.com/pls/certview/sharebadge?id=7A70A97AF22084C151EA72527C25C28E7DD68353D3241A65D5D31F877FBFD30C",
+    },
+    {
+      id: "azure-fundamentals",
+      title: "Microsoft Certified: Azure Fundamentals",
+      issuer: "Microsoft",
+      issued: "Nov 2022",
+      expires: "",
+      credentialId: "1940AAD584CB608E",
+      credentialUrl: "https://learn.microsoft.com/api/credentials/share/en-us/CharishmaNadipalli-6506/1940AAD584CB608E?sharingId",
+    },
+  ],
   skills: {
     backend: ["Java (8+)", "Spring Boot", "Node.js", "FastAPI", "Microservices", "Kafka"],
     frontend: ["React", "TypeScript", "Next.js", "Tailwind CSS"],

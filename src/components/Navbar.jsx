@@ -20,6 +20,7 @@ export default function Navbar({ onOpenChat }) {
     { label: 'Projects', href: '#projects' },
     { label: 'Experience', href: '#experience' },
     { label: 'Skills', href: '#skills' },
+    { label: 'Certifications', href: '#certifications' },
   ];
 
   return (
