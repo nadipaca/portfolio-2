@@ -1,7 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
-import { ExternalLink, GitFork, Search, Star, X } from 'lucide-react';
+import { ExternalLink, Search, X } from 'lucide-react';
 import { portfolioData } from '../constants';
+
+const overrideMap = Object.fromEntries(
+  Object.entries(portfolioData?.github?.repoOverrides || {}).map(([k, v]) => [String(k).toLowerCase(), v])
+);
 
 function getGithubUsername(urlOrUsername) {
   if (!urlOrUsername) return '';
@@ -46,9 +50,8 @@ export default function GitHubProjects() {
 
   const [query, setQuery] = useState('');
   const [language, setLanguage] = useState('All');
-  const [sort, setSort] = useState('updated'); // updated | stars | name
   const [selectedKeywords, setSelectedKeywords] = useState([]);
-  const [includeForks, setIncludeForks] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(6);
 
   useEffect(() => {
     let isMounted = true;
@@ -93,20 +96,27 @@ export default function GitHubProjects() {
         const data = await res.json();
         const normalized = (Array.isArray(data) ? data : [])
           .filter((r) => r && !r.private)
-          .map((r) => ({
-            id: r.id,
-            name: r.name,
-            full_name: r.full_name,
-            html_url: r.html_url,
-            description: r.description,
-            language: r.language,
-            stargazers_count: r.stargazers_count,
-            forks_count: r.forks_count,
-            updated_at: r.updated_at,
-            topics: r.topics || [],
-            fork: r.fork,
-            archived: r.archived,
-          }));
+          .map((r) => {
+            const key = String(r.name || '').toLowerCase();
+            const override = overrideMap[key];
+            const mergedTopics = Array.from(
+              new Set([...(r.topics || []), ...((override?.topics || []) ?? [])].filter(Boolean))
+            );
+            return {
+              id: r.id,
+              name: r.name,
+              full_name: r.full_name,
+              html_url: r.html_url,
+              description: r.description || override?.description || 'No description provided.',
+              language: r.language || override?.language,
+              stargazers_count: r.stargazers_count,
+              forks_count: r.forks_count,
+              updated_at: r.updated_at,
+              topics: mergedTopics,
+              fork: r.fork,
+              archived: r.archived,
+            };
+          });
 
         if (isMounted) setRepos(normalized);
 
@@ -148,8 +158,30 @@ export default function GitHubProjects() {
 
     let list = repos.slice();
 
-    if (!includeForks) list = list.filter((r) => !r.fork);
-    list = list.filter((r) => !r.archived);
+    // Always hide forks + archived (keeps signal high)
+    list = list.filter((r) => !r.fork && !r.archived);
+
+    // Curate: only show what you’d be proud to explain in an interview
+    const curated = portfolioData?.github?.curatedRepos || [];
+    const hidden = new Set((portfolioData?.github?.hiddenRepos || []).map((x) => String(x).toLowerCase()));
+    const curatedSet = new Set(curated.map((x) => String(x).toLowerCase()));
+
+    if (curatedSet.size) {
+      list = list.filter((r) => curatedSet.has(String(r.name || '').toLowerCase()));
+      // keep curated ordering
+      const order = new Map(curated.map((name, i) => [String(name).toLowerCase(), i]));
+      list.sort((a, b) => (order.get(String(a.name).toLowerCase()) ?? 9999) - (order.get(String(b.name).toLowerCase()) ?? 9999));
+    } else if (hidden.size) {
+      list = list.filter((r) => !hidden.has(String(r.name || '').toLowerCase()));
+      // default sort: recently updated
+      list.sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime());
+      // cap to best ~8 if no curated list provided
+      list = list.slice(0, 8);
+    } else {
+      // fallback: recently updated
+      list.sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime());
+      list = list.slice(0, 8);
+    }
 
     if (language !== 'All') {
       list = list.filter((r) => (r.language || 'Unknown') === language);
@@ -169,177 +201,172 @@ export default function GitHubProjects() {
       });
     }
 
-    if (sort === 'stars') {
-      list.sort((a, b) => (b.stargazers_count || 0) - (a.stargazers_count || 0));
-    } else if (sort === 'name') {
-      list.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
-    } else {
-      list.sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime());
-    }
-
     return list;
-  }, [repos, query, language, sort, selectedKeywords, includeForks]);
+  }, [repos, query, language, selectedKeywords]);
 
   return (
-    <section aria-label="GitHub Projects" className="mt-16">
-      <motion.div
-        initial={{ opacity: 0, y: 14 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5 }}
-        className="text-center mb-8"
-      >
-        <h3 className="text-3xl font-bold text-slate-900 mb-2">All Projects (GitHub)</h3>
-        <p className="text-slate-600 max-w-2xl mx-auto">
-          Browse my public repositories. Search and filter by tech keywords.
-        </p>
-      </motion.div>
+    <section
+      id="all-projects"
+      aria-label="Curated GitHub Projects"
+      className="py-20 bg-white relative overflow-hidden scroll-mt-24"
+    >
+      <div className="absolute inset-0 section-glow pointer-events-none" />
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-8"
+        >
+          <h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 mb-4 tracking-tight">
+            More Projects (Curated GitHub)
+          </h2>
+          <p className="text-slate-600 max-w-2xl mx-auto">
+            Only repositories I’d confidently walk through in an interview.
+          </p>
+        </motion.div>
 
-      {/* Controls */}
-      <div className="glass-panel rounded-2xl p-4 md:p-5 mb-6 shadow-sm">
-        <div className="grid grid-cols-1 md:grid-cols-[1fr_160px_160px_auto] gap-3 items-center">
-          {/* Search */}
-          <div className="relative">
-            <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-            <input
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search repos (name, description, language)…"
-              className="w-full pl-10 pr-10 py-2.5 rounded-lg border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
-            />
-            {query && (
-              <button
-                type="button"
-                onClick={() => setQuery('')}
-                className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded hover:bg-slate-100 text-slate-500"
-                aria-label="Clear search"
-              >
-                <X size={16} />
-              </button>
-            )}
+        {/* Controls */}
+        <div className="glass-panel rounded-2xl p-4 md:p-5 mb-6 shadow-sm">
+          <div className="grid grid-cols-1 md:grid-cols-[1fr_200px] gap-3 items-center">
+            {/* Search */}
+            <div className="relative">
+              <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+              <input
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search repos (name, description, language)…"
+                className="w-full pl-10 pr-10 py-2.5 rounded-lg border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
+              />
+              {query && (
+                <button
+                  type="button"
+                  onClick={() => setQuery('')}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded hover:bg-slate-100 text-slate-500"
+                  aria-label="Clear search"
+                >
+                  <X size={16} />
+                </button>
+              )}
+            </div>
+
+            {/* Language */}
+            <select
+              value={language}
+              onChange={(e) => setLanguage(e.target.value)}
+              className="w-full py-2.5 px-3 rounded-lg border border-slate-200 bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
+              aria-label="Filter by language"
+            >
+              {languages.map((l) => (
+                <option key={l} value={l}>
+                  {l}
+                </option>
+              ))}
+            </select>
           </div>
 
-          {/* Language */}
-          <select
-            value={language}
-            onChange={(e) => setLanguage(e.target.value)}
-            className="w-full py-2.5 px-3 rounded-lg border border-slate-200 bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
-            aria-label="Filter by language"
-          >
-            {languages.map((l) => (
-              <option key={l} value={l}>
-                {l}
-              </option>
-            ))}
-          </select>
+          {/* Keyword chips */}
+          <div className="mt-4 flex flex-wrap gap-2">
+            {KEYWORD_FILTERS.map((k) => {
+              const active = selectedKeywords.includes(k.id);
+              return (
+                <button
+                  key={k.id}
+                  type="button"
+                  onClick={() =>
+                    setSelectedKeywords((prev) =>
+                      prev.includes(k.id) ? prev.filter((x) => x !== k.id) : [...prev, k.id]
+                    )
+                  }
+                  className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors ${
+                    active
+                      ? 'bg-blue-600 text-white border-blue-600'
+                      : 'bg-white text-slate-700 border-slate-200 hover:border-slate-300'
+                  }`}
+                >
+                  {k.label}
+                </button>
+              );
+            })}
+          </div>
 
-          {/* Sort */}
-          <select
-            value={sort}
-            onChange={(e) => setSort(e.target.value)}
-            className="w-full py-2.5 px-3 rounded-lg border border-slate-200 bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
-            aria-label="Sort"
-          >
-            <option value="updated">Sort: Recently updated</option>
-            <option value="stars">Sort: Stars</option>
-            <option value="name">Sort: Name</option>
-          </select>
-
-          {/* Include forks */}
-          <label className="flex items-center gap-2 text-sm text-slate-700 select-none">
-            <input
-              type="checkbox"
-              checked={includeForks}
-              onChange={(e) => setIncludeForks(e.target.checked)}
-              className="rounded border-slate-300 text-blue-600 focus:ring-blue-500/40"
-            />
-            Include forks
-          </label>
+          <div className="mt-3 text-xs text-slate-500">
+            Showing <span className="font-semibold text-slate-700">{Math.min(visibleCount, filtered.length)}</span> of{' '}
+            <span className="font-semibold text-slate-700">{filtered.length}</span> curated repos.
+          </div>
         </div>
 
-        {/* Keyword chips */}
-        <div className="mt-4 flex flex-wrap gap-2">
-          {KEYWORD_FILTERS.map((k) => {
-            const active = selectedKeywords.includes(k.id);
-            return (
-              <button
-                key={k.id}
-                type="button"
-                onClick={() =>
-                  setSelectedKeywords((prev) =>
-                    prev.includes(k.id) ? prev.filter((x) => x !== k.id) : [...prev, k.id]
-                  )
-                }
-                className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors ${
-                  active
-                    ? 'bg-blue-600 text-white border-blue-600'
-                    : 'bg-white text-slate-700 border-slate-200 hover:border-slate-300'
-                }`}
-              >
-                {k.label}
-              </button>
-            );
-          })}
-        </div>
+        {/* Content */}
+        {loading ? (
+          <div className="text-center text-slate-500 py-10">Loading GitHub projects…</div>
+        ) : error ? (
+          <div className="text-center text-red-600 py-10">{error}</div>
+        ) : filtered.length === 0 ? (
+          <div className="text-center text-slate-500 py-10">No repos match your filters.</div>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filtered.slice(0, visibleCount).map((r, idx) => (
+                <motion.a
+                  key={r.id}
+                  href={r.html_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.45, delay: Math.min(idx, 8) * 0.04 }}
+                  whileHover={{ y: -8 }}
+                  className="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl transition-shadow p-5 flex flex-col relative overflow-hidden"
+                >
+                  <div className="absolute -top-16 -right-16 w-48 h-48 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <h4 className="text-lg font-bold text-slate-900 truncate">{r.name}</h4>
+                      <p className="text-sm text-slate-600 mt-1">
+                        {r.description || 'No description provided.'}
+                      </p>
+                      {r.topics?.length > 0 && (
+                        <div className="mt-3 flex flex-wrap gap-1.5">
+                          {r.topics.slice(0, 6).map((topic) => (
+                            <span
+                              key={topic}
+                              className="px-2 py-1 rounded-full text-[11px] font-semibold bg-blue-50 text-blue-700 border border-blue-100"
+                            >
+                              {topic}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    <ExternalLink className="text-slate-400 flex-shrink-0" size={18} />
+                  </div>
 
-        <div className="mt-3 text-xs text-slate-500">
-          Showing <span className="font-semibold text-slate-700">{filtered.length}</span> of{' '}
-          <span className="font-semibold text-slate-700">{repos.length}</span> repos
-          {includeForks ? ' (including forks)' : ''}.
-        </div>
+                  <div className="mt-4 flex flex-wrap items-center gap-2">
+                    <span className="px-2.5 py-1 rounded-full text-xs bg-slate-100 text-slate-700 border border-slate-200">
+                      {r.language || 'Unknown'}
+                    </span>
+                    <span className="ml-auto text-xs text-slate-500">Updated {formatDate(r.updated_at)}</span>
+                  </div>
+                </motion.a>
+              ))}
+            </div>
+
+            {filtered.length > visibleCount && (
+              <div className="mt-8 flex justify-center">
+                <button
+                  type="button"
+                  onClick={() => setVisibleCount((n) => Math.min(filtered.length, n + 6))}
+                  className="px-5 py-2.5 rounded-full bg-slate-900 text-white font-semibold hover:bg-slate-800 transition-colors shadow-sm"
+                >
+                  Load more
+                </button>
+              </div>
+            )}
+          </>
+        )}
       </div>
-
-      {/* Content */}
-      {loading ? (
-        <div className="text-center text-slate-500 py-10">Loading GitHub projects…</div>
-      ) : error ? (
-        <div className="text-center text-red-600 py-10">{error}</div>
-      ) : filtered.length === 0 ? (
-        <div className="text-center text-slate-500 py-10">No repos match your filters.</div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filtered.map((r, idx) => (
-            <motion.a
-              key={r.id}
-              href={r.html_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.45, delay: Math.min(idx, 8) * 0.04 }}
-              whileHover={{ y: -8 }}
-              className="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl transition-shadow p-5 flex flex-col relative overflow-hidden"
-            >
-              <div className="absolute -top-16 -right-16 w-48 h-48 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
-              <div className="flex items-start justify-between gap-3">
-                <div className="min-w-0">
-                  <h4 className="text-lg font-bold text-slate-900 truncate">{r.name}</h4>
-                  <p className="text-sm text-slate-600 mt-1">
-                    {r.description || 'No description provided.'}
-                  </p>
-                </div>
-                <ExternalLink className="text-slate-400 flex-shrink-0" size={18} />
-              </div>
-
-              <div className="mt-4 flex flex-wrap items-center gap-2">
-                <span className="px-2.5 py-1 rounded-full text-xs bg-slate-100 text-slate-700 border border-slate-200">
-                  {r.language || 'Unknown'}
-                </span>
-                <span className="inline-flex items-center gap-1 text-xs text-slate-600">
-                  <Star size={14} className="text-amber-500" />
-                  {r.stargazers_count ?? 0}
-                </span>
-                <span className="inline-flex items-center gap-1 text-xs text-slate-600">
-                  <GitFork size={14} className="text-slate-500" />
-                  {r.forks_count ?? 0}
-                </span>
-                <span className="ml-auto text-xs text-slate-500">Updated {formatDate(r.updated_at)}</span>
-              </div>
-            </motion.a>
-          ))}
-        </div>
-      )}
     </section>
   );
 }

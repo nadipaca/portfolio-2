@@ -11,6 +11,62 @@ export const portfolioData = {
       email: "nadipaca@mail.uc.edu"
     }
   },
+  github: {
+    // Curate what you want recruiters/founders to see first (quality > quantity).
+    // These should match your GitHub repo names exactly.
+    curatedRepos: [
+      "ai-code-review-assistant",
+      "healthcare-multi-agent",
+      "playground-app",
+      "Naruto-Infinite-List",
+      "spring-sentiment-analyzer",
+      "nova_mart",
+      "daily_weather_update",
+      "project_scout_hackathon"
+    ],
+    // Hide repos you don’t want displayed (learning repos, forks, portfolio experiments, etc.)
+    hiddenRepos: [
+      "portfolio-2",
+      "Sequelize-learn",
+      "nodejs-databases",
+      "OCAT-Charishma-2025"
+    ],
+    // Manual fallbacks for repos whose GitHub metadata is sparse/empty
+    repoOverrides: {
+      "ai-code-review-assistant": {
+        description: "Agentic code reviewer that auto-critiques PRs and suggests fixes.",
+        topics: ["Node.js", "LangChain", "OpenAI", "TypeScript", "CI/CD"]
+      },
+      "healthcare-multi-agent": {
+        description: "Multi-agent healthcare assistant for triage Q&A with retrieval.",
+        topics: ["Python", "FastAPI", "Agents", "RAG", "Pinecone"]
+      },
+      "playground-app": {
+        description: "React Native social app with real-time chat, events, and media.",
+        topics: ["React Native", "Firebase", "Sockets", "OAuth", "Mobile"]
+      },
+      "naruto-infinite-list": {
+        description: "Infinite-scroll Naruto character browser with performant list UI.",
+        topics: ["React", "TypeScript", "TanStack Query", "REST"]
+      },
+      "spring-sentiment-analyzer": {
+        description: "Spring Boot REST API that performs sentiment analysis on text.",
+        topics: ["Java", "Spring Boot", "NLP", "Sentiment", "PostgreSQL"]
+      },
+      "nova_mart": {
+        description: "E-commerce microservices blueprint with Spring Boot and Kafka.",
+        topics: ["Java", "Spring Boot", "Kafka", "Docker", "AWS"]
+      },
+      "daily_weather_update": {
+        description: "Scheduled weather notifier that pushes daily forecasts.",
+        topics: ["Python", "APIs", "Scheduler", "Notifications"]
+      },
+      "project_scout_hackathon": {
+        description: "AI agent that curates GitHub projects and generates roadmaps.",
+        topics: ["Python", "FastAPI", "OpenAI", "GitHub API", "Agents"]
+      }
+    }
+  },
   education: {
     label: "Education",
     degree: "Master's in Information Technology",
@@ -28,9 +84,9 @@ export const portfolioData = {
   },
   skills: {
     backend: ["Java (8+)", "Spring Boot", "Node.js", "FastAPI", "Microservices", "Kafka"],
-    cloud: ["AWS (EC2, EKS, S3)", "Docker", "Kubernetes", "Terraform", "CI/CD"],
     frontend: ["React", "TypeScript", "Next.js", "Tailwind CSS"],
-    ai_ml: ["GenAI Agents", "RAG Pipelines", "Vector DBs", "LangChain", "Vertex AI"]
+    cloud: ["AWS (EC2, EKS, S3)", "Docker", "Kubernetes", "Terraform", "CI/CD"],
+    ai_ml: ["GenAI Agents", "RAG Pipelines", "Vector DBs", "LangChain", "Vertex AI", "OpenAI", "Hugging Face"]
   },
   projects: [
     {
