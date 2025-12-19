@@ -3,9 +3,16 @@ import { motion } from 'framer-motion';
 import { ExternalLink, Search, X } from 'lucide-react';
 import { portfolioData } from '../constants';
 
-const overrideMap = Object.fromEntries(
-  Object.entries(portfolioData?.github?.repoOverrides || {}).map(([k, v]) => [String(k).toLowerCase(), v])
-);
+function inferLanguageFromTopics(topics = []) {
+  const text = topics.join(' ').toLowerCase();
+  if (/\b(java|spring)\b/.test(text)) return 'Java';
+  if (/\btypescript\b/.test(text)) return 'TypeScript';
+  if (/\bjavascript\b/.test(text)) return 'JavaScript';
+  if (/\bpython\b/.test(text)) return 'Python';
+  if (/\bnode(\.js)?\b/.test(text)) return 'JavaScript';
+  if (/\breact\b/.test(text)) return 'JavaScript';
+  return null;
+}
 
 function getGithubUsername(urlOrUsername) {
   if (!urlOrUsername) return '';
@@ -96,27 +103,64 @@ export default function GitHubProjects() {
         const data = await res.json();
         const normalized = (Array.isArray(data) ? data : [])
           .filter((r) => r && !r.private)
-          .map((r) => {
-            const key = String(r.name || '').toLowerCase();
-            const override = overrideMap[key];
-            const mergedTopics = Array.from(
-              new Set([...(r.topics || []), ...((override?.topics || []) ?? [])].filter(Boolean))
-            );
-            return {
-              id: r.id,
-              name: r.name,
-              full_name: r.full_name,
-              html_url: r.html_url,
-              description: r.description || override?.description || 'No description provided.',
-              language: r.language || override?.language,
-              stargazers_count: r.stargazers_count,
-              forks_count: r.forks_count,
-              updated_at: r.updated_at,
-              topics: mergedTopics,
-              fork: r.fork,
-              archived: r.archived,
-            };
-          });
+          .map((r) => ({
+            id: r.id,
+            name: r.name,
+            full_name: r.full_name,
+            html_url: r.html_url,
+            description: r.description || 'No description provided.',
+            language: r.language || inferLanguageFromTopics(r.topics),
+            stargazers_count: r.stargazers_count,
+            forks_count: r.forks_count,
+            updated_at: r.updated_at,
+            topics: r.topics || [],
+            fork: r.fork,
+            archived: r.archived,
+          }));
+
+        // Add missing curated repos that are under other owners
+        const curated = portfolioData?.github?.curatedRepos || [];
+        const owners = portfolioData?.github?.repoOwners || {};
+        const have = new Set(normalized.map((r) => String(r.name).toLowerCase()));
+
+        const missing = curated.filter((name) => !have.has(String(name).toLowerCase()));
+
+        if (missing.length) {
+          const extras = await Promise.all(
+            missing.map(async (name) => {
+              const owner = owners?.[name] || username;
+              try {
+                const resRepo = await fetch(
+                  `https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(name)}`,
+                  {
+                    signal: controller.signal,
+                    headers: { Accept: 'application/vnd.github+json' }
+                  }
+                );
+                if (!resRepo.ok) return null;
+                const r = await resRepo.json();
+                return {
+                  id: r.id,
+                  name: r.name,
+                  full_name: r.full_name,
+                  html_url: r.html_url,
+                  description: r.description || 'No description provided.',
+                  language: r.language || inferLanguageFromTopics(r.topics),
+                  stargazers_count: r.stargazers_count,
+                  forks_count: r.forks_count,
+                  updated_at: r.updated_at,
+                  topics: r.topics || [],
+                  fork: r.fork,
+                  archived: r.archived,
+                };
+              } catch {
+                return null;
+              }
+            })
+          );
+
+          extras.filter(Boolean).forEach((r) => normalized.push(r));
+        }
 
         if (isMounted) setRepos(normalized);
 
@@ -341,13 +385,6 @@ export default function GitHubProjects() {
                       )}
                     </div>
                     <ExternalLink className="text-slate-400 flex-shrink-0" size={18} />
-                  </div>
-
-                  <div className="mt-4 flex flex-wrap items-center gap-2">
-                    <span className="px-2.5 py-1 rounded-full text-xs bg-slate-100 text-slate-700 border border-slate-200">
-                      {r.language || 'Unknown'}
-                    </span>
-                    <span className="ml-auto text-xs text-slate-500">Updated {formatDate(r.updated_at)}</span>
                   </div>
                 </motion.a>
               ))}

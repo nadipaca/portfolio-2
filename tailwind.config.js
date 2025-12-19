@@ -6,6 +6,9 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        handwriting: ['"Caveat"', 'cursive'],
+      },
       colors: {
         slate: {
           50: '#f8fafc',

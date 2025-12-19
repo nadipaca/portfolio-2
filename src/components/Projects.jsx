@@ -1,23 +1,60 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import ProjectCard from './ProjectCard';
 import ProjectModal from './ProjectModal';
 import { portfolioData } from '../constants';
-import GitHubProjects from './GitHubProjects';
 
 export default function Projects() {
   const [selectedProject, setSelectedProject] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleProjectClick = (project) => {
-    setSelectedProject(project);
-    setIsModalOpen(true);
+  const setProjectQueryParam = (projectId) => {
+    const url = new URL(window.location.href);
+    if (projectId) url.searchParams.set('project', projectId);
+    else url.searchParams.delete('project');
+    window.history.pushState({}, '', url.toString());
   };
 
-  const handleCloseModal = () => {
+  const openProject = (project) => {
+    if (!project) return;
+    setSelectedProject(project);
+    setIsModalOpen(true);
+    setProjectQueryParam(project.id);
+  };
+
+  const closeProject = () => {
+    setProjectQueryParam(null);
     setIsModalOpen(false);
     setTimeout(() => setSelectedProject(null), 300);
   };
+
+  // Deep linking: /?project=<id>
+  useEffect(() => {
+    const syncFromUrl = () => {
+      const url = new URL(window.location.href);
+      const projectId = url.searchParams.get('project');
+      if (!projectId) {
+        setIsModalOpen(false);
+        setSelectedProject(null);
+        return;
+      }
+      const p = portfolioData.projects.find((x) => x.id === projectId);
+      if (!p) return;
+
+      // Ensure user sees the projects section when landing via deep link
+      if (url.hash !== '#projects') {
+        url.hash = '#projects';
+        window.history.replaceState({}, '', url.toString());
+      }
+
+      setSelectedProject(p);
+      setIsModalOpen(true);
+    };
+
+    syncFromUrl();
+    window.addEventListener('popstate', syncFromUrl);
+    return () => window.removeEventListener('popstate', syncFromUrl);
+  }, []);
 
   return (
     <>
@@ -37,6 +74,15 @@ export default function Projects() {
             <p className="text-slate-600 max-w-2xl mx-auto">
               Engineering solutions that deliver measurable impact
             </p>
+
+            <div className="mt-6 flex justify-center">
+              <a
+                href="#all-projects"
+                className="inline-flex items-center justify-center px-5 py-2.5 rounded-full bg-slate-900 text-white font-semibold hover:bg-slate-800 transition-colors shadow-sm"
+              >
+                See all projects
+              </a>
+            </div>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -48,20 +94,17 @@ export default function Projects() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
               >
-                <ProjectCard project={project} onClick={handleProjectClick} />
+                <ProjectCard project={project} onClick={openProject} />
               </motion.div>
             ))}
           </div>
-
-          {/* GitHub Repos */}
-          <GitHubProjects />
         </div>
       </section>
 
       <ProjectModal
         project={selectedProject}
         isOpen={isModalOpen}
-        onClose={handleCloseModal}
+        onClose={closeProject}
       />
     </>
   );

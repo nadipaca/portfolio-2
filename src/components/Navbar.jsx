@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Github, Linkedin, Mail, Menu, MessageCircle, X } from 'lucide-react';
+import { portfolioData } from '../constants';
 
 export default function Navbar({ onOpenChat }) {
   const [scrolled, setScrolled] = useState(false);
@@ -62,7 +63,7 @@ export default function Navbar({ onOpenChat }) {
             </button>
             <div className="flex items-center space-x-4 ml-4">
               <a
-                href="https://github.com/nadipaca"
+                href={portfolioData.profile.socials.github}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-slate-300 hover:text-white transition-colors"
@@ -70,7 +71,7 @@ export default function Navbar({ onOpenChat }) {
                 <Github size={20} />
               </a>
               <a
-                href="https://linkedin.com/in/charishma-nadipalli"
+                href={portfolioData.profile.socials.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-slate-300 hover:text-white transition-colors"
@@ -78,7 +79,7 @@ export default function Navbar({ onOpenChat }) {
                 <Linkedin size={20} />
               </a>
               <a
-                href="mailto:nadipaca@mail.uc.edu"
+                href={`mailto:${portfolioData.profile.socials.email}`}
                 className="text-slate-300 hover:text-white transition-colors"
               >
                 <Mail size={20} />
@@ -126,7 +127,7 @@ export default function Navbar({ onOpenChat }) {
             </button>
             <div className="flex items-center space-x-4 pt-4">
               <a
-                href="https://github.com/nadipaca"
+                href={portfolioData.profile.socials.github}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-slate-300 hover:text-white transition-colors"
@@ -134,7 +135,7 @@ export default function Navbar({ onOpenChat }) {
                 <Github size={20} />
               </a>
               <a
-                href="https://linkedin.com/in/charishma-nadipalli"
+                href={portfolioData.profile.socials.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-slate-300 hover:text-white transition-colors"
@@ -142,7 +143,7 @@ export default function Navbar({ onOpenChat }) {
                 <Linkedin size={20} />
               </a>
               <a
-                href="mailto:nadipaca@mail.uc.edu"
+                href={`mailto:${portfolioData.profile.socials.email}`}
                 className="text-slate-300 hover:text-white transition-colors"
               >
                 <Mail size={20} />

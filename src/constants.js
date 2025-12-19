@@ -31,40 +31,9 @@ export const portfolioData = {
       "nodejs-databases",
       "OCAT-Charishma-2025"
     ],
-    // Manual fallbacks for repos whose GitHub metadata is sparse/empty
-    repoOverrides: {
-      "ai-code-review-assistant": {
-        description: "Agentic code reviewer that auto-critiques PRs and suggests fixes.",
-        topics: ["Node.js", "LangChain", "OpenAI", "TypeScript", "CI/CD"]
-      },
-      "healthcare-multi-agent": {
-        description: "Multi-agent healthcare assistant for triage Q&A with retrieval.",
-        topics: ["Python", "FastAPI", "Agents", "RAG", "Pinecone"]
-      },
-      "playground-app": {
-        description: "React Native social app with real-time chat, events, and media.",
-        topics: ["React Native", "Firebase", "Sockets", "OAuth", "Mobile"]
-      },
-      "naruto-infinite-list": {
-        description: "Infinite-scroll Naruto character browser with performant list UI.",
-        topics: ["React", "TypeScript", "TanStack Query", "REST"]
-      },
-      "spring-sentiment-analyzer": {
-        description: "Spring Boot REST API that performs sentiment analysis on text.",
-        topics: ["Java", "Spring Boot", "NLP", "Sentiment", "PostgreSQL"]
-      },
-      "nova_mart": {
-        description: "E-commerce microservices blueprint with Spring Boot and Kafka.",
-        topics: ["Java", "Spring Boot", "Kafka", "Docker", "AWS"]
-      },
-      "daily_weather_update": {
-        description: "Scheduled weather notifier that pushes daily forecasts.",
-        topics: ["Python", "APIs", "Scheduler", "Notifications"]
-      },
-      "project_scout_hackathon": {
-        description: "AI agent that curates GitHub projects and generates roadmaps.",
-        topics: ["Python", "FastAPI", "OpenAI", "GitHub API", "Agents"]
-      }
+    // Optional per-repo owner overrides when curated repos live under other accounts
+    repoOwners: {
+      "spring-sentiment-analyzer": "charish37"
     }
   },
   education: {

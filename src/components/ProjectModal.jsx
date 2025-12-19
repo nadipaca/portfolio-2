@@ -23,17 +23,22 @@ export default function ProjectModal({ project, isOpen, onClose }) {
             className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50"
           />
 
-          {/* Modal */}
+          {/* Modal (Desktop) / Bottom Sheet (Mobile) */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="fixed inset-4 md:inset-8 lg:inset-16 z-50 overflow-y-auto"
+            initial={{ opacity: 0, y: 24, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 24, scale: 0.98 }}
+            transition={{ duration: 0.22, ease: "easeOut" }}
+            className="fixed inset-0 z-50 flex items-end md:items-center justify-center p-0 md:p-8"
           >
-            <div className="bg-white rounded-lg shadow-2xl max-w-5xl mx-auto my-8">
+            <div className="w-full md:max-w-5xl bg-white rounded-t-2xl md:rounded-2xl shadow-2xl max-h-[88vh] md:max-h-[calc(100vh-6rem)] overflow-hidden flex flex-col">
               {/* Header */}
-              <div className="sticky top-0 bg-white border-b border-slate-200 px-6 py-4 rounded-t-lg flex items-start justify-between z-10">
+              <div className="bg-white border-b border-slate-200 px-5 md:px-6 py-4 flex items-start justify-between z-10">
                 <div className="flex-1">
+                  {/* drag handle (mobile) */}
+                  <div className="md:hidden flex justify-center -mt-1 mb-3">
+                    <div className="h-1 w-10 rounded-full bg-slate-200" />
+                  </div>
                   <div className="flex items-center gap-3 mb-2">
                     <span
                       className={`px-3 py-1 text-xs font-semibold rounded-full ${
@@ -47,14 +52,15 @@ export default function ProjectModal({ project, isOpen, onClose }) {
                 </div>
                 <button
                   onClick={onClose}
-                  className="text-slate-400 hover:text-slate-600 transition-colors ml-4"
+                  className="text-slate-400 hover:text-slate-600 transition-colors ml-4 p-2 rounded-lg hover:bg-slate-100"
+                  aria-label="Close project"
                 >
                   <X size={24} />
                 </button>
               </div>
 
               {/* Content */}
-              <div className="px-6 py-6 space-y-8">
+              <div className="flex-1 overflow-y-auto px-5 md:px-6 py-6 space-y-8">
                 {/* Summary */}
                 <div>
                   <h3 className="text-lg font-semibold text-slate-900 mb-2">Overview</h3>
