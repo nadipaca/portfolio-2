@@ -158,12 +158,39 @@ export default function GitHubProjects() {
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState('All');
   const [selectedKeywords, setSelectedKeywords] = useState([]);
-  const [visibleCount, setVisibleCount] = useState(6);
+  const [pageSize, setPageSize] = useState(() => {
+    if (typeof window === 'undefined') return 6;
+    // Tailwind md breakpoint is 768px; treat <768 as mobile.
+    return window.matchMedia?.('(max-width: 767px)')?.matches ? 3 : 6;
+  });
+  const [visibleCount, setVisibleCount] = useState(() => {
+    if (typeof window === 'undefined') return 6;
+    return window.matchMedia?.('(max-width: 767px)')?.matches ? 3 : 6;
+  });
+
+  useEffect(() => {
+    // Responsive paging: 3 on mobile, 6 on desktop. Keep it in sync on resize.
+    if (typeof window === 'undefined' || !window.matchMedia) return () => {};
+    const mq = window.matchMedia('(max-width: 767px)');
+    const apply = () => {
+      const next = mq.matches ? 3 : 6;
+      setPageSize(next);
+      setVisibleCount(next); // collapse on breakpoint change to avoid confusion
+    };
+    apply();
+    // Safari <14 uses addListener/removeListener
+    if (mq.addEventListener) mq.addEventListener('change', apply);
+    else mq.addListener(apply);
+    return () => {
+      if (mq.removeEventListener) mq.removeEventListener('change', apply);
+      else mq.removeListener(apply);
+    };
+  }, []);
 
   useEffect(() => {
     // Any filter change should reset pagination for clarity
-    setVisibleCount(6);
-  }, [query, category, selectedKeywords]);
+    setVisibleCount(pageSize);
+  }, [query, category, selectedKeywords, pageSize]);
 
   useEffect(() => {
     let isMounted = true;
@@ -536,15 +563,27 @@ export default function GitHubProjects() {
               ))}
             </div>
 
-            {filtered.length > visibleCount && (
-              <div className="mt-8 flex justify-center">
-                <button
-                  type="button"
-                  onClick={() => setVisibleCount((n) => Math.min(filtered.length, n + 6))}
-                  className="px-5 py-2.5 rounded-full bg-slate-900 text-white font-semibold hover:bg-slate-800 transition-colors shadow-sm"
-                >
-                  Load more
-                </button>
+            {(filtered.length > visibleCount || visibleCount > pageSize) && (
+              <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+                {filtered.length > visibleCount ? (
+                  <button
+                    type="button"
+                    onClick={() => setVisibleCount((n) => Math.min(filtered.length, n + pageSize))}
+                    className="px-5 py-2.5 rounded-full bg-slate-900 text-white font-semibold hover:bg-slate-800 transition-colors shadow-sm"
+                  >
+                    Load more
+                  </button>
+                ) : null}
+
+                {visibleCount > pageSize ? (
+                  <button
+                    type="button"
+                    onClick={() => setVisibleCount(pageSize)}
+                    className="px-5 py-2.5 rounded-full bg-white text-slate-900 font-semibold border border-slate-200 hover:bg-slate-50 transition-colors shadow-sm"
+                  >
+                    Show less
+                  </button>
+                ) : null}
               </div>
             )}
           </>
