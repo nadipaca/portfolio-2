@@ -22,22 +22,32 @@ const H = 620; // Increased height for better spacing
 
 // Animation configuration - slower for cooler effect
 const ANIMATION_DURATION = 2500; // 2.5 seconds per step (slower)
-const STEP_DELAY = 300; // Small delay between web server paths (300ms)
 
-// Updated animation steps with correct flow
+// Updated animation steps with correct flow (grouped by parallel execution)
 const ANIMATION_STEPS = [
-  { id: 'user-dns', from: 'user', to: 'dns', color: '#64748b', delay: 0 }, // User queries DNS
-  { id: 'user-cdn', from: 'user', to: 'cdn', color: '#64748b', delay: 0 }, // User gets static from CDN
-  { id: 'webbrowser-lb', from: 'webbrowser', to: 'loadBalancer', color: '#22d3ee', delay: 0 }, // Web browser to LB
-  { id: 'mobileapp-lb', from: 'mobileapp', to: 'loadBalancer', color: '#22d3ee', delay: 0 }, // Mobile app to LB
-  { id: 'lb-dc1', from: 'loadBalancer', to: 'dc1', color: '#22d3ee', delay: 0 }, // LB to DC1 boundary
-  { id: 'highlight-webservers', from: 'webServers', to: 'webServers', color: '#22c55e', delay: 0 }, // Highlight web servers
-  { id: 'webservers-messagequeue', from: 'webServers', to: 'messageQueue', color: '#22c55e', delay: 0 }, // Web servers to MQ
-  { id: 'webservers-databases', from: 'webServers', to: 'databases', color: '#22c55e', delay: STEP_DELAY }, // Web servers to DB (delayed)
-  { id: 'webservers-caches', from: 'webServers', to: 'caches', color: '#22c55e', delay: STEP_DELAY * 2 }, // Web servers to Caches (delayed)
-  { id: 'messagequeue-workers', from: 'messageQueue', to: 'workers', color: '#22d3ee', delay: 0 }, // MQ to Workers
-  { id: 'workers-nosql', from: 'workers', to: 'nosql', color: '#a855f7', delay: 0 }, // Workers to NoSQL
-  { id: 'dc1-tools', from: 'dc1', to: 'tools', color: '#64748b', dashed: true, delay: 0 }, // DC1 to Tools
+  // Phase 1: DNS resolution (must happen first)
+  { id: 'user-dns', from: 'user', to: 'dns', color: '#64748b', delay: 0, phase: 1 },
+  
+  // Phase 2: Parallel requests - CDN, Web Browser, and Mobile App all call simultaneously
+  { id: 'user-cdn', from: 'user', to: 'cdn', color: '#64748b', delay: 0, phase: 2 }, // User gets static from CDN
+  { id: 'webbrowser-lb', from: 'webbrowser', to: 'loadBalancer', color: '#22d3ee', delay: 0, phase: 2 }, // Web browser to LB
+  { id: 'mobileapp-lb', from: 'mobileapp', to: 'loadBalancer', color: '#22d3ee', delay: 0, phase: 2 }, // Mobile app to LB
+  
+  // Phase 3: Load Balancer routes to Web Servers
+  { id: 'lb-webservers', from: 'loadBalancer', to: 'webServers', color: '#22d3ee', delay: 0, phase: 3 },
+  
+  // Phase 4: Web Servers call backend services simultaneously (parallel)
+  { id: 'webservers-messagequeue', from: 'webServers', to: 'messageQueue', color: '#22c55e', delay: 0, phase: 4 },
+  { id: 'webservers-databases', from: 'webServers', to: 'databases', color: '#22c55e', delay: 0, phase: 4 },
+  { id: 'webservers-caches', from: 'webServers', to: 'caches', color: '#22c55e', delay: 0, phase: 4 },
+  { id: 'webservers-nosql', from: 'webServers', to: 'nosql', color: '#a855f7', delay: 0, phase: 4 },
+  
+  // Phase 5: Async processing flow
+  { id: 'messagequeue-workers', from: 'messageQueue', to: 'workers', color: '#22d3ee', delay: 0, phase: 5 },
+  { id: 'workers-nosql', from: 'workers', to: 'nosql', color: '#a855f7', delay: 0, phase: 5 },
+  
+  // Phase 6: Monitoring (can happen continuously, shown last)
+  { id: 'dc1-tools', from: 'dc1', to: 'tools', color: '#64748b', dashed: true, delay: 0, phase: 6 },
 ];
 
 // Styled icon wrapper with background
@@ -352,25 +362,27 @@ export default function ArchitectureHero() {
       });
     }
 
-    // Load Balancer to DC1 (boundary)
-    const dc1Bounds = getBounds(dc1Ref);
-    if (lbBounds && dc1Bounds) {
+    // Load Balancer to Web Servers
+    const webServersBounds = getBounds(webServersRef);
+    if (lbBounds && webServersBounds) {
       const from = getConnectionPoint(lbBounds, 'bottom');
-      const to = getConnectionPoint(dc1Bounds, 'top');
+      const to = getConnectionPoint(webServersBounds, 'top');
       newArrows.push({ 
-        id: 'lb-dc1',
+        id: 'lb-webservers',
         from, 
         to, 
         color: '#22d3ee', 
         dashed: false, 
         curved: false,
         fromComponent: 'loadBalancer',
-        toComponent: 'dc1',
+        toComponent: 'webServers',
       });
     }
 
+    // Get DC1 bounds for Tools connection
+    const dc1Bounds = getBounds(dc1Ref);
+
     // Web Servers to Message Queue
-    const webServersBounds = getBounds(webServersRef);
     const messageQueueBounds = getBounds(messageQueueRef);
     if (webServersBounds && messageQueueBounds) {
       const from = getConnectionPoint(webServersBounds, 'right');
@@ -404,8 +416,10 @@ export default function ArchitectureHero() {
       });
     }
 
-    // Workers to NoSQL
+    // Get NoSQL bounds (used by both Web Servers and Workers)
     const nosqlBounds = getBounds(nosqlRef);
+
+    // Workers to NoSQL
     if (workersBounds && nosqlBounds) {
       const from = getConnectionPoint(workersBounds, 'right');
       const to = getConnectionPoint(nosqlBounds, 'left');
@@ -455,6 +469,22 @@ export default function ArchitectureHero() {
       });
     }
 
+    // Web Servers to NoSQL
+    if (webServersBounds && nosqlBounds) {
+      const from = getConnectionPoint(webServersBounds, 'right');
+      const to = getConnectionPoint(nosqlBounds, 'left');
+      newArrows.push({ 
+        id: 'webservers-nosql',
+        from, 
+        to, 
+        color: '#a855f7', 
+        dashed: false, 
+        curved: true,
+        fromComponent: 'webServers',
+        toComponent: 'nosql',
+      });
+    }
+
     // DC1 to Tools (from DC1 boundary bottom to Tools)
     const toolsBounds = getBounds(toolsRef);
     if (dc1Bounds && toolsBounds) {
@@ -475,42 +505,48 @@ export default function ArchitectureHero() {
     setArrows(newArrows);
   }, []);
 
-  // Animation loop with delays
+  // Animation loop with phases (parallel execution within each phase)
   useEffect(() => {
-    let currentStep = 0;
+    let currentPhase = 1;
     let animationTimer;
-    let delayTimer;
+    
+    // Group steps by phase
+    const stepsByPhase = ANIMATION_STEPS.reduce((acc, step, index) => {
+      const phase = step.phase || 1;
+      if (!acc[phase]) acc[phase] = [];
+      acc[phase].push({ ...step, index });
+      return acc;
+    }, {});
 
     const runAnimation = () => {
-      if (currentStep >= ANIMATION_STEPS.length) {
+      const maxPhase = Math.max(...Object.keys(stepsByPhase).map(Number));
+      
+      if (currentPhase > maxPhase) {
         // Reset and loop
-        currentStep = 0;
+        currentPhase = 1;
         setActiveComponents(new Set());
         setActiveStep(-1);
       }
 
-      const step = ANIMATION_STEPS[currentStep];
-      const delay = step.delay || 0;
-
-      delayTimer = setTimeout(() => {
-        setActiveStep(currentStep);
+      // Get all steps in the current phase
+      const phaseSteps = stepsByPhase[currentPhase] || [];
+      
+      // Activate all steps in this phase simultaneously
+      // We'll use the first step's index as the activeStep indicator for phase-based rendering
+      if (phaseSteps.length > 0) {
+        setActiveStep(phaseSteps[0].index); // Use first step index to indicate phase
         
-        // Handle special cases
-        if (step.id === 'highlight-webservers') {
-          // Just highlight web servers, no arrow
-          setActiveComponents(new Set(['webServers']));
-        } else if (step.id === 'lb-dc1') {
-          // Highlight DC1 boundary
-          setActiveComponents(new Set(['dc1', 'loadBalancer']));
-        } else {
-          // Highlight both components
-          const newActiveComponents = new Set([step.from, step.to]);
-          setActiveComponents(newActiveComponents);
-        }
+        // Collect all components that should be active in this phase
+        const activeComponentsSet = new Set();
+        phaseSteps.forEach(step => {
+          activeComponentsSet.add(step.from);
+          activeComponentsSet.add(step.to);
+        });
+        setActiveComponents(activeComponentsSet);
+      }
 
-        currentStep++;
-        animationTimer = setTimeout(runAnimation, ANIMATION_DURATION);
-      }, delay);
+      currentPhase++;
+      animationTimer = setTimeout(runAnimation, ANIMATION_DURATION);
     };
 
     // Start animation after initial render
@@ -521,7 +557,6 @@ export default function ArchitectureHero() {
     return () => {
       clearTimeout(startTimer);
       clearTimeout(animationTimer);
-      clearTimeout(delayTimer);
     };
   }, []);
 
@@ -562,7 +597,15 @@ export default function ArchitectureHero() {
   }, [calculateArrows]);
 
   const currentStep = activeStep >= 0 ? ANIMATION_STEPS[activeStep] : null;
+  const currentPhase = currentStep?.phase || null;
   const isComponentActive = (componentName) => activeComponents.has(componentName);
+  
+  // Helper to check if an arrow belongs to the active phase
+  const isArrowInActivePhase = (arrowId) => {
+    if (currentPhase === null) return false;
+    const step = ANIMATION_STEPS.find(s => s.id === arrowId);
+    return step?.phase === currentPhase;
+  };
 
   return (
     <div className="w-full">
@@ -824,10 +867,7 @@ export default function ArchitectureHero() {
             >
               {arrows.map((arrow) => {
                 const step = ANIMATION_STEPS.find(s => s.id === arrow.id);
-                // Skip highlight-only steps (no arrow to render)
-                if (step?.id === 'highlight-webservers') return null;
-                
-                const isActive = currentStep?.id === arrow.id;
+                const isActive = isArrowInActivePhase(arrow.id);
                 
                 return (
                   <AnimatedArrow
