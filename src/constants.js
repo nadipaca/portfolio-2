@@ -1,8 +1,8 @@
 export const portfolioData = {
   profile: {
     name: "Charishma Nadipalli",
-    role: "Senior Java Software Engineer",
-    bio: "Full Stack Engineer transforming complex requirements into scalable microservices and AI-driven solutions. Specializing in Spring Boot, AWS, and Agentic AI workflows.",
+    role: "Senior Full-Stack Engineer | React, Node, Spring Boot | Cloud & AI Systems at Scale",
+    bio: "4+ years experience • Built production systems for 50k+ users • Deployed on AWS • Led end-to-end features",
     experience_years: "5+",
     availability: "Let's Build Something Intelligent.",
     socials: {
