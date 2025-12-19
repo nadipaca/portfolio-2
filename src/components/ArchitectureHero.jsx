@@ -24,30 +24,31 @@ const H = 620; // Increased height for better spacing
 const ANIMATION_DURATION = 2500; // 2.5 seconds per step (slower)
 
 // Updated animation steps with correct flow (grouped by parallel execution)
+// Each step includes dataType label showing what data flows through the connection
 const ANIMATION_STEPS = [
   // Phase 1: DNS resolution (must happen first)
-  { id: 'user-dns', from: 'user', to: 'dns', color: '#64748b', delay: 0, phase: 1 },
+  { id: 'user-dns', from: 'user', to: 'dns', color: '#64748b', delay: 0, phase: 1, dataType: 'DNS Query → IP Address' },
   
   // Phase 2: Parallel requests - CDN, Web Browser, and Mobile App all call simultaneously
-  { id: 'user-cdn', from: 'user', to: 'cdn', color: '#64748b', delay: 0, phase: 2 }, // User gets static from CDN
-  { id: 'webbrowser-lb', from: 'webbrowser', to: 'loadBalancer', color: '#22d3ee', delay: 0, phase: 2 }, // Web browser to LB
-  { id: 'mobileapp-lb', from: 'mobileapp', to: 'loadBalancer', color: '#22d3ee', delay: 0, phase: 2 }, // Mobile app to LB
+  { id: 'user-cdn', from: 'user', to: 'cdn', color: '#64748b', delay: 0, phase: 2, dataType: 'Static Files (HTML/CSS/JS)' },
+  { id: 'webbrowser-lb', from: 'webbrowser', to: 'loadBalancer', color: '#22d3ee', delay: 0, phase: 2, dataType: 'HTTP Request' },
+  { id: 'mobileapp-lb', from: 'mobileapp', to: 'loadBalancer', color: '#22d3ee', delay: 0, phase: 2, dataType: 'HTTP Request' },
   
   // Phase 3: Load Balancer routes to Web Servers
-  { id: 'lb-webservers', from: 'loadBalancer', to: 'webServers', color: '#22d3ee', delay: 0, phase: 3 },
+  { id: 'lb-webservers', from: 'loadBalancer', to: 'webServers', color: '#22d3ee', delay: 0, phase: 3, dataType: 'HTTP Request' },
   
   // Phase 4: Web Servers call backend services simultaneously (parallel)
-  { id: 'webservers-messagequeue', from: 'webServers', to: 'messageQueue', color: '#22c55e', delay: 0, phase: 4 },
-  { id: 'webservers-databases', from: 'webServers', to: 'databases', color: '#22c55e', delay: 0, phase: 4 },
-  { id: 'webservers-caches', from: 'webServers', to: 'caches', color: '#22c55e', delay: 0, phase: 4 },
-  { id: 'webservers-nosql', from: 'webServers', to: 'nosql', color: '#a855f7', delay: 0, phase: 4 },
+  { id: 'webservers-messagequeue', from: 'webServers', to: 'messageQueue', color: '#22c55e', delay: 0, phase: 4, dataType: 'Messages/Jobs' },
+  { id: 'webservers-databases', from: 'webServers', to: 'databases', color: '#22c55e', delay: 0, phase: 4, dataType: 'SQL Queries' },
+  { id: 'webservers-caches', from: 'webServers', to: 'caches', color: '#22c55e', delay: 0, phase: 4, dataType: 'Cache Lookup' },
+  { id: 'webservers-nosql', from: 'webServers', to: 'nosql', color: '#a855f7', delay: 0, phase: 4, dataType: 'Documents/Sessions' },
   
   // Phase 5: Async processing flow
-  { id: 'messagequeue-workers', from: 'messageQueue', to: 'workers', color: '#22d3ee', delay: 0, phase: 5 },
-  { id: 'workers-nosql', from: 'workers', to: 'nosql', color: '#a855f7', delay: 0, phase: 5 },
+  { id: 'messagequeue-workers', from: 'messageQueue', to: 'workers', color: '#22d3ee', delay: 0, phase: 5, dataType: 'Job Messages' },
+  { id: 'workers-nosql', from: 'workers', to: 'nosql', color: '#a855f7', delay: 0, phase: 5, dataType: 'Processed Data/Logs' },
   
   // Phase 6: Monitoring (can happen continuously, shown last)
-  { id: 'dc1-tools', from: 'dc1', to: 'tools', color: '#64748b', dashed: true, delay: 0, phase: 6 },
+  { id: 'dc1-tools', from: 'dc1', to: 'tools', color: '#64748b', dashed: true, delay: 0, phase: 6, dataType: 'Metrics/Logs' },
 ];
 
 // Styled icon wrapper with background
@@ -114,7 +115,7 @@ const getConnectionPoint = (bounds, side = 'center') => {
   }
 };
 
-// Animated Arrow component with dotted lines
+// Animated Arrow component with dotted lines and data type labels
 const AnimatedArrow = ({ 
   x1, 
   y1, 
@@ -124,6 +125,7 @@ const AnimatedArrow = ({
   dashed = false, 
   curved = false,
   isActive = false,
+  dataType = null,
 }) => {
   const pathRef = useRef(null);
   const [pathLength, setPathLength] = useState(1000);
@@ -141,6 +143,17 @@ const AnimatedArrow = ({
   } else {
     path = `M ${x1} ${y1} L ${x2} ${y2}`;
   }
+  
+  // Calculate label position (midpoint of the line)
+  const labelX = (x1 + x2) / 2;
+  const labelY = (y1 + y2) / 2;
+  // Offset label perpendicular to the line to avoid overlap
+  const dx = x2 - x1;
+  const dy = y2 - y1;
+  const angle = Math.atan2(dy, dx);
+  const offset = 15;
+  const labelOffsetX = Math.sin(angle) * offset;
+  const labelOffsetY = -Math.cos(angle) * offset;
 
   // Calculate path length on mount
   useEffect(() => {
@@ -206,6 +219,37 @@ const AnimatedArrow = ({
             animation: `flowAnimation ${ANIMATION_DURATION}ms linear forwards`,
           }}
         />
+      )}
+      
+      {/* Data type label (only shown when active) */}
+      {isActive && dataType && (
+        <g>
+          {/* Background rectangle for label - estimate width based on character count */}
+          <rect
+            x={labelX + labelOffsetX - (dataType.length * 3.5)}
+            y={labelY + labelOffsetY - 8}
+            width={Math.max(dataType.length * 7, 60)}
+            height={16}
+            fill="rgba(15, 23, 42, 0.92)"
+            stroke={strokeColor}
+            strokeWidth="1.5"
+            rx="4"
+            opacity={0.95}
+          />
+          {/* Label text */}
+          <text
+            x={labelX + labelOffsetX}
+            y={labelY + labelOffsetY + 4.5}
+            fill={strokeColor}
+            fontSize="9.5"
+            fontWeight="600"
+            textAnchor="middle"
+            opacity={1}
+            style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}
+          >
+            {dataType}
+          </text>
+        </g>
       )}
     </g>
   );
@@ -289,6 +333,22 @@ export default function ArchitectureHero() {
     };
 
     const newArrows = [];
+    
+    // Helper to create arrow with step config
+    const createArrow = (stepId, from, to, fromComponent, toComponent, curved = false, customConfig = {}) => {
+      const stepConfig = ANIMATION_STEPS.find(s => s.id === stepId) || {};
+      return {
+        id: stepId,
+        from,
+        to,
+        color: stepConfig.color || customConfig.color || '#64748b',
+        dashed: stepConfig.dashed || customConfig.dashed || false,
+        curved,
+        dataType: stepConfig.dataType || null,
+        fromComponent,
+        toComponent,
+      };
+    };
 
     // User to DNS (User queries DNS)
     const dnsBounds = getBounds(dnsRef);
@@ -296,16 +356,7 @@ export default function ArchitectureHero() {
     if (dnsBounds && userBounds) {
       const from = getConnectionPoint(userBounds, 'left');
       const to = getConnectionPoint(dnsBounds, 'right');
-      newArrows.push({ 
-        id: 'user-dns',
-        from, 
-        to, 
-        color: '#64748b', 
-        dashed: false, 
-        curved: false,
-        fromComponent: 'user',
-        toComponent: 'dns',
-      });
+      newArrows.push(createArrow('user-dns', from, to, 'user', 'dns'));
     }
 
     // User to CDN (User gets static assets)
@@ -313,16 +364,7 @@ export default function ArchitectureHero() {
     if (userBounds && cdnBounds) {
       const from = getConnectionPoint(userBounds, 'right');
       const to = getConnectionPoint(cdnBounds, 'left');
-      newArrows.push({ 
-        id: 'user-cdn',
-        from, 
-        to, 
-        color: '#64748b', 
-        dashed: false, 
-        curved: false,
-        fromComponent: 'user',
-        toComponent: 'cdn',
-      });
+      newArrows.push(createArrow('user-cdn', from, to, 'user', 'cdn'));
     }
 
     // Web Browser to Load Balancer
@@ -331,17 +373,11 @@ export default function ArchitectureHero() {
     if (webbrowserBounds && lbBounds) {
       const from = getConnectionPoint(webbrowserBounds, 'bottom');
       const to = getConnectionPoint(lbBounds, 'top');
-      // Offset slightly left
-      newArrows.push({ 
-        id: 'webbrowser-lb',
-        from: { x: from.x - 30, y: from.y }, 
-        to: { x: to.x - 20, y: to.y }, 
-        color: '#22d3ee', 
-        dashed: false, 
-        curved: false,
-        fromComponent: 'webbrowser',
-        toComponent: 'loadBalancer',
-      });
+      // Offset slightly left for clarity
+      newArrows.push(createArrow('webbrowser-lb', 
+        { x: from.x - 25, y: from.y }, 
+        { x: to.x - 15, y: to.y }, 
+        'webbrowser', 'loadBalancer'));
     }
 
     // Mobile App to Load Balancer
@@ -349,17 +385,11 @@ export default function ArchitectureHero() {
     if (mobileappBounds && lbBounds) {
       const from = getConnectionPoint(mobileappBounds, 'bottom');
       const to = getConnectionPoint(lbBounds, 'top');
-      // Offset slightly right
-      newArrows.push({ 
-        id: 'mobileapp-lb',
-        from: { x: from.x + 30, y: from.y }, 
-        to: { x: to.x + 20, y: to.y }, 
-        color: '#22d3ee', 
-        dashed: false, 
-        curved: false,
-        fromComponent: 'mobileapp',
-        toComponent: 'loadBalancer',
-      });
+      // Offset slightly right for clarity
+      newArrows.push(createArrow('mobileapp-lb', 
+        { x: from.x + 25, y: from.y }, 
+        { x: to.x + 15, y: to.y }, 
+        'mobileapp', 'loadBalancer'));
     }
 
     // Load Balancer to Web Servers
@@ -367,16 +397,7 @@ export default function ArchitectureHero() {
     if (lbBounds && webServersBounds) {
       const from = getConnectionPoint(lbBounds, 'bottom');
       const to = getConnectionPoint(webServersBounds, 'top');
-      newArrows.push({ 
-        id: 'lb-webservers',
-        from, 
-        to, 
-        color: '#22d3ee', 
-        dashed: false, 
-        curved: false,
-        fromComponent: 'loadBalancer',
-        toComponent: 'webServers',
-      });
+      newArrows.push(createArrow('lb-webservers', from, to, 'loadBalancer', 'webServers'));
     }
 
     // Get DC1 bounds for Tools connection
@@ -387,16 +408,7 @@ export default function ArchitectureHero() {
     if (webServersBounds && messageQueueBounds) {
       const from = getConnectionPoint(webServersBounds, 'right');
       const to = getConnectionPoint(messageQueueBounds, 'left');
-      newArrows.push({ 
-        id: 'webservers-messagequeue',
-        from, 
-        to, 
-        color: '#22c55e', 
-        dashed: false, 
-        curved: false,
-        fromComponent: 'webServers',
-        toComponent: 'messageQueue',
-      });
+      newArrows.push(createArrow('webservers-messagequeue', from, to, 'webServers', 'messageQueue'));
     }
 
     // Message Queue to Workers
@@ -404,35 +416,18 @@ export default function ArchitectureHero() {
     if (messageQueueBounds && workersBounds) {
       const from = getConnectionPoint(messageQueueBounds, 'bottom');
       const to = getConnectionPoint(workersBounds, 'top');
-      newArrows.push({ 
-        id: 'messagequeue-workers',
-        from, 
-        to, 
-        color: '#22d3ee', 
-        dashed: false, 
-        curved: false,
-        fromComponent: 'messageQueue',
-        toComponent: 'workers',
-      });
+      newArrows.push(createArrow('messagequeue-workers', from, to, 'messageQueue', 'workers'));
     }
 
     // Get NoSQL bounds (used by both Web Servers and Workers)
     const nosqlBounds = getBounds(nosqlRef);
 
-    // Workers to NoSQL
+    // Workers to NoSQL - Use straight line by connecting to right side of workers
     if (workersBounds && nosqlBounds) {
       const from = getConnectionPoint(workersBounds, 'right');
       const to = getConnectionPoint(nosqlBounds, 'left');
-      newArrows.push({ 
-        id: 'workers-nosql',
-        from, 
-        to, 
-        color: '#a855f7', 
-        dashed: false, 
-        curved: true,
-        fromComponent: 'workers',
-        toComponent: 'nosql',
-      });
+      // Use straight line instead of curved for clarity
+      newArrows.push(createArrow('workers-nosql', from, to, 'workers', 'nosql', false));
     }
 
     // Web Servers to Databases
@@ -440,16 +435,7 @@ export default function ArchitectureHero() {
     if (webServersBounds && databasesBounds) {
       const from = getConnectionPoint(webServersBounds, 'bottom');
       const to = getConnectionPoint(databasesBounds, 'top');
-      newArrows.push({ 
-        id: 'webservers-databases',
-        from, 
-        to, 
-        color: '#22c55e', 
-        dashed: false, 
-        curved: false,
-        fromComponent: 'webServers',
-        toComponent: 'databases',
-      });
+      newArrows.push(createArrow('webservers-databases', from, to, 'webServers', 'databases'));
     }
 
     // Web Servers to Caches
@@ -457,32 +443,15 @@ export default function ArchitectureHero() {
     if (webServersBounds && cachesBounds) {
       const from = getConnectionPoint(webServersBounds, 'bottom');
       const to = getConnectionPoint(cachesBounds, 'top');
-      newArrows.push({ 
-        id: 'webservers-caches',
-        from, 
-        to, 
-        color: '#22c55e', 
-        dashed: false, 
-        curved: false,
-        fromComponent: 'webServers',
-        toComponent: 'caches',
-      });
+      newArrows.push(createArrow('webservers-caches', from, to, 'webServers', 'caches'));
     }
 
-    // Web Servers to NoSQL
+    // Web Servers to NoSQL - Offset to avoid overlap with Workers->NoSQL
     if (webServersBounds && nosqlBounds) {
-      const from = getConnectionPoint(webServersBounds, 'right');
-      const to = getConnectionPoint(nosqlBounds, 'left');
-      newArrows.push({ 
-        id: 'webservers-nosql',
-        from, 
-        to, 
-        color: '#a855f7', 
-        dashed: false, 
-        curved: true,
-        fromComponent: 'webServers',
-        toComponent: 'nosql',
-      });
+      // Connect from top-right of web servers to top-left of nosql to avoid curve overlap
+      const from = { x: webServersBounds.left + webServersBounds.width, y: webServersBounds.top + 10 };
+      const to = { x: nosqlBounds.left, y: nosqlBounds.top + 15 };
+      newArrows.push(createArrow('webservers-nosql', from, to, 'webServers', 'nosql', false));
     }
 
     // DC1 to Tools (from DC1 boundary bottom to Tools)
@@ -490,16 +459,7 @@ export default function ArchitectureHero() {
     if (dc1Bounds && toolsBounds) {
       const from = getConnectionPoint(dc1Bounds, 'bottom');
       const to = getConnectionPoint(toolsBounds, 'top');
-      newArrows.push({ 
-        id: 'dc1-tools',
-        from, 
-        to, 
-        color: '#64748b', 
-        dashed: true, 
-        curved: false,
-        fromComponent: 'dc1',
-        toComponent: 'tools',
-      });
+      newArrows.push(createArrow('dc1-tools', from, to, 'dc1', 'tools'));
     }
 
     setArrows(newArrows);
@@ -880,6 +840,7 @@ export default function ArchitectureHero() {
                     dashed={step?.dashed || arrow.dashed}
                     curved={arrow.curved}
                     isActive={isActive}
+                    dataType={arrow.dataType || step?.dataType || null}
                   />
                 );
               })}
