@@ -375,21 +375,41 @@ export default function ArchitectureHero() {
   const [activeStep, setActiveStep] = useState(-1);
   const [activeComponents, setActiveComponents] = useState(new Set());
 
-  // Calculate arrow positions dynamically
+  // Calculate arrow positions dynamically - using offset coordinates for transform independence
   const calculateArrows = useCallback(() => {
     if (!containerRef.current) return;
 
     const container = containerRef.current;
-    const containerRect = container.getBoundingClientRect();
 
     const getBounds = (ref) => {
       if (!ref.current) return null;
-      const rect = ref.current.getBoundingClientRect();
+      const element = ref.current;
+      
+      // Calculate position relative to container using offsetLeft/offsetTop
+      // These values are NOT affected by CSS transforms (scale, rotate, etc.)
+      // This ensures arrows remain correctly positioned at any scale
+      let left = element.offsetLeft;
+      let top = element.offsetTop;
+      let current = element.offsetParent;
+      
+      // Traverse up the offsetParent chain to calculate position relative to container
+      // This handles nested elements correctly
+      while (current && current !== container) {
+        left += current.offsetLeft;
+        top += current.offsetTop;
+        current = current.offsetParent;
+        
+        // Safety: stop if we reach body/html (shouldn't happen if container is positioned)
+        if (!current || current === document.body || current === document.documentElement) {
+          break;
+        }
+      }
+      
       return {
-        left: rect.left - containerRect.left,
-        top: rect.top - containerRect.top,
-        width: rect.width,
-        height: rect.height,
+        left,
+        top,
+        width: element.offsetWidth,
+        height: element.offsetHeight,
       };
     };
 
@@ -597,39 +617,48 @@ export default function ArchitectureHero() {
     };
   }, []);
 
-  // Recalculate arrows on mount and resize
+  // Recalculate arrows on mount and resize - with proper debouncing for performance
   useEffect(() => {
+    // Initial calculation with delay to ensure DOM is ready
     const timer = setTimeout(() => {
       calculateArrows();
     }, 100);
 
-    const resizeObserver = new ResizeObserver(() => {
-      requestAnimationFrame(() => {
-        calculateArrows();
-      });
-    });
-
-    if (containerRef.current) {
-      resizeObserver.observe(containerRef.current);
-    }
-
+    // Debounce function for resize events
     let resizeTimer;
-    const handleResize = () => {
+    const debouncedCalculate = () => {
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(() => {
         requestAnimationFrame(() => {
           calculateArrows();
         });
-      }, 50);
+      }, 100); // Debounce delay
     };
 
-    window.addEventListener('resize', handleResize);
+    // Observe container and parent for size changes
+    const resizeObserver = new ResizeObserver(() => {
+      debouncedCalculate();
+    });
+
+    if (containerRef.current) {
+      resizeObserver.observe(containerRef.current);
+      // Also observe parent for scale changes
+      if (containerRef.current.parentElement) {
+        resizeObserver.observe(containerRef.current.parentElement);
+      }
+    }
+
+    // Listen to window resize for viewport changes
+    window.addEventListener('resize', debouncedCalculate);
+    // Also listen to orientation changes on mobile
+    window.addEventListener('orientationchange', debouncedCalculate);
 
     return () => {
       clearTimeout(timer);
       clearTimeout(resizeTimer);
       resizeObserver.disconnect();
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('resize', debouncedCalculate);
+      window.removeEventListener('orientationchange', debouncedCalculate);
     };
   }, [calculateArrows]);
 
