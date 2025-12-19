@@ -15,6 +15,13 @@ import {
   BarChart3,
   Activity,
   Settings,
+  FileCode,
+  FileJson,
+  MessageSquare,
+  Search,
+  Code,
+  File,
+  Gauge,
 } from 'lucide-react';
 
 const W = 700;
@@ -22,6 +29,20 @@ const H = 620; // Increased height for better spacing
 
 // Animation configuration - slower for cooler effect
 const ANIMATION_DURATION = 2500; // 2.5 seconds per step (slower)
+
+// Icon mapping for data types
+const DATA_TYPE_ICONS = {
+  'DNS Query → IP Address': Globe,
+  'Static Files (HTML/CSS/JS)': FileCode,
+  'HTTP Request': Network,
+  'Messages/Jobs': MessageSquare,
+  'SQL Queries': Database,
+  'Cache Lookup': Search,
+  'Documents/Sessions': FileJson,
+  'Job Messages': Mail,
+  'Processed Data/Logs': File,
+  'Metrics/Logs': Gauge,
+};
 
 // Updated animation steps with correct flow (grouped by parallel execution)
 // Each step includes dataType label showing what data flows through the connection
@@ -115,7 +136,7 @@ const getConnectionPoint = (bounds, side = 'center') => {
   }
 };
 
-// Animated Arrow component with dotted lines and data type labels
+// Animated Arrow component with dotted lines and data type icons
 const AnimatedArrow = ({ 
   x1, 
   y1, 
@@ -124,6 +145,7 @@ const AnimatedArrow = ({
   color = "#64748b", 
   dashed = false, 
   curved = false,
+  zShape = false,
   isActive = false,
   dataType = null,
 }) => {
@@ -132,7 +154,15 @@ const AnimatedArrow = ({
   const id = `arrow-${Math.round(x1)}-${Math.round(y1)}-${Math.round(x2)}-${Math.round(y2)}`.replace(/\./g, '-');
   
   let path;
-  if (curved) {
+  if (zShape) {
+    // Z-shaped path: horizontal right, vertical down, horizontal right, vertical down
+    const horizontalOffset = Math.abs(x2 - x1) * 0.4;
+    const verticalOffset = Math.abs(y2 - y1) * 0.5;
+    const midX1 = x1 + horizontalOffset;
+    const midX2 = x2 - horizontalOffset;
+    const midY = y1 < y2 ? y1 + verticalOffset : y1 - verticalOffset;
+    path = `M ${x1} ${y1} L ${midX1} ${y1} L ${midX1} ${midY} L ${midX2} ${midY} L ${midX2} ${y2} L ${x2} ${y2}`;
+  } else if (curved) {
     const midX = (x1 + x2) / 2;
     const midY = (y1 + y2) / 2;
     const dx = x2 - x1;
@@ -144,16 +174,19 @@ const AnimatedArrow = ({
     path = `M ${x1} ${y1} L ${x2} ${y2}`;
   }
   
-  // Calculate label position (midpoint of the line)
-  const labelX = (x1 + x2) / 2;
-  const labelY = (y1 + y2) / 2;
-  // Offset label perpendicular to the line to avoid overlap
+  // Calculate icon position (midpoint of the path)
+  const iconX = (x1 + x2) / 2;
+  const iconY = (y1 + y2) / 2;
+  // Offset icon perpendicular to the line to avoid overlap
   const dx = x2 - x1;
   const dy = y2 - y1;
   const angle = Math.atan2(dy, dx);
-  const offset = 15;
-  const labelOffsetX = Math.sin(angle) * offset;
-  const labelOffsetY = -Math.cos(angle) * offset;
+  const offset = 20;
+  const iconOffsetX = Math.sin(angle) * offset;
+  const iconOffsetY = -Math.cos(angle) * offset;
+  
+  // Get icon component
+  const IconComponent = dataType ? DATA_TYPE_ICONS[dataType] : null;
 
   // Calculate path length on mount
   useEffect(() => {
@@ -221,34 +254,36 @@ const AnimatedArrow = ({
         />
       )}
       
-      {/* Data type label (only shown when active) */}
-      {isActive && dataType && (
-        <g>
-          {/* Background rectangle for label - estimate width based on character count */}
-          <rect
-            x={labelX + labelOffsetX - (dataType.length * 3.5)}
-            y={labelY + labelOffsetY - 8}
-            width={Math.max(dataType.length * 7, 60)}
-            height={16}
-            fill="rgba(15, 23, 42, 0.92)"
+      {/* Data type icon (only shown when active) */}
+      {isActive && IconComponent && (
+        <g transform={`translate(${iconX + iconOffsetX}, ${iconY + iconOffsetY})`}>
+          {/* Background circle for icon */}
+          <circle
+            cx="0"
+            cy="0"
+            r="14"
+            fill="rgba(15, 23, 42, 0.95)"
             stroke={strokeColor}
-            strokeWidth="1.5"
-            rx="4"
+            strokeWidth="2"
             opacity={0.95}
           />
-          {/* Label text */}
-          <text
-            x={labelX + labelOffsetX}
-            y={labelY + labelOffsetY + 4.5}
-            fill={strokeColor}
-            fontSize="9.5"
-            fontWeight="600"
-            textAnchor="middle"
-            opacity={1}
-            style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}
-          >
-            {dataType}
-          </text>
+          {/* Icon using foreignObject for React component rendering */}
+          <foreignObject x="-12" y="-12" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
+            <div xmlns="http://www.w3.org/1999/xhtml" style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center',
+              width: '100%',
+              height: '100%',
+              pointerEvents: 'none',
+            }}>
+              <IconComponent 
+                size={16} 
+                color={strokeColor}
+                strokeWidth={2}
+              />
+            </div>
+          </foreignObject>
         </g>
       )}
     </g>
@@ -335,7 +370,7 @@ export default function ArchitectureHero() {
     const newArrows = [];
     
     // Helper to create arrow with step config
-    const createArrow = (stepId, from, to, fromComponent, toComponent, curved = false, customConfig = {}) => {
+    const createArrow = (stepId, from, to, fromComponent, toComponent, curved = false, zShape = false, customConfig = {}) => {
       const stepConfig = ANIMATION_STEPS.find(s => s.id === stepId) || {};
       return {
         id: stepId,
@@ -344,6 +379,7 @@ export default function ArchitectureHero() {
         color: stepConfig.color || customConfig.color || '#64748b',
         dashed: stepConfig.dashed || customConfig.dashed || false,
         curved,
+        zShape,
         dataType: stepConfig.dataType || null,
         fromComponent,
         toComponent,
@@ -356,7 +392,10 @@ export default function ArchitectureHero() {
     if (dnsBounds && userBounds) {
       const from = getConnectionPoint(userBounds, 'left');
       const to = getConnectionPoint(dnsBounds, 'right');
-      newArrows.push(createArrow('user-dns', from, to, 'user', 'dns'));
+      newArrows.push(createArrow('user-dns', 
+        { x: from.x, y: from.y }, 
+        { x: to.x, y: to.y-3 }, 
+         'user', 'dns'));
     }
 
     // User to CDN (User gets static assets)
@@ -364,7 +403,10 @@ export default function ArchitectureHero() {
     if (userBounds && cdnBounds) {
       const from = getConnectionPoint(userBounds, 'right');
       const to = getConnectionPoint(cdnBounds, 'left');
-      newArrows.push(createArrow('user-cdn', from, to, 'user', 'cdn'));
+      newArrows.push(createArrow('user-cdn', 
+        { x: from.x, y: from.y }, 
+        { x: to.x, y: to.y-3 }, 
+         'user', 'cdn'));
     }
 
     // Web Browser to Load Balancer
@@ -375,7 +417,7 @@ export default function ArchitectureHero() {
       const to = getConnectionPoint(lbBounds, 'top');
       // Offset slightly left for clarity
       newArrows.push(createArrow('webbrowser-lb', 
-        { x: from.x - 25, y: from.y }, 
+        { x: from.x -5, y: from.y }, 
         { x: to.x - 15, y: to.y }, 
         'webbrowser', 'loadBalancer'));
     }
@@ -387,7 +429,7 @@ export default function ArchitectureHero() {
       const to = getConnectionPoint(lbBounds, 'top');
       // Offset slightly right for clarity
       newArrows.push(createArrow('mobileapp-lb', 
-        { x: from.x + 25, y: from.y }, 
+        { x: from.x + 10, y: from.y }, 
         { x: to.x + 15, y: to.y }, 
         'mobileapp', 'loadBalancer'));
     }
@@ -397,18 +439,23 @@ export default function ArchitectureHero() {
     if (lbBounds && webServersBounds) {
       const from = getConnectionPoint(lbBounds, 'bottom');
       const to = getConnectionPoint(webServersBounds, 'top');
-      newArrows.push(createArrow('lb-webservers', from, to, 'loadBalancer', 'webServers'));
+      newArrows.push(createArrow('lb-webservers', from, 
+        { x: to.x + 10, y: to.y-5 }, 
+         'loadBalancer', 'webServers'));
     }
 
     // Get DC1 bounds for Tools connection
     const dc1Bounds = getBounds(dc1Ref);
 
-    // Web Servers to Message Queue
+    // Web Servers to Message Queue - Connect from right side of Web Servers to left side of Message Queue
     const messageQueueBounds = getBounds(messageQueueRef);
     if (webServersBounds && messageQueueBounds) {
       const from = getConnectionPoint(webServersBounds, 'right');
       const to = getConnectionPoint(messageQueueBounds, 'left');
-      newArrows.push(createArrow('webservers-messagequeue', from, to, 'webServers', 'messageQueue'));
+      newArrows.push(createArrow('webservers-messagequeue', 
+        { x: from.x, y: from.y-10 }, 
+        { x: to.x, y: to.y-5 }, 
+         'webServers', 'messageQueue'));
     }
 
     // Message Queue to Workers
@@ -416,17 +463,19 @@ export default function ArchitectureHero() {
     if (messageQueueBounds && workersBounds) {
       const from = getConnectionPoint(messageQueueBounds, 'bottom');
       const to = getConnectionPoint(workersBounds, 'top');
-      newArrows.push(createArrow('messagequeue-workers', from, to, 'messageQueue', 'workers'));
+      newArrows.push(createArrow('messagequeue-workers', 
+        { x: from.x + 10, y: from.y }, 
+        { x: to.x , y: to.y }, 
+         'messageQueue', 'workers'));
     }
 
     // Get NoSQL bounds (used by both Web Servers and Workers)
     const nosqlBounds = getBounds(nosqlRef);
 
-    // Workers to NoSQL - Use straight line by connecting to right side of workers
+    // Workers to NoSQL - Connect from bottom of Workers to top of NoSQL (now below DC1)
     if (workersBounds && nosqlBounds) {
-      const from = getConnectionPoint(workersBounds, 'right');
-      const to = getConnectionPoint(nosqlBounds, 'left');
-      // Use straight line instead of curved for clarity
+      const from = getConnectionPoint(workersBounds, 'bottom');
+      const to = getConnectionPoint(nosqlBounds, 'top');
       newArrows.push(createArrow('workers-nosql', from, to, 'workers', 'nosql', false));
     }
 
@@ -446,20 +495,22 @@ export default function ArchitectureHero() {
       newArrows.push(createArrow('webservers-caches', from, to, 'webServers', 'caches'));
     }
 
-    // Web Servers to NoSQL - Offset to avoid overlap with Workers->NoSQL
+    // Web Servers to NoSQL - Use Z-shape from bottom of Web Servers to top of NoSQL
     if (webServersBounds && nosqlBounds) {
-      // Connect from top-right of web servers to top-left of nosql to avoid curve overlap
-      const from = { x: webServersBounds.left + webServersBounds.width, y: webServersBounds.top + 10 };
-      const to = { x: nosqlBounds.left, y: nosqlBounds.top + 15 };
-      newArrows.push(createArrow('webservers-nosql', from, to, 'webServers', 'nosql', false));
+      const from = getConnectionPoint(webServersBounds, 'bottom');
+      const to = getConnectionPoint(nosqlBounds, 'top');
+      newArrows.push(createArrow('webservers-nosql', from, to, 'webServers', 'nosql', false, true));
     }
 
     // DC1 to Tools (from DC1 boundary bottom to Tools)
     const toolsBounds = getBounds(toolsRef);
     if (dc1Bounds && toolsBounds) {
-      const from = getConnectionPoint(dc1Bounds, 'bottom');
-      const to = getConnectionPoint(toolsBounds, 'top');
-      newArrows.push(createArrow('dc1-tools', from, to, 'dc1', 'tools'));
+      const from = getConnectionPoint(toolsBounds, 'top');
+      const to = getConnectionPoint(dc1Bounds, 'bottom');
+      newArrows.push(createArrow('dc1-tools', 
+        { x: from.x, y: from.y }, 
+        { x: to.x - 75, y: to.y }, 
+         'dc1', 'tools'));
     }
 
     setArrows(newArrows);
@@ -637,7 +688,7 @@ export default function ArchitectureHero() {
             {/* CDN */}
             <div 
               ref={cdnRef}
-              className="absolute right-[45px] top-[20px] flex flex-col items-center gap-1"
+              className="absolute right-[65px] top-[20px] flex flex-col items-center gap-1"
             >
               <IconBox color="amber" size="xl" isActive={isComponentActive('cdn')}>
                 <Cloud size={28} />
@@ -646,17 +697,17 @@ export default function ArchitectureHero() {
             </div>
 
             {/* Domain labels */}
-            <div className="absolute left-[175px] top-[102px] text-[9px] text-slate-500 font-mono">
+            <div className="absolute left-[195px] top-[102px] text-[9px] text-slate-500 font-mono">
               www.mysite.com
             </div>
-            <div className="absolute left-[365px] top-[102px] text-[9px] text-slate-500 font-mono">
+            <div className="absolute left-[415px] top-[102px] text-[9px] text-slate-500 font-mono">
               api.mysite.com
             </div>
 
-            {/* Load Balancer - Moved down for padding */}
+            {/* Load Balancer - Centered above DC1 */}
             <div 
               ref={loadBalancerRef}
-              className="absolute left-[290px] top-[125px] flex flex-col items-center gap-1"
+              className="absolute left-[315px] top-[125px] flex flex-col items-center gap-1"
             >
               <IconBox color="cyan" size="lg" isActive={isComponentActive('loadBalancer')}>
                 <Network size={24} />
@@ -664,10 +715,10 @@ export default function ArchitectureHero() {
               <span className="text-[10px] text-slate-300 font-medium">Load Balancer</span>
             </div>
 
-            {/* DC1 Boundary - Moved down for padding */}
+            {/* DC1 Boundary - Centered and extended for better spacing */}
             <div 
               ref={dc1Ref}
-              className={`absolute left-[28px] top-[200px] w-[530px] h-[260px] border-2 border-dashed rounded-xl bg-slate-800/20 transition-all duration-500 ${
+              className={`absolute left-[50px] top-[200px] w-[600px] h-[260px] border-2 border-dashed rounded-xl bg-slate-800/20 transition-all duration-500 ${
                 isComponentActive('dc1')
                   ? 'border-cyan-300/60 shadow-lg shadow-cyan-500/30'
                   : 'border-cyan-400/40'
@@ -680,7 +731,7 @@ export default function ArchitectureHero() {
               {/* Web Servers */}
               <div 
                 ref={webServersRef}
-                className="absolute left-[25px] top-[25px] flex flex-col items-center gap-2"
+                className="absolute left-[15px] top-[25px] flex flex-col items-center gap-2"
               >
                 <div className="flex gap-2">
                   <IconBox color="green" size="lg" isActive={isComponentActive('webServers')}>
@@ -696,10 +747,10 @@ export default function ArchitectureHero() {
                 <span className="text-[10px] text-slate-300 font-medium">Web Servers</span>
               </div>
 
-              {/* Message Queue */}
+              {/* Message Queue - Moved further right for better spacing */}
               <div 
                 ref={messageQueueRef}
-                className="absolute right-[90px] top-[20px] flex flex-col items-center gap-2"
+                className="absolute right-[40px] top-[20px] flex flex-col items-center gap-2"
               >
                 <div className="flex gap-2">
                   <IconBox color="blue" size="lg" isActive={isComponentActive('messageQueue')}>
@@ -718,7 +769,7 @@ export default function ArchitectureHero() {
               {/* Databases */}
               <div 
                 ref={databasesRef}
-                className="absolute left-[15px] top-[115px] flex flex-col items-center gap-2"
+                className="absolute left-[15px] top-[140px] flex flex-col items-center gap-2"
               >
                 <div className="flex gap-2">
                   <div className="flex flex-col items-center">
@@ -749,12 +800,9 @@ export default function ArchitectureHero() {
               {/* Caches */}
               <div 
                 ref={cachesRef}
-                className="absolute left-[190px] top-[110px] flex flex-col items-center gap-2"
+                className="absolute left-[190px] top-[140px] flex flex-col items-center gap-2"
               >
                 <div className="flex flex-col gap-1">
-                  <IconBox color="cyan" size="md" isActive={isComponentActive('caches')}>
-                    <Layers size={18} />
-                  </IconBox>
                   <IconBox color="cyan" size="md" isActive={isComponentActive('caches')}>
                     <Layers size={18} />
                   </IconBox>
@@ -768,7 +816,7 @@ export default function ArchitectureHero() {
               {/* Workers */}
               <div 
                 ref={workersRef}
-                className="absolute right-[75px] top-[105px] flex flex-col items-center gap-2"
+                className="absolute right-[30px] top-[125px] flex flex-col items-center gap-2"
               >
                 <div className="flex gap-2">
                   <IconBox color="cyan" size="lg" isActive={isComponentActive('workers')}>
@@ -785,10 +833,10 @@ export default function ArchitectureHero() {
               </div>
             </div>
 
-            {/* NoSQL (outside DC1) */}
+            {/* NoSQL (below DC1, towards right) */}
             <div 
               ref={nosqlRef}
-              className="absolute right-[30px] top-[315px] flex flex-col items-center gap-1"
+              className="absolute left-[510px] top-[480px] flex flex-col items-center gap-1"
             >
               <div className="flex items-center gap-1 mb-1">
                 <span className="w-4 h-4 rounded-full border border-slate-500 text-[8px] flex items-center justify-center text-slate-400">2</span>
@@ -799,10 +847,10 @@ export default function ArchitectureHero() {
               </IconBox>
             </div>
 
-            {/* Tools Section - Moved down */}
+            {/* Tools Section - Towards left below DC1 */}
             <div 
               ref={toolsRef}
-              className="absolute left-[190px] bottom-[25px] flex flex-col items-center"
+              className="absolute left-[150px] bottom-[0px] flex flex-col items-center"
             >
               <div className={`border rounded-lg p-2.5 bg-slate-800/40 transition-all duration-500 ${
                 isComponentActive('tools') 
@@ -839,17 +887,13 @@ export default function ArchitectureHero() {
                     color={step?.color || arrow.color}
                     dashed={step?.dashed || arrow.dashed}
                     curved={arrow.curved}
+                    zShape={arrow.zShape || false}
                     isActive={isActive}
                     dataType={arrow.dataType || step?.dataType || null}
                   />
                 );
               })}
             </svg>
-
-            {/* Figure label */}
-            <div className="absolute bottom-[6px] right-[180px] text-[10px] text-slate-600 font-mono">
-              Figure 1-23
-            </div>
           </div>
         </ScaleToFit>
       </div>
