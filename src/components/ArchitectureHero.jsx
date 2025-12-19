@@ -299,29 +299,55 @@ function ScaleToFit({ baseWidth, baseHeight, children }) {
     if (!ref.current) return;
 
     const el = ref.current;
-    const ro = new ResizeObserver(() => {
-      const parentWidth = el.parentElement?.clientWidth || baseWidth;
-      const nextScale = Math.min(1, parentWidth / baseWidth);
-      setScale(nextScale);
-    });
+    const updateScale = () => {
+      const parent = el.parentElement;
+      if (!parent) return;
 
+      const parentWidth = parent.clientWidth;
+      const parentHeight = parent.clientHeight || window.innerHeight;
+      
+      // Add padding/margin consideration (40px total padding)
+      const padding = 40;
+      const availableWidth = parentWidth - padding;
+      const availableHeight = parentHeight - padding;
+      
+      // Calculate scale based on both dimensions (use the smaller scale to fit)
+      const scaleX = availableWidth / baseWidth;
+      const scaleY = availableHeight / baseHeight;
+      const nextScale = Math.min(scaleX, scaleY, 1.2); // Max scale 1.2x for very large screens
+      
+      setScale(Math.max(0.3, nextScale)); // Min scale 0.3x for very small screens
+    };
+
+    const ro = new ResizeObserver(updateScale);
     ro.observe(el.parentElement);
-    return () => ro.disconnect();
-  }, [baseWidth]);
+    
+    // Also listen to window resize for better responsiveness
+    window.addEventListener('resize', updateScale);
+    updateScale(); // Initial calculation
+
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('resize', updateScale);
+    };
+  }, [baseWidth, baseHeight]);
+
+  const scaledHeight = baseHeight * scale;
 
   return (
-    <div ref={ref} className="relative w-full overflow-visible">
-      <div
-        style={{
-          width: baseWidth,
-          height: baseHeight,
-          transform: `scale(${scale})`,
-          transformOrigin: "top left",
-        }}
-      >
-        <div style={{ width: baseWidth, height: baseHeight }}>{children}</div>
+    <div ref={ref} className="relative w-full overflow-visible" style={{ minHeight: scaledHeight }}>
+      <div className="flex items-start justify-center">
+        <div
+          style={{
+            width: baseWidth,
+            height: baseHeight,
+            transform: `scale(${scale})`,
+            transformOrigin: "top center",
+          }}
+        >
+          <div style={{ width: baseWidth, height: baseHeight }}>{children}</div>
+        </div>
       </div>
-      <div style={{ height: baseHeight * scale }} />
     </div>
   );
 }
