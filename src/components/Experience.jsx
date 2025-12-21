@@ -7,6 +7,7 @@ import ArchitectureFlowModal from './ArchitectureFlowModal';
 // Visual Card Component (for MCESC)
 function VisualCard({ experience, index, isActive, expanded, onToggle }) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
 
   const nextImage = () => {
     setCurrentImageIndex((prev) => (prev + 1) % experience.gallery.length);
@@ -15,6 +16,17 @@ function VisualCard({ experience, index, isActive, expanded, onToggle }) {
   const prevImage = () => {
     setCurrentImageIndex((prev) => (prev - 1 + experience.gallery.length) % experience.gallery.length);
   };
+
+  // Auto-play carousel (advance every 4 seconds, pauses on hover)
+  useEffect(() => {
+    if (!expanded || experience.gallery.length <= 1 || isPaused) return;
+    
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % experience.gallery.length);
+    }, 4000); // Change slide every 4 seconds
+
+    return () => clearInterval(interval);
+  }, [expanded, experience.gallery.length, isPaused]);
 
   return (
     <motion.div
@@ -91,14 +103,17 @@ function VisualCard({ experience, index, isActive, expanded, onToggle }) {
               transition={{ duration: 0.25, ease: 'easeOut' }}
               className="px-6 pb-6 overflow-hidden"
             >
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 pt-2">
-
-                {/* Right Column: Image Carousel */}
-                <div className="relative">
+              {/* Full-width Carousel at Top */}
+              <div className="mb-6">
+                {/* Image Carousel */}
+                <div 
+                  className="relative"
+                  onMouseEnter={() => setIsPaused(true)}
+                  onMouseLeave={() => setIsPaused(false)}
+                >
                   <div className="relative bg-gray-100 rounded-xl overflow-hidden aspect-video shadow-lg">
                     {/* Image Display */}
-                    {experience.gallery[currentImageIndex]?.src &&
-                    experience.gallery[currentImageIndex].src.startsWith('/images/') ? (
+                    {experience.gallery[currentImageIndex]?.src ? (
                       <img
                         src={experience.gallery[currentImageIndex].src}
                         alt={experience.gallery[currentImageIndex].caption || `Gallery image ${currentImageIndex + 1}`}
@@ -151,7 +166,7 @@ function VisualCard({ experience, index, isActive, expanded, onToggle }) {
                             key={idx}
                             onClick={() => setCurrentImageIndex(idx)}
                             className={`h-2 rounded-full transition-all ${
-                              idx === currentImageIndex ? 'w-8 bg-blue-600' : 'w-2 bg-white/70'
+                              idx === currentImageIndex ? 'w-8 bg-blue-600' : 'w-2 bg-gray-400'
                             }`}
                             aria-label={`Go to image ${idx + 1}`}
                           />
@@ -160,11 +175,42 @@ function VisualCard({ experience, index, isActive, expanded, onToggle }) {
                     )}
                   </div>
 
-                  {/* Caption */}
-                  <p className="mt-3 text-sm text-gray-600 text-center font-medium">
-                    {experience.gallery[currentImageIndex]?.caption}
-                  </p>
+                  {/* Caption and Metrics */}
+                  <div className="mt-3">
+                    <p className="text-sm text-gray-600 text-center font-medium mb-2">
+                      {experience.gallery[currentImageIndex]?.caption}
+                    </p>
+                    {/* Metrics */}
+                    {experience.gallery[currentImageIndex]?.metrics && (
+                      <div className="flex flex-wrap justify-center gap-3 mt-3">
+                        {experience.gallery[currentImageIndex].metrics.map((metric, idx) => (
+                          <div
+                            key={idx}
+                            className="px-3 py-1.5 bg-blue-50 border border-blue-200 rounded-lg"
+                          >
+                            <div className="text-xs font-semibold text-blue-900">{metric.label}</div>
+                            <div className="text-sm font-bold text-blue-700">{metric.value}</div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
+
+                {/* Features Section Below Carousel */}
+                {Array.isArray(experience.features) && experience.features.length > 0 && (
+                  <div className="mt-6">
+                    <div className="text-lg font-semibold text-gray-900 mb-4">Key Features</div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {experience.features.map((feature, idx) => (
+                        <div key={idx} className="flex items-start gap-3 text-sm text-gray-700">
+                          <CheckCircle2 className="text-green-600 mt-0.5 flex-shrink-0" size={18} />
+                          <span className="leading-relaxed">{feature}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </motion.div>
           )}
