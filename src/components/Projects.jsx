@@ -58,7 +58,7 @@ export default function Projects() {
 
   return (
     <>
-      <section id="projects" className="py-20 bg-white relative overflow-hidden">
+      <section id="projects" className="py-20 bg-slate-900 relative overflow-hidden">
         <div className="absolute inset-0 section-glow pointer-events-none" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
@@ -68,17 +68,17 @@ export default function Projects() {
             transition={{ duration: 0.6 }}
             className="text-center mb-12"
           >
-            <h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 mb-4 tracking-tight">
+            <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-4 tracking-tight">
               Featured Projects
             </h2>
-            <p className="text-slate-600 max-w-2xl mx-auto">
+            <p className="text-slate-300 max-w-2xl mx-auto">
               Engineering solutions that deliver measurable impact
             </p>
 
             <div className="mt-6 flex justify-center">
               <a
                 href="#all-projects"
-                className="inline-flex items-center justify-center px-5 py-2.5 rounded-full bg-slate-900 text-white font-semibold hover:bg-slate-800 transition-colors shadow-sm"
+                className="inline-flex items-center justify-center px-5 py-2.5 rounded-full bg-blue-600 text-white font-semibold hover:bg-blue-500 transition-colors shadow-sm"
               >
                 See all projects
               </a>
