@@ -49,38 +49,7 @@ export default function Hero() {
             >
               Full-Stack Engineer building real-time, cloud-native products.
             </motion.h1>
-            {/* Tech chips */}
-            <motion.div
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2, duration: 0.6 }}
-              className="mt-4 flex flex-wrap gap-2"
-            >
-              {['React', 'Node.js', 'Spring Boot', 'AWS', 'Microservices', 'AI'].map((chip) => (
-                <span key={chip} className="px-3 py-1.5 text-xs rounded-full border border-white/10 bg-white/5 text-slate-200">
-                  {chip}
-                </span>
-              ))}
-            </motion.div>
-
-            {/* Proof metrics as pills */}
-            <motion.div
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.6 }}
-              className="mt-5 flex flex-wrap items-center gap-3"
-            >
-              {[
-                '99.99% uptime',
-                '+40% faster deploys',
-                '−35% DB latency',
-                '2,000+ WAU',
-              ].map((m) => (
-                <span key={m} className="px-3 py-1 rounded-md bg-white/5 border border-white/10 text-emerald-200 text-sm">
-                  {m}
-                </span>
-              ))}
-            </motion.div>
+            {/* Simplified per recruiter guidance: remove in-hero chips/metrics */}
 
             <motion.div
               initial={{ opacity: 0, y: 8 }}
@@ -89,26 +58,18 @@ export default function Hero() {
               className="mt-6 flex flex-wrap items-center gap-3"
             >
               <a
-                href={resumePdf}
-                target="_blank"
-                rel="noopener noreferrer"
+                href="#projects"
                 className="px-4 py-2 rounded-md bg-orange-600 text-white hover:bg-orange-500 transition-colors"
               >
-                View Resume
+                View Projects
               </a>
               <a
                 href={resumePdf}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-emerald-300 hover:text-emerald-200 text-sm underline underline-offset-4"
+                className="px-4 py-2 rounded-md bg-transparent border border-orange-600/50 text-orange-300 hover:bg-orange-600/10 transition-colors"
               >
-                Download as PDF
-              </a>
-              <a
-                href="#projects"
-                className="px-4 py-2 rounded-md bg-orange-600/20 border border-orange-600/40 text-orange-200 hover:bg-orange-600/30 transition-colors"
-              >
-                View Projects
+                View Resume
               </a>
             </motion.div>
 

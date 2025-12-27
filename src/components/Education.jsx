@@ -7,7 +7,7 @@ export default function Education() {
   if (!edu) return null;
 
   return (
-    <section className="py-20 bg-white relative overflow-hidden">
+    <section className="py-20 bg-slate-900 relative overflow-hidden">
       <div className="absolute inset-0 section-glow pointer-events-none" />
       <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
@@ -16,41 +16,41 @@ export default function Education() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="glass-panel rounded-3xl p-6 md:p-8 shadow-sm border border-slate-200"
+          className="rounded-3xl p-6 md:p-8 shadow-sm border border-white/10 bg-white/5"
         >
           <div className="flex items-start gap-4">
-            <div className="h-11 w-11 rounded-2xl bg-blue-600/10 border border-blue-600/20 flex items-center justify-center flex-shrink-0">
-              <GraduationCap className="text-blue-700" size={20} />
+            <div className="h-11 w-11 rounded-2xl bg-orange-500/10 border border-orange-500/30 flex items-center justify-center flex-shrink-0">
+              <GraduationCap className="text-orange-400" size={20} />
             </div>
 
             <div className="min-w-0">
-              <div className="text-xs font-semibold tracking-widest text-slate-500 uppercase">
+              <div className="text-xs font-semibold tracking-widest text-slate-400 uppercase">
                 {edu.label || 'Education'}
               </div>
-              <h3 className="mt-2 text-xl md:text-2xl font-semibold text-slate-900">
+              <h3 className="mt-2 text-xl md:text-2xl font-semibold text-white">
                 {edu.degree}
               </h3>
-              <p className="mt-1 text-slate-700 font-medium">
+              <p className="mt-1 text-slate-300 font-medium">
                 {edu.school}
                 {edu.location ? `, ${edu.location}` : ''}
               </p>
 
               {edu.meta && (
-                <p className="mt-3 text-sm text-slate-600">
+                <p className="mt-3 text-sm text-slate-400">
                   {edu.meta}
                 </p>
               )}
 
               {Array.isArray(edu.coursework) && edu.coursework.length > 0 && (
                 <div className="mt-5">
-                  <div className="text-sm font-semibold text-slate-900 mb-2">
+                  <div className="text-sm font-semibold text-white mb-2">
                     Coursework
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {edu.coursework.map((c) => (
                       <span
                         key={c}
-                        className="px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-200"
+                        className="px-3 py-1.5 rounded-full text-xs font-semibold bg-white/5 text-slate-300 border border-white/10"
                       >
                         {c}
                       </span>

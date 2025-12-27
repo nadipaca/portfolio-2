@@ -38,12 +38,12 @@ function VisualCard({ experience, index, isActive, expanded, onToggle }) {
     >
       {/* Card */}
       <motion.div
-        className="bg-white rounded-3xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden border-2"
+        className="bg-slate-900/95 rounded-3xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden border-2 border-white/10"
         animate={{
-          borderColor: isActive ? '#3b82f6' : 'rgba(226, 232, 240, 1)', // blue-500 vs slate-200
+          borderColor: isActive ? '#ea580c' : 'rgba(255, 255, 255, 0.12)',
           boxShadow: isActive
-            ? '0 20px 25px -5px rgba(59, 130, 246, 0.15), 0 10px 10px -5px rgba(59, 130, 246, 0.08)'
-            : '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
+            ? '0 20px 25px -5px rgba(234, 88, 12, 0.18), 0 10px 10px -5px rgba(234, 88, 12, 0.12)'
+            : '0 1px 3px 0 rgba(0, 0, 0, 0.25)',
         }}
         transition={{ duration: 0.25, ease: 'easeOut' }}
       >
@@ -56,15 +56,15 @@ function VisualCard({ experience, index, isActive, expanded, onToggle }) {
         >
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0">
-              <h3 className={`text-xl font-semibold mb-1 ${isActive ? 'text-blue-600' : 'text-gray-900'}`}>
+              <h3 className={`text-xl font-semibold mb-1 ${isActive ? 'text-orange-400' : 'text-white'}`}>
                 {experience.role}
               </h3>
-              <p className="text-gray-600 font-medium">{experience.company}</p>
-              <p className="text-sm text-gray-500 mt-1">{experience.period}</p>
+              <p className="text-slate-300 font-medium">{experience.company}</p>
+              <p className="text-sm text-slate-400 mt-1">{experience.period}</p>
             </div>
             <span
               className={`mt-1 inline-flex items-center justify-center h-9 w-9 rounded-full border transition-colors ${
-                expanded ? 'border-blue-200 bg-blue-50 text-blue-700' : 'border-slate-200 bg-white text-slate-500'
+                expanded ? 'border-orange-500/30 bg-orange-500/10 text-orange-400' : 'border-white/10 bg-slate-800 text-slate-300'
               }`}
               aria-hidden="true"
             >
@@ -72,17 +72,17 @@ function VisualCard({ experience, index, isActive, expanded, onToggle }) {
             </span>
           </div>
 
-          <p className="text-gray-700 leading-relaxed mt-3 font-handwriting text-lg tracking-wide">
+          <p className="text-slate-300 leading-relaxed mt-3 font-handwriting text-lg tracking-wide">
             {experience.summary}
           </p>
 
           {Array.isArray(experience.features) && experience.features.length > 0 && (
             <div className="mt-4">
-              <div className="text-base mb-2 font-semibold text-gray-500">Highlights</div>
+              <div className="text-base mb-2 font-semibold text-slate-400">Highlights</div>
               <ul className="space-y-2">
                 {experience.features.slice(0, 3).map((feature, idx) => (
-                  <li key={idx} className="flex items-start gap-2 text-sm text-gray-700">
-                    <CheckCircle2 className="text-green-600 mt-0.5 flex-shrink-0" size={16} />
+                  <li key={idx} className="flex items-start gap-2 text-sm text-slate-300">
+                    <CheckCircle2 className="text-emerald-400 mt-0.5 flex-shrink-0" size={16} />
                     <span className="leading-relaxed">{feature}</span>
                   </li>
                 ))}
@@ -111,7 +111,7 @@ function VisualCard({ experience, index, isActive, expanded, onToggle }) {
                   onMouseEnter={() => setIsPaused(true)}
                   onMouseLeave={() => setIsPaused(false)}
                 >
-                  <div className="relative bg-gray-100 rounded-xl overflow-hidden aspect-video shadow-lg">
+                  <div className="relative bg-slate-800 rounded-xl overflow-hidden aspect-video shadow-lg">
                     {/* Image Display */}
                     {experience.gallery[currentImageIndex]?.src ? (
                       <img
@@ -143,17 +143,17 @@ function VisualCard({ experience, index, isActive, expanded, onToggle }) {
                       <>
                         <button
                           onClick={prevImage}
-                          className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur-md hover:bg-white/90 rounded-full p-2.5 shadow-lg transition-all z-10"
+                          className="absolute left-3 top-1/2 -translate-y-1/2 bg-slate-900/60 backdrop-blur-md hover:bg-slate-900/70 rounded-full p-2.5 shadow-lg border border-white/10 transition-all z-10"
                           aria-label="Previous image"
                         >
-                          <ChevronLeft className="text-gray-700" size={20} />
+                          <ChevronLeft className="text-white" size={20} />
                         </button>
                         <button
                           onClick={nextImage}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur-md hover:bg-white/90 rounded-full p-2.5 shadow-lg transition-all z-10"
+                          className="absolute right-3 top-1/2 -translate-y-1/2 bg-slate-900/60 backdrop-blur-md hover:bg-slate-900/70 rounded-full p-2.5 shadow-lg border border-white/10 transition-all z-10"
                           aria-label="Next image"
                         >
-                          <ChevronRight className="text-gray-700" size={20} />
+                          <ChevronRight className="text-white" size={20} />
                         </button>
                       </>
                     )}
@@ -166,7 +166,7 @@ function VisualCard({ experience, index, isActive, expanded, onToggle }) {
                             key={idx}
                             onClick={() => setCurrentImageIndex(idx)}
                             className={`h-2 rounded-full transition-all ${
-                              idx === currentImageIndex ? 'w-8 bg-blue-600' : 'w-2 bg-gray-400'
+                              idx === currentImageIndex ? 'w-8 bg-orange-500' : 'w-2 bg-slate-600'
                             }`}
                             aria-label={`Go to image ${idx + 1}`}
                           />
@@ -177,7 +177,7 @@ function VisualCard({ experience, index, isActive, expanded, onToggle }) {
 
                   {/* Caption and Metrics */}
                   <div className="mt-3">
-                    <p className="text-sm text-gray-600 text-center font-medium mb-2">
+                    <p className="text-sm text-slate-400 text-center font-medium mb-2">
                       {experience.gallery[currentImageIndex]?.caption}
                     </p>
                     {/* Metrics */}
@@ -186,10 +186,10 @@ function VisualCard({ experience, index, isActive, expanded, onToggle }) {
                         {experience.gallery[currentImageIndex].metrics.map((metric, idx) => (
                           <div
                             key={idx}
-                            className="px-3 py-1.5 bg-blue-50 border border-blue-200 rounded-lg"
+                            className="px-3 py-1.5 bg-orange-500/10 border border-orange-500/30 rounded-lg"
                           >
-                            <div className="text-xs font-semibold text-blue-900">{metric.label}</div>
-                            <div className="text-sm font-bold text-blue-700">{metric.value}</div>
+                            <div className="text-xs font-semibold text-orange-300">{metric.label}</div>
+                            <div className="text-sm font-bold text-orange-400">{metric.value}</div>
                           </div>
                         ))}
                       </div>
@@ -200,11 +200,11 @@ function VisualCard({ experience, index, isActive, expanded, onToggle }) {
                 {/* Features Section Below Carousel */}
                 {Array.isArray(experience.features) && experience.features.length > 0 && (
                   <div className="mt-6">
-                    <div className="text-lg font-semibold text-gray-900 mb-4">Key Features</div>
+                    <div className="text-lg font-semibold text-white mb-4">Key Features</div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {experience.features.map((feature, idx) => (
-                        <div key={idx} className="flex items-start gap-3 text-sm text-gray-700">
-                          <CheckCircle2 className="text-green-600 mt-0.5 flex-shrink-0" size={18} />
+                        <div key={idx} className="flex items-start gap-3 text-sm text-slate-300">
+                          <CheckCircle2 className="text-emerald-400 mt-0.5 flex-shrink-0" size={18} />
                           <span className="leading-relaxed">{feature}</span>
                         </div>
                       ))}
@@ -249,12 +249,12 @@ function ArchitecturalCard({ experience, index, isActive, expanded, onToggle }) 
     >
       {/* Card */}
       <motion.div
-        className="bg-white rounded-3xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden border-2"
+        className="bg-slate-900/95 rounded-3xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden border-2 border-white/10"
         animate={{
-          borderColor: isActive ? '#3b82f6' : 'rgba(226, 232, 240, 1)',
+          borderColor: isActive ? '#ea580c' : 'rgba(255, 255, 255, 0.12)',
           boxShadow: isActive
-            ? '0 20px 25px -5px rgba(59, 130, 246, 0.15), 0 10px 10px -5px rgba(59, 130, 246, 0.08)'
-            : '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
+            ? '0 20px 25px -5px rgba(234, 88, 12, 0.18), 0 10px 10px -5px rgba(234, 88, 12, 0.12)'
+            : '0 1px 3px 0 rgba(0, 0, 0, 0.25)',
         }}
         transition={{ duration: 0.25, ease: 'easeOut' }}
       >
@@ -267,15 +267,15 @@ function ArchitecturalCard({ experience, index, isActive, expanded, onToggle }) 
         >
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0">
-              <h3 className={`text-xl font-semibold mb-1 ${isActive ? 'text-blue-600' : 'text-gray-900'}`}>
+              <h3 className={`text-xl font-semibold mb-1 ${isActive ? 'text-orange-400' : 'text-white'}`}>
                 {experience.role}
               </h3>
-              <p className="text-gray-600 font-medium">{experience.company}</p>
-              <p className="text-sm text-gray-500 mt-1">{experience.period}</p>
+              <p className="text-slate-300 font-medium">{experience.company}</p>
+              <p className="text-sm text-slate-400 mt-1">{experience.period}</p>
             </div>
             <span
               className={`mt-1 inline-flex items-center justify-center h-9 w-9 rounded-full border transition-colors ${
-                expanded ? 'border-blue-200 bg-blue-50 text-blue-700' : 'border-slate-200 bg-white text-slate-500'
+                expanded ? 'border-orange-500/30 bg-orange-500/10 text-orange-400' : 'border-white/10 bg-slate-800 text-slate-300'
               }`}
               aria-hidden="true"
             >
@@ -283,21 +283,21 @@ function ArchitecturalCard({ experience, index, isActive, expanded, onToggle }) 
             </span>
           </div>
 
-          <p className="text-gray-700 leading-relaxed mt-3 font-handwriting text-lg tracking-wide">
+          <p className="text-slate-300 leading-relaxed mt-3 font-handwriting text-lg tracking-wide">
             {experience.summary}
           </p>
 
           {Array.isArray(experience.impact_metrics) && experience.impact_metrics.length > 0 && (
             <div className="mt-4">
-              <div className="text-base mb-2 font-semibold text-gray-500">Top Impact</div>
+              <div className="text-base mb-2 font-semibold text-slate-400">Top Impact</div>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                 {experience.impact_metrics.slice(0, 3).map((m) => (
                   <div
                     key={m.label}
-                    className="rounded-2xl text-center border border-slate-200 bg-slate-50/60 px-3 py-2"
+                    className="rounded-2xl text-center border border-white/10 bg-white/5 px-3 py-2"
                   >
-                    <div className="text-sm font-bold text-blue-700">{m.value}</div>
-                    <div className="text-[11px] font-semibold tracking-wide text-slate-600 uppercase">{m.label}</div>
+                    <div className="text-sm font-bold text-orange-400">{m.value}</div>
+                    <div className="text-[11px] font-semibold tracking-wide text-slate-300 uppercase">{m.label}</div>
                   </div>
                 ))}
               </div>
@@ -307,7 +307,7 @@ function ArchitecturalCard({ experience, index, isActive, expanded, onToggle }) 
           {Array.isArray(experience.tech_stack_flow) && experience.tech_stack_flow.length > 0 && (
             <div className="mt-4">
               <div className="flex items-center justify-between gap-3 mb-2">
-                <div className="text-base mb-2 font-semibold text-gray-500">
+                <div className="text-base mb-2 font-semibold text-slate-400">
                   System Architecture Flow
                 </div>
                 <button
@@ -317,7 +317,7 @@ function ArchitecturalCard({ experience, index, isActive, expanded, onToggle }) 
                     e.stopPropagation();
                     setFlowOpen(true);
                   }}
-                  className="text-xs font-semibold text-blue-600 hover:text-blue-700"
+                  className="text-xs font-semibold text-orange-400 hover:text-orange-300"
                 >
                   View diagram
                 </button>
@@ -330,7 +330,7 @@ function ArchitecturalCard({ experience, index, isActive, expanded, onToggle }) 
                   e.stopPropagation();
                   setFlowOpen(true);
                 }}
-                className="w-full rounded-2xl border border-slate-200 bg-slate-50/70 hover:bg-slate-50 transition-colors px-3 py-3"
+                className="w-full rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 transition-colors px-3 py-3"
                 aria-label="Open architecture flow diagram"
               >
                 <div className="flex flex-wrap items-center justify-center gap-2">
@@ -339,12 +339,12 @@ function ArchitecturalCard({ experience, index, isActive, expanded, onToggle }) 
                     const isCurrent = idx === flowIndex;
 
                     const chipClass = isDone
-                      ? 'bg-blue-50 border-blue-200 text-blue-800'
+                      ? 'bg-orange-500/10 border-orange-500/30 text-orange-300'
                       : isCurrent
-                        ? 'bg-blue-600 border-blue-600 text-white'
-                        : 'bg-slate-100 border-slate-200 text-slate-700';
+                        ? 'bg-orange-600 border-orange-600 text-white'
+                        : 'bg-white/5 border-white/10 text-slate-300';
 
-                    const arrowClass = isDone || isCurrent ? 'text-blue-600' : 'text-slate-400';
+                    const arrowClass = isDone || isCurrent ? 'text-orange-500' : 'text-slate-400';
 
                     return (
                       <div key={`${tech}-${idx}`} className="flex items-center gap-2">
@@ -394,9 +394,9 @@ function ArchitecturalCard({ experience, index, isActive, expanded, onToggle }) 
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: index * 0.1 + 0.05 }}
-                    className="bg-orange-50 rounded-2xl p-5"
+                    className="bg-white/5 rounded-2xl p-5"
                   >
-                    <h4 className="text-base font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                    <h4 className="text-base font-semibold text-white mb-3 flex items-center gap-2">
                       <AlertTriangle className="text-orange-600" size={20} />
                       The Challenge
                     </h4>

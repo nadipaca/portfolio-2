@@ -112,7 +112,7 @@ export default function Certifications() {
   const certs = useMemo(() => (Array.isArray(portfolioData?.certifications) ? portfolioData.certifications : []), []);
 
   return (
-    <section className="py-20 bg-slate-50 relative overflow-hidden">
+    <section className="py-20 bg-slate-900 relative overflow-hidden">
       <div className="absolute inset-0 section-glow pointer-events-none" />
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
@@ -122,8 +122,8 @@ export default function Certifications() {
           transition={{ duration: 0.5 }}
           className="text-center mb-10"
         >
-          <h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 mb-4 tracking-tight">Certifications</h2>
-          <p className="text-slate-600 max-w-2xl mx-auto">
+          <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-4 tracking-tight">Certifications</h2>
+          <p className="text-slate-300 max-w-2xl mx-auto">
             Proof is one click away — verify credentials instantly.
           </p>
         </motion.div>
@@ -135,8 +135,8 @@ export default function Certifications() {
             ))}
           </div>
         ) : (
-          <div className="glass-panel rounded-2xl p-6 md:p-8 border border-slate-200 text-center text-slate-600">
-            <div className="text-lg font-bold text-slate-900 mb-2">Add your certifications</div>
+          <div className="rounded-2xl p-6 md:p-8 border border-white/10 bg-white/5 text-center text-slate-300">
+            <div className="text-lg font-bold text-white mb-2">Add your certifications</div>
             <div className="text-sm">
               Put images in <span className="font-mono">public/certifications/</span> and add items to{' '}
               <span className="font-mono">portfolioData.certifications</span> in <span className="font-mono">src/constants.js</span>.
