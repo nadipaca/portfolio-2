@@ -4,6 +4,12 @@
 @tailwind components;
 @tailwind utilities;
 
+.nav-desktop { display: none; }
+@media (min-width: 640px) { .nav-desktop { display: flex; } }
+
+.hide-below-lg { display: none; }
+@media (min-width: 1024px) { .hide-below-lg { display: inline; } }
+
 @layer base {
   html {
     scroll-behavior: smooth;
