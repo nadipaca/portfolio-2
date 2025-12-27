@@ -29,7 +29,7 @@ function App() {
     }
     return initial;
   });
-  const [chatMounted, setChatMounted] = useState(false);
+  // Chat drawer always mounted; no conditional mounting
 
   useEffect(() => {
     const onHashChange = () => {
@@ -47,9 +47,8 @@ function App() {
   }, []);
 
   const openChat = () => {
-    setChatMounted(true);
-    // Let the drawer mount, then open it.
-    window.setTimeout(() => chatRef.current?.open?.(), 0);
+    // Drawer is always mounted; open immediately
+    chatRef.current?.open?.();
   };
 
   return (
@@ -106,12 +105,10 @@ function App() {
         </Suspense>
       </DeferredSection>
 
-      {/* Chat drawer mounts only when user asks */}
-      {chatMounted ? (
-        <Suspense fallback={null}>
-          <ResumeChatDrawer ref={chatRef} />
-        </Suspense>
-      ) : null}
+      {/* Chat drawer always mounted */}
+      <Suspense fallback={null}>
+        <ResumeChatDrawer ref={chatRef} />
+      </Suspense>
     </div>
   );
 }

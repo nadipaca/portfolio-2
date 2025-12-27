@@ -139,7 +139,7 @@ const ResumeChatDrawer = forwardRef(function ResumeChatDrawer(_props, ref) {
 
   return (
     <>
-      {/* Floating button */}
+      {/* Floating button (icon-only on mobile, text on md+) */}
       <button
         type="button"
         onClick={() => setOpen(true)}
@@ -147,7 +147,7 @@ const ResumeChatDrawer = forwardRef(function ResumeChatDrawer(_props, ref) {
         aria-label="Open resume chat"
       >
         <MessageCircle size={18} />
-        <span className="text-sm font-semibold">Ask my resume</span>
+        <span className="hidden md:inline text-sm font-semibold">Ask my resume</span>
         <span className="hidden md:inline text-xs text-white/80 ml-2">Ctrl/⌘K</span>
       </button>
 
