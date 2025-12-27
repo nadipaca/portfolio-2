@@ -51,7 +51,7 @@ export default function ProjectCard({ project, onClick }) {
       {/* Results */}
       <div className="space-y-1 mb-4">
         {project.results.slice(0, 1).map((result, idx) => (
-          <p key={idx} className="text-xs text-emerald-300 font-medium">
+          <p key={idx} className="text-xs text-orange-300 font-medium">
             ✓ {result}
           </p>
         ))}

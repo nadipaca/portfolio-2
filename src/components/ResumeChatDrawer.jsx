@@ -143,7 +143,7 @@ const ResumeChatDrawer = forwardRef(function ResumeChatDrawer(_props, ref) {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="fixed bottom-5 right-5 z-[60] inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 py-3 shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-blue-400/60"
+        className="fixed bottom-5 right-5 z-[60] inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-orange-600 to-red-500 text-white px-4 py-3 shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-orange-400/60"
         aria-label="Open resume chat"
       >
         <MessageCircle size={18} />

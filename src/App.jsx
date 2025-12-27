@@ -5,6 +5,7 @@ import DeferredSection from './components/DeferredSection';
 
 const Projects = lazy(() => import('./components/Projects'));
 const Experience = lazy(() => import('./components/Experience'));
+const About = lazy(() => import('./components/About'));
 const GitHubProjects = lazy(() => import('./components/GitHubProjects'));
 const Skills = lazy(() => import('./components/Skills'));
 const Certifications = lazy(() => import('./components/Certifications'));
@@ -55,6 +56,13 @@ function App() {
     <div className="min-h-screen">
       <Navbar onOpenChat={openChat} />
       <Hero />
+
+      {/* About */}
+      <DeferredSection id="about" minHeight={380} rootMargin="600px 0px">
+        <Suspense fallback={<SectionFallback label="Loading about…" />}>
+          <About />
+        </Suspense>
+      </DeferredSection>
 
       {/* Projects (near fold) */}
       <DeferredSection id="projects" minHeight={320} forceMount={forced.has('projects')}>

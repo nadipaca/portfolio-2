@@ -9,10 +9,12 @@ export default function Navbar({ onOpenChat }) {
 
   const navItems = [
     { label: 'Home', href: '#home' },
+    { label: 'About', href: '#about' },
     { label: 'Projects', href: '#projects' },
     { label: 'Experience', href: '#experience' },
     { label: 'Skills', href: '#skills' },
     { label: 'Certifications', href: '#certifications' },
+    { label: 'Contacts', href: '#footer' },
   ];
 
   return (

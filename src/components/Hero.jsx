@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { portfolioData } from '../constants';
-import { Github, Linkedin } from 'lucide-react';
+import { Github, Linkedin, ChevronLeft, ChevronRight } from 'lucide-react';
 import heroImage from '../assets/charishma_portfolio.png';
 import resumePdf from '../assets/Charishma N Resume.pdf';
 
@@ -13,7 +13,7 @@ export default function Hero() {
   return (
     <section id="home" className="relative scroll-mt-24">
       <div
-        className="relative min-h-[60vh] bg-slate-900 grid-pattern overflow-hidden pt-24 pb-14 sm:pt-28 sm:pb-16"
+        className="relative min-h-[60vh] diagonal-gradient overflow-hidden pt-24 pb-14 sm:pt-28 sm:pb-16"
         onMouseMove={(e) => {
           const rect = e.currentTarget.getBoundingClientRect();
           const x = e.clientX - rect.left;
@@ -25,9 +25,9 @@ export default function Hero() {
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
-            background: `radial-gradient(650px circle at ${spot.x}px ${spot.y}px, rgba(59,130,246,0.18), transparent 55%),
-                         radial-gradient(700px circle at 20% 30%, rgba(99,102,241,0.12), transparent 50%),
-                         radial-gradient(700px circle at 80% 80%, rgba(20,184,166,0.10), transparent 55%)`,
+            background: `radial-gradient(650px circle at ${spot.x}px ${spot.y}px, rgba(234,88,12,0.18), transparent 55%),
+                         radial-gradient(700px circle at 20% 30%, rgba(244,63,94,0.10), transparent 50%),
+                         radial-gradient(700px circle at 80% 80%, rgba(234,88,12,0.10), transparent 55%)`,
           }}
         />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-[60vh] grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
@@ -56,7 +56,7 @@ export default function Hero() {
               transition={{ delay: 0.2, duration: 0.6 }}
               className="mt-4 flex flex-wrap gap-2"
             >
-              {['React', 'Node.js', 'Spring Boot', 'AWS', 'Microservices'].map((chip) => (
+              {['React', 'Node.js', 'Spring Boot', 'AWS', 'Microservices', 'AI'].map((chip) => (
                 <span key={chip} className="px-3 py-1.5 text-xs rounded-full border border-white/10 bg-white/5 text-slate-200">
                   {chip}
                 </span>
@@ -92,7 +92,7 @@ export default function Hero() {
                 href={resumePdf}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-4 py-2 rounded-md bg-emerald-600 text-white hover:bg-emerald-500 transition-colors"
+                className="px-4 py-2 rounded-md bg-orange-600 text-white hover:bg-orange-500 transition-colors"
               >
                 View Resume
               </a>
@@ -106,30 +106,10 @@ export default function Hero() {
               </a>
               <a
                 href="#projects"
-                className="px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-500 transition-colors"
+                className="px-4 py-2 rounded-md bg-orange-600/20 border border-orange-600/40 text-orange-200 hover:bg-orange-600/30 transition-colors"
               >
                 View Projects
               </a>
-              <div className="flex items-center gap-4 ml-2 text-slate-300">
-                <a
-                  href={portfolioData.profile.socials.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 hover:text-white transition-colors"
-                >
-                  <Github size={16} />
-                  <span>GitHub</span>
-                </a>
-                <a
-                  href={portfolioData.profile.socials.linkedin}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 hover:text-white transition-colors"
-                >
-                  <Linkedin size={16} />
-                  <span>LinkedIn</span>
-                </a>
-              </div>
             </motion.div>
 
             {/* Featured project cards removed from hero to reduce clutter */}
@@ -137,11 +117,23 @@ export default function Hero() {
 
           {/* Right: Static image (replaces orbit animation) */}
           <div className="flex items-start justify-center md:justify-end relative z-0 mt-8 md:mt-0">
-            <div className="flex flex-col items-center">
+            <div className="relative flex flex-col items-center">
+              {/* Accent rings behind photo */}
+              <div className="absolute -top-6 -left-10 w-10 h-10 text-orange-400/40">
+                <ChevronLeft size={40} />
+              </div>
+              <div className="absolute -top-6 -right-10 w-10 h-10 text-orange-400/40">
+                <ChevronRight size={40} />
+              </div>
+              <div className="absolute inset-0 -z-10 flex items-center justify-center">
+                <div className="w-[260px] h-[260px] rounded-full border-4 border-orange-500/30" />
+                <div className="absolute w-[200px] h-[200px] rounded-full border-2 border-orange-400/20" />
+                <div className="absolute w-[300px] h-[300px] rounded-full bg-orange-500/10 blur-3xl" />
+              </div>
               <img
                 src={heroImage}
                 alt="Charishma Nadipalli portrait"
-                className="w-[220px] h-[220px] xl:w-[260px] xl:h-[260px] rounded-full border border-white/10 shadow-lg shadow-emerald-500/10 object-cover"
+                className="w-[220px] h-[220px] xl:w-[260px] xl:h-[260px] rounded-full border border-white/10 shadow-lg shadow-orange-500/10 object-cover"
               />
               <div className="mt-3 text-center">
                 <div className="text-white font-semibold">Charishma Nadipalli</div>
@@ -152,7 +144,18 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Impact strip removed; metrics shown inside hero */}
+      {/* Tech chip strip banner like reference */}
+      <div className="chip-strip">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+          <div className="flex flex-wrap justify-center gap-4 text-slate-300">
+            {['React', 'Node.js', 'Spring Boot', 'AWS', 'Microservices', 'AI'].map((chip) => (
+              <span key={chip} className="px-3 py-1.5 rounded-full bg-white/5 border border-white/10">
+                {chip}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
     </section>
   );
 }
