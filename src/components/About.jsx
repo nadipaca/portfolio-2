@@ -1,8 +1,34 @@
 import { motion } from 'framer-motion';
+import { Monitor, Smartphone, Cloud } from 'lucide-react';
+import { portfolioData } from '../constants';
 
 export default function About() {
+  const services = [
+    {
+      icon: Monitor,
+      title: 'Web Development',
+      tech: 'React, NodeJS, Springboot, FastAPI, Open AI'
+    },
+    {
+      icon: Smartphone,
+      title: 'App Development',
+      tech: 'React Native/FireStore/ Expo'
+    },
+    {
+      icon: Cloud,
+      title: 'Web Hosting',
+      tech: 'AWS, Docker, Kubernetes, Splunk, Kafka, Micorservice'
+    }
+  ];
+
+  const metrics = [
+    { value: '120 +', label: 'Completed Projects' },
+    { value: '95 %', label: 'Client satisfaction' },
+    { value: '10 +', label: 'Years of experience' }
+  ];
+
   return (
-    <section id="about" className="py-20 bg-slate-900 relative overflow-hidden">
+    <section id="about" className="py-20 bg-slate-950 relative overflow-hidden">
       <div className="absolute inset-0 section-glow pointer-events-none" />
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
@@ -10,64 +36,55 @@ export default function About() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="grid grid-cols-1 md:grid-cols-2 gap-10 items-start"
+          className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start"
         >
           {/* Left: Services rail with vertical line and dots */}
           <div className="relative">
-            <div className="absolute left-4 top-0 bottom-0 w-px bg-orange-600/40" aria-hidden="true" />
-            <ul className="space-y-6 pl-10">
-              <li className="relative">
-                <span className="absolute left-4 top-2 inline-block w-3 h-3 rounded-full bg-orange-500 shadow-[0_0_0_4px_rgba(234,88,12,0.15)]" aria-hidden="true" />
-                <div className="flex items-start gap-3">
-                  <span className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-white/5 border border-white/10 text-orange-400">🕸️</span>
-                  <div>
-                    <div className="text-white font-semibold">Web Development</div>
-                    <div className="text-slate-300 text-sm">React, NodeJS, Spring Boot, FastAPI, OpenAI</div>
-                  </div>
-                </div>
-              </li>
-              <li className="relative">
-                <span className="absolute left-4 top-2 inline-block w-3 h-3 rounded-full bg-orange-500 shadow-[0_0_0_4px_rgba(234,88,12,0.15)]" aria-hidden="true" />
-                <div className="flex items-start gap-3">
-                  <span className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-white/5 border border-white/10 text-orange-400">📱</span>
-                  <div>
-                    <div className="text-white font-semibold">App Development</div>
-                    <div className="text-slate-300 text-sm">React Native, Firestore, Expo</div>
-                  </div>
-                </div>
-              </li>
-              <li className="relative">
-                <span className="absolute left-4 top-2 inline-block w-3 h-3 rounded-full bg-orange-500 shadow-[0_0_0_4px_rgba(234,88,12,0.15)]" aria-hidden="true" />
-                <div className="flex items-start gap-3">
-                  <span className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-white/5 border border-white/10 text-orange-400">🗄️</span>
-                  <div>
-                    <div className="text-white font-semibold">Web Hosting</div>
-                    <div className="text-slate-300 text-sm">AWS, Docker, Kubernetes, Splunk, Kafka, Microservice</div>
-                  </div>
-                </div>
-              </li>
+            <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-orange-600" aria-hidden="true" />
+            <ul className="space-y-8 pl-10">
+              {services.map((service, index) => {
+                const IconComponent = service.icon;
+                return (
+                  <li key={index} className="relative">
+                    <span 
+                      className="absolute left-4 top-3 inline-block w-3 h-3 rounded-full bg-orange-500 shadow-[0_0_0_4px_rgba(234,88,12,0.15)]" 
+                      aria-hidden="true"
+                      style={{ transform: 'translateX(-50%)' }}
+                    />
+                    <div className="flex items-start gap-4">
+                      <span className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-white/5 border border-white/10 text-orange-400">
+                        <IconComponent size={20} />
+                      </span>
+                      <div>
+                        <div className="text-white font-semibold text-lg mb-1">{service.title}</div>
+                        <div className="text-slate-300 text-sm">({service.tech})</div>
+                      </div>
+                    </div>
+                  </li>
+                );
+              })}
             </ul>
           </div>
 
-          {/* Right: Summary and metrics */}
+          {/* Right: About me, summary and metrics */}
           <div>
             <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-6 tracking-tight">About me</h2>
-            <p className="text-slate-300 leading-relaxed">
-              I build secure, scalable microservices and real-time applications across AWS using Spring Boot and Node.js.
-              Practices include OAuth2/JWT, observability, CI/CD, and cloud-native design.
+            <p className="text-white leading-relaxed text-lg mb-8">
+              I started my software journey from photography. Through that, I learned to love the process of creating from scratch. Since then, this has led me to software development as it fulfills my love for learning and building things.
             </p>
-            <div className="mt-8 grid grid-cols-2 gap-6">
-              {[
-                { label: 'Uptime', value: '99.99%' },
-                { label: 'Deploy speed', value: '+40%' },
-                { label: 'DB latency', value: '\u221235%' },
-                { label: 'WAU', value: '2,000+' },
-              ].map((m) => (
-                <div key={m.label} className="rounded-xl border border-white/10 bg-white/5 p-4">
-                  <div className="text-3xl font-bold text-orange-400">{m.value}</div>
-                  <div className="text-slate-300 text-sm mt-1">{m.label}</div>
-                </div>
-              ))}
+            <div className="grid grid-cols-3 gap-4">
+              {metrics.map((m, index) => {
+                const [value, suffix] = m.value.split(' ');
+                return (
+                  <div key={index} className="text-center">
+                    <div className="text-2xl md:text-3xl font-bold text-white mb-1">
+                      {value}
+                      {suffix && <span className="text-orange-500"> {suffix}</span>}
+                    </div>
+                    <div className="text-slate-300 text-sm">{m.label}</div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </motion.div>

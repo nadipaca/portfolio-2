@@ -397,10 +397,10 @@ function ArchitecturalCard({ experience, index, isActive, expanded, onToggle }) 
                     className="bg-white/5 rounded-2xl p-5"
                   >
                     <h4 className="text-base font-semibold text-white mb-3 flex items-center gap-2">
-                      <AlertTriangle className="text-orange-600" size={20} />
+                      <AlertTriangle className="text-orange-500" size={20} />
                       The Challenge
                     </h4>
-                    <p className="text-gray-700 leading-relaxed">{experience.problem}</p>
+                    <p className="text-slate-300 leading-relaxed">{experience.problem}</p>
                   </motion.div>
 
                   {/* Solution */}
@@ -409,13 +409,13 @@ function ArchitecturalCard({ experience, index, isActive, expanded, onToggle }) 
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: index * 0.1 + 0.1 }}
-                    className="bg-blue-50 rounded-2xl p-5"
+                    className="bg-orange-500/10 border border-orange-500/20 rounded-2xl p-5"
                   >
-                    <h4 className="text-base font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                      <CheckCircle className="text-blue-600" size={20} />
+                    <h4 className="text-base font-semibold text-white mb-3 flex items-center gap-2">
+                      <CheckCircle className="text-orange-500" size={20} />
                       The Solution
                     </h4>
-                    <p className="text-gray-700 leading-relaxed">{experience.solution}</p>
+                    <p className="text-slate-300 leading-relaxed">{experience.solution}</p>
                   </motion.div>
                 </div>
 
@@ -424,12 +424,12 @@ function ArchitecturalCard({ experience, index, isActive, expanded, onToggle }) 
                 {/* Section 4: Tech Stack */}
                 {Array.isArray(experience.tech_stack_flow) && experience.tech_stack_flow.length > 0 && (
                   <div>
-                    <h4 className="text-base font-semibold text-gray-900 mb-3">Tech Stack</h4>
+                    <h4 className="text-base font-semibold text-white mb-3">Tech Stack</h4>
                     <div className="flex flex-wrap gap-2">
                       {experience.tech_stack_flow.map((t) => (
                         <span
                           key={t}
-                          className="px-3 py-1.5 rounded-full text-xs font-semibold bg-white text-slate-700 border border-slate-200"
+                          className="px-3 py-1.5 rounded-full text-xs font-semibold bg-orange-500/10 text-orange-300 border border-orange-500/30"
                         >
                           {t}
                         </span>
@@ -510,7 +510,7 @@ export default function Experience() {
   }, []);
 
   return (
-    <section className="py-20 bg-gray-50/50">
+    <section className="py-20 bg-slate-950 relative overflow-hidden">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -519,8 +519,8 @@ export default function Experience() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">Professional Experience</h2>
-          <p className="text-gray-600 max-w-2xl mx-auto">
+          <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-4 tracking-tight">Professional Experience</h2>
+          <p className="text-slate-300 max-w-2xl mx-auto">
             Headline first. Deep-dive when you want (challenge → solution → architecture).
           </p>
         </motion.div>
@@ -528,11 +528,11 @@ export default function Experience() {
         {/* Timeline Container */}
         <div className="relative" ref={timelineRef}>
           {/* Background Timeline Line */}
-          <div className="absolute left-2 md:left-4 top-0 bottom-0 w-0.5 bg-gray-200"></div>
+          <div className="absolute left-2 md:left-4 top-0 bottom-0 w-0.5 bg-slate-700"></div>
 
-          {/* Animated Blue Fill Line */}
+          {/* Animated Orange Fill Line */}
           <motion.div
-            className="absolute left-2 md:left-4 top-0 w-0.5 bg-blue-500"
+            className="absolute left-2 md:left-4 top-0 w-0.5 bg-orange-500"
             initial={{ height: 0 }}
             animate={{ height: progressPx }}
             transition={{ type: 'spring', stiffness: 260, damping: 35 }}

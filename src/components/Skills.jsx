@@ -116,7 +116,7 @@ const skillCategoryColors = {
 
 export default function Skills() {
   return (
-    <section className="py-20 bg-slate-50 relative overflow-hidden">
+    <section className="py-20 bg-slate-950 relative overflow-hidden">
       {/* Background Glow */}
       <div className="absolute inset-0 section-glow pointer-events-none" />
       
@@ -128,10 +128,10 @@ export default function Skills() {
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 mb-4 tracking-tight">
+          <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-4 tracking-tight">
             Skills & Technologies
           </h2>
-          <p className="text-slate-600 max-w-2xl mx-auto text-lg">
+          <p className="text-slate-300 max-w-2xl mx-auto text-lg">
             The modern stack I use to build scalable, intelligent applications.
           </p>
         </motion.div>
@@ -145,9 +145,9 @@ export default function Skills() {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: categoryIndex * 0.1 }}
               whileHover={{ y: -5 }}
-              className={`rounded-2xl border-2 p-6 shadow-sm hover:shadow-xl transition-all duration-300 ${skillCategoryColors[category] || 'bg-gray-50 border-gray-200'}`}
+              className="rounded-2xl border-2 border-orange-500/20 bg-slate-900/90 p-6 shadow-sm hover:shadow-xl hover:border-orange-500/40 transition-all duration-300"
             >
-              <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
+              <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-white">
                  {/* Optional: Add a category icon here if you want */}
                 {skillCategoryLabels[category] || category.toUpperCase()}
               </h3>
@@ -161,7 +161,7 @@ export default function Skills() {
                     viewport={{ once: true }}
                     transition={{ delay: categoryIndex * 0.1 + skillIndex * 0.05 }}
                     whileHover={{ scale: 1.05 }}
-                    className="inline-flex items-center gap-2 px-3 py-1.5 bg-white rounded-lg text-sm font-semibold shadow-sm border border-gray-100 hover:border-gray-300 transition-colors"
+                    className="inline-flex items-center gap-2 px-3 py-1.5 bg-slate-800 rounded-lg text-sm font-semibold shadow-sm border border-orange-500/20 hover:border-orange-500/40 text-white transition-colors"
                   >
                     <SkillIcon label={skill} />
                     <span>{skill}</span>
