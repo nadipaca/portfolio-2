@@ -42,15 +42,15 @@ function CertificationCard({ cert, index }) {
       viewport={{ once: true }}
       transition={{ duration: 0.45, delay: Math.min(index, 10) * 0.05 }}
     >
-      <div className="rounded-2xl border border-orange-500/20 shadow-sm hover:shadow-xl transition-shadow bg-slate-900/90 hover:border-orange-500/40 overflow-hidden">
+      <div className="rounded-2xl border border-orange-400/20 shadow-sm hover:shadow-xl transition-shadow bg-slate-900/90 hover:border-orange-400/40 overflow-hidden">
         <div className="p-5 flex gap-4 sm:gap-5">
           {/* Issuer Logo (LinkedIn-style) */}
-          <div className="w-14 h-14 sm:w-16 sm:h-16 flex-shrink-0 rounded-xl border border-orange-500/20 bg-slate-800 overflow-hidden flex items-center justify-center">
+          <div className="w-14 h-14 sm:w-16 sm:h-16 flex-shrink-0 rounded-xl border border-orange-400/20 bg-slate-800 overflow-hidden flex items-center justify-center">
             {IssuerIcon ? (
               <IssuerIcon
                 aria-label={issuerLogoAlt}
                 title={issuerLogoAlt}
-                className={issuer.toLowerCase().includes('oracle') ? 'text-red-600' : 'text-slate-800'}
+                className={issuer.toLowerCase().includes('oracle') ? 'text-red-500' : 'text-slate-800'}
                 size={32}
               />
             ) : issuerLogo ? (
@@ -89,13 +89,13 @@ function CertificationCard({ cert, index }) {
                   href={credentialUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-orange-600 text-white font-semibold hover:bg-orange-500 transition-colors"
+                  className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-orange-400 text-white font-semibold hover:bg-orange-300 transition-colors"
                 >
                   <ExternalLink size={16} />
                   Show credential
                 </a>
               ) : (
-                <span className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800 text-slate-400 font-semibold border border-orange-500/20">
+                <span className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800 text-slate-400 font-semibold border border-orange-400/20">
                   <ExternalLink size={16} />
                   Add credential URL
                 </span>
@@ -112,7 +112,7 @@ export default function Certifications() {
   const certs = useMemo(() => (Array.isArray(portfolioData?.certifications) ? portfolioData.certifications : []), []);
 
   return (
-    <section className="py-20 bg-slate-950 relative overflow-hidden">
+    <section className="py-20 bg-slate-900 relative overflow-hidden">
       <div className="absolute inset-0 section-glow pointer-events-none" />
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div

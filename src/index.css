@@ -17,32 +17,18 @@
 }
 
 @layer utilities {
-  /* Diagonal gradient background like reference (blackish brown + orange accent) */
+  /* Diagonal gradient background with blueish shade */
   .diagonal-gradient {
     background:
-      radial-gradient(800px circle at 68% 35%, rgba(234, 88, 12, 0.15), transparent 45%),
-      radial-gradient(700px circle at 72% 60%, rgba(234, 88, 12, 0.12), transparent 50%),
-      linear-gradient(135deg, rgba(15, 10, 8, 1) 0%, rgba(20, 15, 12, 1) 45%, rgba(25, 20, 18, 1) 100%);
+      radial-gradient(800px circle at 68% 35%, rgba(198, 15, 15, 0.15), transparent 45%),
+      linear-gradient(135deg, rgb(15,23,42) 0%, rgb(15, 23, 42) 45%, rgb(19, 31, 57) 100%);
   }
 
-  /* Subtle section glow using accent */
-  .section-glow {
-    background:
-      radial-gradient(600px circle at 20% 10%, rgba(234, 88, 12, 0.12), transparent 45%),
-      radial-gradient(600px circle at 90% 30%, rgba(244, 63, 94, 0.10), transparent 40%),
-      radial-gradient(700px circle at 70% 90%, rgba(234, 88, 12, 0.10), transparent 45%);
-  }
 
-  .glass-panel {
-    background: rgba(255, 255, 255, 0.75);
-    border: 1px solid rgba(226, 232, 240, 0.8);
-    backdrop-filter: blur(10px);
-  }
 
   /* Tech chip strip styling */
   .chip-strip {
-    background: rgba(15, 10, 8, 0.8);
-    border-top: 1px solid rgba(234, 88, 12, 0.2);
-    border-bottom: 1px solid rgba(234, 88, 12, 0.2);
+    background: rgb(28,36,57,0.95);
+    box-shadow: 0 0 2px 0 rgba(15,23,42, 0.5);
   }
 }

@@ -143,7 +143,7 @@ const ResumeChatDrawer = forwardRef(function ResumeChatDrawer(_props, ref) {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="fixed bottom-5 right-5 z-[60] inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-orange-600 to-red-500 text-white px-4 py-3 shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-orange-400/60"
+        className="fixed bottom-5 right-5 z-[60] inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-orange-400 to-orange-500 text-white px-4 py-3 shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-orange-400/60"
         aria-label="Open resume chat"
       >
         <MessageCircle size={18} />
@@ -197,7 +197,7 @@ const ResumeChatDrawer = forwardRef(function ResumeChatDrawer(_props, ref) {
                           ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
                           : 'bg-amber-50 text-amber-700 border-amber-200'
                         : apiStatus.state === 'down'
-                        ? 'bg-red-50 text-red-700 border-red-200'
+                        ? 'bg-red-50 text-red-600 border-red-200'
                         : 'bg-slate-50 text-slate-600 border-slate-200'
                     }`}
                     title={
@@ -297,7 +297,7 @@ const ResumeChatDrawer = forwardRef(function ResumeChatDrawer(_props, ref) {
 
               {/* Input */}
               <div className="p-4 border-t border-slate-200">
-                {error ? <div className="text-xs text-red-600 mb-2">{error}</div> : null}
+                {error ? <div className="text-xs text-red-500 mb-2">{error}</div> : null}
                 <form
                   onSubmit={(e) => {
                     e.preventDefault();

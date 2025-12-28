@@ -48,14 +48,14 @@ const SKILL_CONFIG = {
   // Backend
   'node.js': { icon: SiNodedotjs, color: 'text-green-600' },
   'spring boot': { icon: SiSpringboot, color: 'text-green-500' },
-  'java': { icon: FaJava, color: 'text-orange-600' },
+  'java': { icon: FaJava, color: 'text-orange-400' },
   'python': { icon: SiPython, color: 'text-yellow-500' },
   'fastapi': { icon: SiFastapi, color: 'text-teal-600' },
   'kafka': { icon: SiApachekafka, color: 'text-slate-800 dark:text-white' },
   
   // Databases
   'mongodb': { icon: SiMongodb, color: 'text-green-500' },
-  'redis': { icon: SiRedis, color: 'text-red-600' },
+  'redis': { icon: SiRedis, color: 'text-red-500' },
   'postgresql': { icon: SiPostgresql, color: 'text-blue-400' },
   'firebase': { icon: SiFirebase, color: 'text-orange-400' },
 
@@ -70,7 +70,7 @@ const SKILL_CONFIG = {
   'langchain': { icon: SiLangchain, color: 'text-emerald-600' },
   'openai': { icon: SiOpenai, color: 'text-teal-600' },
   'huggingface': { icon: SiHuggingface, color: 'text-yellow-400' },
-  'pytorch': { icon: SiPytorch, color: 'text-orange-500' },
+  'pytorch': { icon: SiPytorch, color: 'text-orange-400' },
   'tensorflow': { icon: SiTensorflow, color: 'text-orange-400' },
 };
 
@@ -116,7 +116,7 @@ const skillCategoryColors = {
 
 export default function Skills() {
   return (
-    <section className="py-20 bg-slate-950 relative overflow-hidden">
+    <section className="py-20 bg-slate-900 relative overflow-hidden">
       {/* Background Glow */}
       <div className="absolute inset-0 section-glow pointer-events-none" />
       
@@ -145,7 +145,7 @@ export default function Skills() {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: categoryIndex * 0.1 }}
               whileHover={{ y: -5 }}
-              className="rounded-2xl border-2 border-orange-500/20 bg-slate-900/90 p-6 shadow-sm hover:shadow-xl hover:border-orange-500/40 transition-all duration-300"
+              className="rounded-2xl border-2 border-orange-400/20 bg-slate-900/90 p-6 shadow-sm hover:shadow-xl hover:border-orange-400/40 transition-all duration-300"
             >
               <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-white">
                  {/* Optional: Add a category icon here if you want */}
@@ -161,7 +161,7 @@ export default function Skills() {
                     viewport={{ once: true }}
                     transition={{ delay: categoryIndex * 0.1 + skillIndex * 0.05 }}
                     whileHover={{ scale: 1.05 }}
-                    className="inline-flex items-center gap-2 px-3 py-1.5 bg-slate-800 rounded-lg text-sm font-semibold shadow-sm border border-orange-500/20 hover:border-orange-500/40 text-white transition-colors"
+                    className="inline-flex items-center gap-2 px-3 py-1.5 bg-slate-800 rounded-lg text-sm font-semibold shadow-sm border border-orange-400/20 hover:border-orange-400/40 text-white transition-colors"
                   >
                     <SkillIcon label={skill} />
                     <span>{skill}</span>

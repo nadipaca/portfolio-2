@@ -1,21 +1,23 @@
 import { motion } from 'framer-motion';
-import { Monitor, Smartphone, Cloud } from 'lucide-react';
 import { portfolioData } from '../constants';
+import softwareIcon from '../assets/icons/software.png';
+import appDevelopmentIcon from '../assets/icons/app-development.png';
+import serverIcon from '../assets/icons/server.png';
 
 export default function About() {
   const services = [
     {
-      icon: Monitor,
+      icon: softwareIcon,
       title: 'Web Development',
       tech: 'React, NodeJS, Springboot, FastAPI, Open AI'
     },
     {
-      icon: Smartphone,
+      icon: appDevelopmentIcon,
       title: 'App Development',
       tech: 'React Native/FireStore/ Expo'
     },
     {
-      icon: Cloud,
+      icon: serverIcon,
       title: 'Web Hosting',
       tech: 'AWS, Docker, Kubernetes, Splunk, Kafka, Micorservice'
     }
@@ -28,10 +30,10 @@ export default function About() {
   ];
 
   return (
-    <section id="about" className="py-20 bg-slate-950 relative overflow-hidden">
+    <section id="about" className="py-20 bg-slate-900 relative overflow-hidden">
       <div className="absolute inset-0 section-glow pointer-events-none" />
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
+        <div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -40,20 +42,16 @@ export default function About() {
         >
           {/* Left: Services rail with vertical line and dots */}
           <div className="relative">
-            <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-orange-600" aria-hidden="true" />
+            <div className="absolute left-4 top-5 bottom-8 w-0.5 bg-orange-400" aria-hidden="true" />
             <ul className="space-y-8 pl-10">
               {services.map((service, index) => {
-                const IconComponent = service.icon;
                 return (
                   <li key={index} className="relative">
-                    <span 
-                      className="absolute left-4 top-3 inline-block w-3 h-3 rounded-full bg-orange-500 shadow-[0_0_0_4px_rgba(234,88,12,0.15)]" 
-                      aria-hidden="true"
-                      style={{ transform: 'translateX(-50%)' }}
-                    />
+                    {/* Dot on the timeline */}
+                    <div className="absolute -left-7 top-2.5 h-3 w-3 bg-orange-400 rounded-full" aria-hidden="true" />
                     <div className="flex items-start gap-4">
-                      <span className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-white/5 border border-white/10 text-orange-400">
-                        <IconComponent size={20} />
+                      <span className="inline-flex h-10 w-10 items-center justify-center flex-shrink-0">
+                        <img src={service.icon} alt={service.title} className="w-8 h-8 object-contain" style={{ filter: 'brightness(0) invert(1)' }} />
                       </span>
                       <div>
                         <div className="text-white font-semibold text-lg mb-1">{service.title}</div>
@@ -72,14 +70,14 @@ export default function About() {
             <p className="text-white leading-relaxed text-lg mb-8">
               I started my software journey from photography. Through that, I learned to love the process of creating from scratch. Since then, this has led me to software development as it fulfills my love for learning and building things.
             </p>
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-3 gap-4 justify-items-start">
               {metrics.map((m, index) => {
                 const [value, suffix] = m.value.split(' ');
                 return (
                   <div key={index} className="text-center">
                     <div className="text-2xl md:text-3xl font-bold text-white mb-1">
                       {value}
-                      {suffix && <span className="text-orange-500"> {suffix}</span>}
+                      {suffix && <span className="text-orange-400"> {suffix}</span>}
                     </div>
                     <div className="text-slate-300 text-sm">{m.label}</div>
                   </div>
@@ -87,7 +85,7 @@ export default function About() {
               })}
             </div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

@@ -7,7 +7,7 @@ export default function Education() {
   if (!edu) return null;
 
   return (
-    <section className="py-20 bg-slate-950 relative overflow-hidden">
+    <section className="py-20 bg-slate-900 relative overflow-hidden">
       <div className="absolute inset-0 section-glow pointer-events-none" />
       <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
@@ -19,7 +19,7 @@ export default function Education() {
           className="rounded-3xl p-6 md:p-8 shadow-sm border border-white/10 bg-white/5"
         >
           <div className="flex items-start gap-4">
-            <div className="h-11 w-11 rounded-2xl bg-orange-500/10 border border-orange-500/30 flex items-center justify-center flex-shrink-0">
+            <div className="h-11 w-11 rounded-2xl bg-orange-400/10 border border-orange-400/30 flex items-center justify-center flex-shrink-0">
               <GraduationCap className="text-orange-400" size={20} />
             </div>
 

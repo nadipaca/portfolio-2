@@ -3,20 +3,20 @@ import { ExternalLink, Github } from 'lucide-react';
 
 export default function ProjectCard({ project, onClick }) {
   const categoryColors = {
-    'AI/ML': 'bg-orange-900/20 text-orange-300 border-orange-500/30',
-    'Mobile': 'bg-orange-900/20 text-orange-300 border-orange-500/30',
-    'Cloud Architecture': 'bg-orange-900/20 text-orange-300 border-orange-500/30',
+    'AI/ML': 'bg-orange-900/20 text-orange-300 border-orange-400/30',
+    'Mobile': 'bg-orange-900/20 text-orange-300 border-orange-400/30',
+    'Cloud Architecture': 'bg-orange-900/20 text-orange-300 border-orange-400/30',
   };
 
   return (
     <motion.div
       whileHover={{ y: -10, scale: 1.015 }}
       transition={{ duration: 0.22, ease: 'easeOut' }}
-      className="bg-slate-900/90 rounded-2xl shadow-lg hover:shadow-xl p-6 border border-orange-500/20 cursor-pointer h-full flex flex-col relative overflow-hidden text-slate-200 hover:border-orange-500/40 transition-colors"
+      className="bg-slate-900/90 rounded-2xl shadow-lg hover:shadow-xl p-6 border border-orange-400/20 cursor-pointer h-full flex flex-col relative overflow-hidden text-slate-200 hover:border-orange-400/40 transition-colors"
       onClick={() => onClick && onClick(project)}
     >
       {/* subtle corner glow */}
-      <div className="absolute -top-16 -right-16 w-48 h-48 bg-orange-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -top-16 -right-16 w-48 h-48 bg-orange-400/10 rounded-full blur-3xl pointer-events-none" />
 
       <div className="flex items-start justify-between mb-4">
         <span

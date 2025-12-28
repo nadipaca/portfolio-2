@@ -9,21 +9,17 @@ export default function Navbar({ onOpenChat }) {
 
   const navItems = [
     { label: 'Home', href: '#home' },
-    { label: 'About', href: '#about' },
     { label: 'Projects', href: '#projects' },
-    { label: 'Experience', href: '#experience' },
-    { label: 'Skills', href: '#skills' },
-    { label: 'Certifications', href: '#certifications' },
     { label: 'Contacts', href: '#footer' },
   ];
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-slate-950/95 backdrop-blur-xl shadow-lg border-b border-orange-500/20 transition-all">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-slate-950/95 backdrop-blur-xl shadow-lg border-b border-orange-400/20 transition-all">
+      <div className="px-8 sm:px-6 lg:px-12">
         <div className="flex items-center justify-between h-16">
           <div className="flex-shrink-0">
             <a href="#" className="text-white font-extrabold text-xl tracking-tight">
-              <span className="bg-gradient-to-r from-white via-orange-300 to-orange-500 bg-clip-text text-transparent">CN</span>
+              <span className="bg-gradient-to-r from-white via-orange-300 to-orange-400 bg-clip-text text-transparent">Charishma Nadipalli</span>
             </a>
           </div>
 
@@ -35,7 +31,7 @@ export default function Navbar({ onOpenChat }) {
                 <a
                   key={item.label}
                   href={item.href}
-                  className="text-slate-300 hover:text-white transition-colors font-medium relative after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-0 after:bg-orange-500 after:transition-all hover:after:w-full"
+                  className="text-slate-300 hover:text-white transition-colors font-medium relative after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-0 after:bg-orange-400 after:transition-all hover:after:w-full"
                 >
                   {item.label}
                 </a>

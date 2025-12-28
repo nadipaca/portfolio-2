@@ -40,7 +40,7 @@ function VisualCard({ experience, index, isActive, expanded, onToggle }) {
       <motion.div
         className="bg-slate-900/95 rounded-3xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden border-2 border-white/10"
         animate={{
-          borderColor: isActive ? '#ea580c' : 'rgba(255, 255, 255, 0.12)',
+          borderColor: isActive ? '#fb923c' : 'rgba(255, 255, 255, 0.12)',
           boxShadow: isActive
             ? '0 20px 25px -5px rgba(234, 88, 12, 0.18), 0 10px 10px -5px rgba(234, 88, 12, 0.12)'
             : '0 1px 3px 0 rgba(0, 0, 0, 0.25)',
@@ -64,7 +64,7 @@ function VisualCard({ experience, index, isActive, expanded, onToggle }) {
             </div>
             <span
               className={`mt-1 inline-flex items-center justify-center h-9 w-9 rounded-full border transition-colors ${
-                expanded ? 'border-orange-500/30 bg-orange-500/10 text-orange-400' : 'border-white/10 bg-slate-800 text-slate-300'
+                expanded ? 'border-orange-400/30 bg-orange-400/10 text-orange-400' : 'border-white/10 bg-slate-800 text-slate-300'
               }`}
               aria-hidden="true"
             >
@@ -166,7 +166,7 @@ function VisualCard({ experience, index, isActive, expanded, onToggle }) {
                             key={idx}
                             onClick={() => setCurrentImageIndex(idx)}
                             className={`h-2 rounded-full transition-all ${
-                              idx === currentImageIndex ? 'w-8 bg-orange-500' : 'w-2 bg-slate-600'
+                              idx === currentImageIndex ? 'w-8 bg-orange-400' : 'w-2 bg-slate-600'
                             }`}
                             aria-label={`Go to image ${idx + 1}`}
                           />
@@ -186,7 +186,7 @@ function VisualCard({ experience, index, isActive, expanded, onToggle }) {
                         {experience.gallery[currentImageIndex].metrics.map((metric, idx) => (
                           <div
                             key={idx}
-                            className="px-3 py-1.5 bg-orange-500/10 border border-orange-500/30 rounded-lg"
+                            className="px-3 py-1.5 bg-orange-400/10 border border-orange-400/30 rounded-lg"
                           >
                             <div className="text-xs font-semibold text-orange-300">{metric.label}</div>
                             <div className="text-sm font-bold text-orange-400">{metric.value}</div>
@@ -251,7 +251,7 @@ function ArchitecturalCard({ experience, index, isActive, expanded, onToggle }) 
       <motion.div
         className="bg-slate-900/95 rounded-3xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden border-2 border-white/10"
         animate={{
-          borderColor: isActive ? '#ea580c' : 'rgba(255, 255, 255, 0.12)',
+          borderColor: isActive ? '#fb923c' : 'rgba(255, 255, 255, 0.12)',
           boxShadow: isActive
             ? '0 20px 25px -5px rgba(234, 88, 12, 0.18), 0 10px 10px -5px rgba(234, 88, 12, 0.12)'
             : '0 1px 3px 0 rgba(0, 0, 0, 0.25)',
@@ -275,7 +275,7 @@ function ArchitecturalCard({ experience, index, isActive, expanded, onToggle }) 
             </div>
             <span
               className={`mt-1 inline-flex items-center justify-center h-9 w-9 rounded-full border transition-colors ${
-                expanded ? 'border-orange-500/30 bg-orange-500/10 text-orange-400' : 'border-white/10 bg-slate-800 text-slate-300'
+                expanded ? 'border-orange-400/30 bg-orange-400/10 text-orange-400' : 'border-white/10 bg-slate-800 text-slate-300'
               }`}
               aria-hidden="true"
             >
@@ -339,12 +339,12 @@ function ArchitecturalCard({ experience, index, isActive, expanded, onToggle }) 
                     const isCurrent = idx === flowIndex;
 
                     const chipClass = isDone
-                      ? 'bg-orange-500/10 border-orange-500/30 text-orange-300'
+                      ? 'bg-orange-400/10 border-orange-400/30 text-orange-300'
                       : isCurrent
-                        ? 'bg-orange-600 border-orange-600 text-white'
+                        ? 'bg-orange-400 border-orange-400 text-white'
                         : 'bg-white/5 border-white/10 text-slate-300';
 
-                    const arrowClass = isDone || isCurrent ? 'text-orange-500' : 'text-slate-400';
+                    const arrowClass = isDone || isCurrent ? 'text-orange-400' : 'text-slate-400';
 
                     return (
                       <div key={`${tech}-${idx}`} className="flex items-center gap-2">
@@ -397,7 +397,7 @@ function ArchitecturalCard({ experience, index, isActive, expanded, onToggle }) 
                     className="bg-white/5 rounded-2xl p-5"
                   >
                     <h4 className="text-base font-semibold text-white mb-3 flex items-center gap-2">
-                      <AlertTriangle className="text-orange-500" size={20} />
+                      <AlertTriangle className="text-orange-400" size={20} />
                       The Challenge
                     </h4>
                     <p className="text-slate-300 leading-relaxed">{experience.problem}</p>
@@ -409,10 +409,10 @@ function ArchitecturalCard({ experience, index, isActive, expanded, onToggle }) 
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: index * 0.1 + 0.1 }}
-                    className="bg-orange-500/10 border border-orange-500/20 rounded-2xl p-5"
+                    className="bg-orange-400/10 border border-orange-400/20 rounded-2xl p-5"
                   >
                     <h4 className="text-base font-semibold text-white mb-3 flex items-center gap-2">
-                      <CheckCircle className="text-orange-500" size={20} />
+                      <CheckCircle className="text-orange-400" size={20} />
                       The Solution
                     </h4>
                     <p className="text-slate-300 leading-relaxed">{experience.solution}</p>
@@ -429,7 +429,7 @@ function ArchitecturalCard({ experience, index, isActive, expanded, onToggle }) 
                       {experience.tech_stack_flow.map((t) => (
                         <span
                           key={t}
-                          className="px-3 py-1.5 rounded-full text-xs font-semibold bg-orange-500/10 text-orange-300 border border-orange-500/30"
+                          className="px-3 py-1.5 rounded-full text-xs font-semibold bg-orange-400/10 text-orange-300 border border-orange-400/30"
                         >
                           {t}
                         </span>
@@ -510,7 +510,7 @@ export default function Experience() {
   }, []);
 
   return (
-    <section className="py-20 bg-slate-950 relative overflow-hidden">
+    <section className="py-20 bg-slate-900 relative overflow-hidden">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -532,7 +532,7 @@ export default function Experience() {
 
           {/* Animated Orange Fill Line */}
           <motion.div
-            className="absolute left-2 md:left-4 top-0 w-0.5 bg-orange-500"
+            className="absolute left-2 md:left-4 top-0 w-0.5 bg-orange-400"
             initial={{ height: 0 }}
             animate={{ height: progressPx }}
             transition={{ type: 'spring', stiffness: 260, damping: 35 }}
