@@ -128,6 +128,8 @@ function VisualCard({ experience, index, isActive, expanded, onToggle }) {
                         src={experience.gallery[currentImageIndex].src}
                         alt={experience.gallery[currentImageIndex].caption || `Gallery image ${currentImageIndex + 1}`}
                         className="w-full h-full object-cover"
+                        loading={currentImageIndex === 0 ? "eager" : "lazy"}
+                        decoding="async"
                       />
                     ) : (
                       <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gray-200 to-gray-300">

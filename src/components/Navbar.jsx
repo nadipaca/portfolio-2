@@ -46,17 +46,11 @@ export default function Navbar({ onOpenChat }) {
                 className="ml-1 inline-flex items-center gap-2 px-3 py-2 rounded-full bg-white/10 border border-white/10 text-slate-100 hover:bg-white/15 transition-colors"
               >
                 <MessageCircle size={16} />
-                <span className="hide-below-lg text-sm font-semibold">Chat with me</span>
+                <span className="text-sm font-semibold">Chat with AI</span>
               </button>
               <div className="flex items-center space-x-3 lg:space-x-4 ml-1">
-                <a href={portfolioData.profile.socials.github} target="_blank" rel="noopener noreferrer" className="text-slate-300 hover:text-white transition-colors">
-                  <Github size={20} />
-                </a>
                 <a href={portfolioData.profile.socials.linkedin} target="_blank" rel="noopener noreferrer" className="text-slate-300 hover:text-white transition-colors">
                   <Linkedin size={20} />
-                </a>
-                <a href={`mailto:${portfolioData.profile.socials.email}`} className="text-slate-300 hover:text-white transition-colors">
-                  <Mail size={20} />
                 </a>
               </div>
             </div>
@@ -101,17 +95,11 @@ export default function Navbar({ onOpenChat }) {
               className="w-full inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/10 text-slate-100 hover:bg-white/15 transition-colors"
             >
               <MessageCircle size={16} />
-              <span className="text-sm font-semibold">Chat</span>
+              <span className="text-sm font-semibold">Chat with AI</span>
             </button>
             <div className="flex items-center space-x-4 pt-4">
-              <a href={portfolioData.profile.socials.github} target="_blank" rel="noopener noreferrer" className="text-slate-300 hover:text-white transition-colors">
-                <Github size={20} />
-              </a>
               <a href={portfolioData.profile.socials.linkedin} target="_blank" rel="noopener noreferrer" className="text-slate-300 hover:text-white transition-colors">
                 <Linkedin size={20} />
-              </a>
-              <a href={`mailto:${portfolioData.profile.socials.email}`} className="text-slate-300 hover:text-white transition-colors">
-                <Mail size={20} />
               </a>
             </div>
           </motion.div>

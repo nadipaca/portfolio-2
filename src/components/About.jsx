@@ -24,14 +24,13 @@ export default function About() {
   ];
 
   const metrics = [
-    { value: '120 +', label: 'Completed Projects' },
+    { value: '50 +', label: 'Completed Projects' },
     { value: '95 %', label: 'Client satisfaction' },
-    { value: '10 +', label: 'Years of experience' }
+    { value: '5 +', label: 'Years of experience' }
   ];
 
   return (
     <section id="about" className="py-20 bg-slate-900 relative overflow-hidden">
-      <div className="absolute inset-0 section-glow pointer-events-none" />
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div
           initial={{ opacity: 0, y: 20 }}
@@ -51,7 +50,7 @@ export default function About() {
                     <div className="absolute -left-7 top-2.5 h-3 w-3 bg-orange-400 rounded-full" aria-hidden="true" />
                     <div className="flex items-start gap-4">
                       <span className="inline-flex h-10 w-10 items-center justify-center flex-shrink-0">
-                        <img src={service.icon} alt={service.title} className="w-8 h-8 object-contain" style={{ filter: 'brightness(0) invert(1)' }} />
+                        <img src={service.icon} alt={service.title} className="w-8 h-8 object-contain" style={{ filter: 'brightness(0) invert(1)' }} loading="lazy" decoding="async" />
                       </span>
                       <div>
                         <div className="text-white font-semibold text-lg mb-1">{service.title}</div>

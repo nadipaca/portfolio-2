@@ -1,11 +1,16 @@
+import { memo } from 'react';
 import { motion } from 'framer-motion';
 import CaseStudyCard from './CaseStudyCard';
 import { caseStudies } from '../data/caseStudies';
 
-export default function Projects() {
+function Projects() {
+  // Memoize filtered case studies to prevent re-filtering on re-renders
+  const featuredCaseStudies = caseStudies.filter(
+    cs => ['playground-app', 'healthcare-agent', 'novamart'].includes(cs.id)
+  );
+
   return (
     <section id="projects" className="py-20 bg-slate-900 relative overflow-hidden">
-      <div className="absolute inset-0 section-glow pointer-events-none" />
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -32,21 +37,21 @@ export default function Projects() {
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {caseStudies
-            .filter(cs => ['playground-app', 'healthcare-agent', 'novamart'].includes(cs.id))
-            .map((caseStudy, index) => (
-              <motion.div
-                key={caseStudy.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-              >
-                <CaseStudyCard caseStudy={caseStudy} />
-              </motion.div>
-            ))}
+          {featuredCaseStudies.map((caseStudy, index) => (
+            <motion.div
+              key={caseStudy.id}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+            >
+              <CaseStudyCard caseStudy={caseStudy} />
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>
   );
 }
+
+export default memo(Projects);

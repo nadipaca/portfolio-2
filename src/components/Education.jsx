@@ -7,7 +7,7 @@ export default function Education() {
   if (!edu) return null;
 
   return (
-    <section id="education" className="min-h-screen py-20 bg-slate-900 relative overflow-hidden">
+    <section id="education" className="py-10 bg-slate-900 relative overflow-hidden">
       <div className="absolute inset-0 section-glow pointer-events-none" />
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div

@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import DeferredSection from './components/DeferredSection';
+import SectionSkeleton from './components/SectionSkeleton';
 
 const Projects = lazy(() => import('./components/Projects'));
 const Experience = lazy(() => import('./components/Experience'));
@@ -15,10 +16,6 @@ const Contact = lazy(() => import('./components/Contact'));
 const Footer = lazy(() => import('./components/Footer'));
 const ResumeChatDrawer = lazy(() => import('./components/ResumeChatDrawer'));
 const CaseStudyPage = lazy(() => import('./components/CaseStudyPage'));
-
-function SectionFallback({ label }) {
-  return <div className="py-16 text-center text-slate-400">{label || 'Loading…'}</div>;
-}
 
 function HomePage() {
   const chatRef = useRef(null);
@@ -59,63 +56,63 @@ function HomePage() {
       <Hero />
 
       {/* About */}
-      <DeferredSection id="about" minHeight={380} rootMargin="600px 0px">
-        <Suspense fallback={<SectionFallback label="Loading about…" />}>
+      <DeferredSection id="about" minHeight={380} rootMargin="200px 0px">
+        <Suspense fallback={<SectionSkeleton lines={2} />}>
           <About />
         </Suspense>
       </DeferredSection>
 
       {/* Projects (near fold) */}
-      <DeferredSection id="projects" minHeight={320} forceMount={forced.has('projects')}>
-        <Suspense fallback={<SectionFallback label="Loading projects…" />}>
+      <DeferredSection id="projects" minHeight={320} rootMargin="200px 0px" forceMount={forced.has('projects')}>
+        <Suspense fallback={<SectionSkeleton lines={3} />}>
           <Projects />
         </Suspense>
       </DeferredSection>
 
       {/* Experience */}
-      <DeferredSection id="experience" minHeight={420} forceMount={forced.has('experience')}>
-        <Suspense fallback={<SectionFallback label="Loading experience…" />}>
+      <DeferredSection id="experience" minHeight={420} rootMargin="200px 0px" forceMount={forced.has('experience')}>
+        <Suspense fallback={<SectionSkeleton lines={2} />}>
           <Experience />
         </Suspense>
       </DeferredSection>
 
       {/* GitHub Projects */}
-      <DeferredSection id="all-projects" minHeight={420} forceMount={forced.has('all-projects')}>
-        <Suspense fallback={<SectionFallback label="Loading GitHub projects…" />}>
+      <DeferredSection id="all-projects" minHeight={420} rootMargin="200px 0px" forceMount={forced.has('all-projects')}>
+        <Suspense fallback={<SectionSkeleton lines={4} />}>
           <GitHubProjects />
         </Suspense>
       </DeferredSection>
 
       {/* Skills */}
-      <DeferredSection id="skills" minHeight={340} forceMount={forced.has('skills')}>
-        <Suspense fallback={<SectionFallback label="Loading skills…" />}>
+      <DeferredSection id="skills" minHeight={340} rootMargin="200px 0px" forceMount={forced.has('skills')}>
+        <Suspense fallback={<SectionSkeleton lines={3} />}>
           <Skills />
         </Suspense>
       </DeferredSection>
 
       {/* Certifications */}
-      <DeferredSection id="certifications" minHeight={340} forceMount={forced.has('certifications')}>
-        <Suspense fallback={<SectionFallback label="Loading certifications…" />}>
+      <DeferredSection id="certifications" minHeight={340} rootMargin="200px 0px" forceMount={forced.has('certifications')}>
+        <Suspense fallback={<SectionSkeleton lines={3} />}>
           <Certifications />
         </Suspense>
       </DeferredSection>
 
       {/* Education */}
-      <DeferredSection id="education" minHeight={400} forceMount={forced.has('education')}>
-        <Suspense fallback={<SectionFallback label="Loading education…" />}>
+      <DeferredSection id="education" minHeight={400} rootMargin="200px 0px" forceMount={forced.has('education')}>
+        <Suspense fallback={<SectionSkeleton lines={2} />}>
           <Education />
         </Suspense>
       </DeferredSection>
 
       {/* Contact */}
-      <DeferredSection id="contact" minHeight={500} forceMount={forced.has('contact')}>
-        <Suspense fallback={<SectionFallback label="Loading contact form…" />}>
+      <DeferredSection id="contact" minHeight={500} rootMargin="200px 0px" forceMount={forced.has('contact')}>
+        <Suspense fallback={<SectionSkeleton lines={1} />}>
           <Contact />
         </Suspense>
       </DeferredSection>
 
       {/* Footer */}
-      <DeferredSection id="footer" minHeight={120} rootMargin="1200px 0px">
+      <DeferredSection id="footer" minHeight={120} rootMargin="400px 0px">
         <Suspense fallback={null}>
           <Footer />
         </Suspense>

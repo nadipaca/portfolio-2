@@ -1,10 +1,11 @@
+import { memo } from 'react';
 import { motion } from 'framer-motion';
 import { ExternalLink, Github, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import MobileDeviceFrame from './MobileDeviceFrame';
 import playgroundThumbnail from '../assets/thumbnails/playground.png';
 
-export default function CaseStudyCard({ caseStudy }) {
+function CaseStudyCard({ caseStudy }) {
   const navigate = useNavigate();
   const categoryColors = {
     'AI/ML': 'bg-orange-900/20 text-orange-300 border-orange-400/30',
@@ -46,6 +47,8 @@ export default function CaseStudyCard({ caseStudy }) {
                 src={playgroundThumbnail}
                 alt={caseStudy.title}
                 className="w-full h-full object-cover"
+                loading="lazy"
+                decoding="async"
               />
               {/* Overlay Badge and Arrow */}
               <div className="absolute top-0 left-0 right-0 flex items-center justify-between p-3 z-10">
@@ -240,7 +243,7 @@ export default function CaseStudyCard({ caseStudy }) {
                 e.stopPropagation();
                 handleClick();
               }}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-orange-400/90 hover:bg-orange-300 text-white text-sm font-medium rounded-md transition-colors group/btn"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-orange-400 hover:bg-orange-300 text-white text-sm font-medium rounded-md transition-colors group/btn"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
@@ -282,3 +285,5 @@ export default function CaseStudyCard({ caseStudy }) {
     </motion.div>
   );
 }
+
+export default memo(CaseStudyCard);
