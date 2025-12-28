@@ -467,23 +467,9 @@ export default function GitHubProjects() {
   }, [filtered]);
 
   return (
-    <section aria-label="Curated GitHub Projects" className="py-20 bg-slate-900 relative overflow-hidden">
+    <section aria-label="Projects" className="py-20 bg-slate-900 relative overflow-hidden">
       <div className="absolute inset-0 section-glow pointer-events-none" />
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 14 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="text-center mb-8"
-        >
-          <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-4 tracking-tight">
-            More Projects (Curated GitHub)
-          </h2>
-          <p className="text-slate-300 max-w-2xl mx-auto">
-            Only repositories I'd confidently walk through in an interview.
-          </p>
-        </motion.div>
 
         {/* Controls */}
         <div className="bg-slate-900/90 rounded-2xl p-4 md:p-5 mb-6 shadow-sm border border-orange-400/20">

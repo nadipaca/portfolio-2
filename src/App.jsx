@@ -11,6 +11,7 @@ const GitHubProjects = lazy(() => import('./components/GitHubProjects'));
 const Skills = lazy(() => import('./components/Skills'));
 const Certifications = lazy(() => import('./components/Certifications'));
 const Education = lazy(() => import('./components/Education'));
+const Contact = lazy(() => import('./components/Contact'));
 const Footer = lazy(() => import('./components/Footer'));
 const ResumeChatDrawer = lazy(() => import('./components/ResumeChatDrawer'));
 const CaseStudyPage = lazy(() => import('./components/CaseStudyPage'));
@@ -100,9 +101,16 @@ function HomePage() {
       </DeferredSection>
 
       {/* Education */}
-      <DeferredSection id="education" minHeight={220} forceMount={forced.has('education')}>
+      <DeferredSection id="education" minHeight={400} forceMount={forced.has('education')}>
         <Suspense fallback={<SectionFallback label="Loading education…" />}>
           <Education />
+        </Suspense>
+      </DeferredSection>
+
+      {/* Contact */}
+      <DeferredSection id="contact" minHeight={500} forceMount={forced.has('contact')}>
+        <Suspense fallback={<SectionFallback label="Loading contact form…" />}>
+          <Contact />
         </Suspense>
       </DeferredSection>
 

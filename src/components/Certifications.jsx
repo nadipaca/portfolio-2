@@ -50,7 +50,13 @@ function CertificationCard({ cert, index }) {
               <IssuerIcon
                 aria-label={issuerLogoAlt}
                 title={issuerLogoAlt}
-                className={issuer.toLowerCase().includes('oracle') ? 'text-red-500' : 'text-slate-800'}
+                className={
+                  issuer.toLowerCase().includes('oracle') 
+                    ? 'text-red-500' 
+                    : issuer.toLowerCase().includes('microsoft')
+                    ? 'text-blue-500'
+                    : 'text-slate-300'
+                }
                 size={32}
               />
             ) : issuerLogo ? (

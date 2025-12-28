@@ -99,15 +99,6 @@ export const portfolioData = {
 
     // --- Your current certifications (fill in credentialUrl values) ---
     {
-      id: "oci-ai-foundations-associate-2025",
-      title: "Oracle Cloud Infrastructure 2025 Certified AI Foundations Associate",
-      issuer: "Oracle",
-      issued: "Oct 2025",
-      expires: "Oct 2027",
-      credentialId: "",
-      credentialUrl: "https://catalog-education.oracle.com/pls/certview/sharebadge?id=A3FBF91ABB544C3048BFCA10D41C60E999FAA548BF9EEB12383C05250941FADB",
-    },
-    {
       id: "oci-developer-professional-2025",
       title: "Oracle Cloud Infrastructure 2025 Certified Developer Professional",
       issuer: "Oracle",

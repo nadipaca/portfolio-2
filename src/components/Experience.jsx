@@ -38,7 +38,7 @@ function VisualCard({ experience, index, isActive, expanded, onToggle }) {
     >
       {/* Card */}
       <motion.div
-        className="bg-slate-900/95 rounded-3xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden border-2 border-white/10"
+        className="bg-slate-900/95 rounded-3xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden border-2 border-white/10 group/card"
         animate={{
           borderColor: isActive ? '#fb923c' : 'rgba(255, 255, 255, 0.12)',
           boxShadow: isActive
@@ -52,7 +52,7 @@ function VisualCard({ experience, index, isActive, expanded, onToggle }) {
           type="button"
           onClick={onToggle}
           aria-expanded={expanded}
-          className="w-full text-left p-6 pb-5"
+          className="w-full text-left p-6 pb-5 relative group/button"
         >
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0">
@@ -62,14 +62,24 @@ function VisualCard({ experience, index, isActive, expanded, onToggle }) {
               <p className="text-slate-300 font-medium">{experience.company}</p>
               <p className="text-sm text-slate-400 mt-1">{experience.period}</p>
             </div>
-            <span
-              className={`mt-1 inline-flex items-center justify-center h-9 w-9 rounded-full border transition-colors ${
-                expanded ? 'border-orange-400/30 bg-orange-400/10 text-orange-400' : 'border-white/10 bg-slate-800 text-slate-300'
-              }`}
-              aria-hidden="true"
-            >
-              <ChevronDown className={`transition-transform ${expanded ? 'rotate-180' : ''}`} size={18} />
-            </span>
+            <div className="relative flex items-center">
+              {/* Hover text - only show when collapsed */}
+              {!expanded && (
+                <span className="absolute right-12 mr-2 px-2 py-1 bg-slate-800 text-white text-xs font-medium rounded whitespace-nowrap opacity-0 group-hover/button:opacity-100 transition-opacity duration-200 pointer-events-none z-10 border border-white/10">
+                  See more details
+                </span>
+              )}
+              <span
+                className={`mt-1 inline-flex items-center justify-center h-9 w-9 rounded-full border transition-all ${
+                  expanded 
+                    ? 'border-orange-400/30 bg-orange-400/10 text-orange-400' 
+                    : 'border-white/10 bg-slate-800 text-slate-300 group-hover/button:border-orange-400/30 group-hover/button:bg-orange-400/10 group-hover/button:text-orange-400'
+                }`}
+                aria-hidden="true"
+              >
+                <ChevronDown className={`transition-transform ${expanded ? 'rotate-180' : ''}`} size={18} />
+              </span>
+            </div>
           </div>
 
           <p className="text-slate-300 leading-relaxed mt-3 font-handwriting text-lg tracking-wide">
@@ -249,7 +259,7 @@ function ArchitecturalCard({ experience, index, isActive, expanded, onToggle }) 
     >
       {/* Card */}
       <motion.div
-        className="bg-slate-900/95 rounded-3xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden border-2 border-white/10"
+        className="bg-slate-900/95 rounded-3xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden border-2 border-white/10 group/card"
         animate={{
           borderColor: isActive ? '#fb923c' : 'rgba(255, 255, 255, 0.12)',
           boxShadow: isActive
@@ -263,7 +273,7 @@ function ArchitecturalCard({ experience, index, isActive, expanded, onToggle }) 
           type="button"
           onClick={onToggle}
           aria-expanded={expanded}
-          className="w-full text-left p-6 pb-5"
+          className="w-full text-left p-6 pb-5 relative group/button"
         >
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0">
@@ -273,14 +283,24 @@ function ArchitecturalCard({ experience, index, isActive, expanded, onToggle }) 
               <p className="text-slate-300 font-medium">{experience.company}</p>
               <p className="text-sm text-slate-400 mt-1">{experience.period}</p>
             </div>
-            <span
-              className={`mt-1 inline-flex items-center justify-center h-9 w-9 rounded-full border transition-colors ${
-                expanded ? 'border-orange-400/30 bg-orange-400/10 text-orange-400' : 'border-white/10 bg-slate-800 text-slate-300'
-              }`}
-              aria-hidden="true"
-            >
-              <ChevronDown className={`transition-transform ${expanded ? 'rotate-180' : ''}`} size={18} />
-            </span>
+            <div className="relative flex items-center">
+              {/* Hover text - only show when collapsed */}
+              {!expanded && (
+                <span className="absolute right-12 mr-2 px-2 py-1 bg-slate-800 text-white text-xs font-medium rounded whitespace-nowrap opacity-0 group-hover/button:opacity-100 transition-opacity duration-200 pointer-events-none z-10 border border-white/10">
+                  See more details
+                </span>
+              )}
+              <span
+                className={`mt-1 inline-flex items-center justify-center h-9 w-9 rounded-full border transition-all ${
+                  expanded 
+                    ? 'border-orange-400/30 bg-orange-400/10 text-orange-400' 
+                    : 'border-white/10 bg-slate-800 text-slate-300 group-hover/button:border-orange-400/30 group-hover/button:bg-orange-400/10 group-hover/button:text-orange-400'
+                }`}
+                aria-hidden="true"
+              >
+                <ChevronDown className={`transition-transform ${expanded ? 'rotate-180' : ''}`} size={18} />
+              </span>
+            </div>
           </div>
 
           <p className="text-slate-300 leading-relaxed mt-3 font-handwriting text-lg tracking-wide">
