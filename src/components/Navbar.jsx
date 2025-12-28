@@ -18,7 +18,7 @@ export default function Navbar({ onOpenChat }) {
       <div className="px-8 sm:px-6 lg:px-12">
         <div className="flex items-center justify-between h-16">
           <div className="flex-shrink-0">
-            <a href="#" className="text-white font-extrabold text-xl tracking-tight">
+            <a href="/" className="text-white font-extrabold text-xl tracking-tight">
               <span className="bg-gradient-to-r from-white via-orange-300 to-orange-400 bg-clip-text text-transparent">Charishma Nadipalli</span>
             </a>
           </div>

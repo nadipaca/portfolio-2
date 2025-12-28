@@ -52,11 +52,11 @@ export const portfolioData = {
       "ai-code-review-assistant": "AI/ML",
       "healthcare-multi-agent": "AI/ML",
       "spring-sentiment-analyzer": "AI/ML",
+      "project_scout_hackathon": "AI/ML",
       "playground-app": "Mobile",
       "Naruto-Infinite-List": "Web",
       "nova_mart": "Web",
-      "daily_weather_update": "Web",
-      "project_scout_hackathon": "Web"
+      "daily_weather_update": "Web"
     }
   },
   education: {

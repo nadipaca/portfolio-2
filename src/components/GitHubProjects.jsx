@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { ExternalLink, Search, X } from 'lucide-react';
 import { portfolioData } from '../constants';
+import { caseStudies } from '../data/caseStudies';
+import CaseStudyCard from './CaseStudyCard';
 
 function normalizeText(s) {
   return String(s || '')
@@ -409,6 +411,61 @@ export default function GitHubProjects() {
     return list;
   }, [preparedRepos, query, category, selectedKeywords]);
 
+  // Convert GitHub repos to case study format
+  const reposAsCaseStudies = useMemo(() => {
+    return filtered.map((repo) => {
+      // Try to find matching case study by repo name
+      const repoNameLower = String(repo.name || '').toLowerCase();
+      const matchingCaseStudy = caseStudies.find((cs) => {
+        const csRepoName = cs.links?.repo?.split('/').pop()?.toLowerCase();
+        return csRepoName === repoNameLower;
+      });
+
+      if (matchingCaseStudy) {
+        // Use existing case study data
+        return matchingCaseStudy;
+      }
+
+      // Create a simplified case study from GitHub repo data
+      const stack = [
+        repo.language || '',
+        ...(repo.topics || []).slice(0, 4)
+      ].filter(Boolean);
+
+      return {
+        id: `github-${repo.id}`,
+        slug: `github-${repoNameLower}`,
+        title: repo.name || 'Untitled Project',
+        subtitle: repo.description || 'GitHub repository',
+        category: repo._category || 'Web',
+        oneLiner: repo.description || 'No description provided.',
+        readTime: '2 min read',
+        role: 'Repo Owner',
+        stack: stack.length > 0 ? stack : ['Code'],
+        impactChips: repo.stargazers_count > 0 ? [
+          { label: 'Stars', value: `${repo.stargazers_count}` }
+        ] : [],
+        videoUrl: null,
+        problem: ['Project details available in repository'],
+        myRole: ['Repository owner and primary contributor'],
+        architecture: {
+          description: repo.description || 'See repository for architecture details.',
+          components: stack.slice(0, 4)
+        },
+        keyDecisions: ['See repository for implementation details'],
+        results: repo.stargazers_count > 0 ? [
+          { label: 'GitHub Stars', value: `${repo.stargazers_count}` }
+        ] : [],
+        improvements: ['See repository for future improvements'],
+        links: {
+          demo: null,
+          repo: repo.html_url,
+          caseStudy: `#github-${repoNameLower}`
+        }
+      };
+    });
+  }, [filtered]);
+
   return (
     <section aria-label="Curated GitHub Projects" className="py-20 bg-slate-900 relative overflow-hidden">
       <div className="absolute inset-0 section-glow pointer-events-none" />
@@ -493,8 +550,8 @@ export default function GitHubProjects() {
           </div>
 
           <div className="mt-3 text-xs text-slate-400">
-            Showing <span className="font-semibold text-white">{Math.min(visibleCount, filtered.length)}</span> of{' '}
-            <span className="font-semibold text-white">{filtered.length}</span> curated repos.
+            Showing <span className="font-semibold text-white">{Math.min(visibleCount, reposAsCaseStudies.length)}</span> of{' '}
+            <span className="font-semibold text-white">{reposAsCaseStudies.length}</span> curated repos.
           </div>
         </div>
 
@@ -511,58 +568,25 @@ export default function GitHubProjects() {
               <div className="text-center text-slate-400 text-xs -mt-2 mb-4">Updating from GitHub…</div>
             ) : null}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filtered.slice(0, visibleCount).map((r, idx) => (
-                <motion.a
-                  key={r.id}
-                  href={r.html_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  initial={{ opacity: 0, y: 16 }}
+              {reposAsCaseStudies.slice(0, visibleCount).map((caseStudy, idx) => (
+                <motion.div
+                  key={caseStudy.id}
+                  initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.45, delay: Math.min(idx, 8) * 0.04 }}
-                  whileHover={{ y: -8 }}
-                  className="bg-slate-900/90 rounded-2xl border border-orange-400/20 shadow-lg hover:shadow-xl hover:border-orange-400/40 transition-all p-5 flex flex-col relative overflow-hidden"
+                  transition={{ duration: 0.5, delay: Math.min(idx, 8) * 0.04 }}
                 >
-                  <div className="absolute -top-16 -right-16 w-48 h-48 bg-orange-400/10 rounded-full blur-3xl pointer-events-none" />
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-2">
-                        <h4 className="text-lg font-bold text-white truncate">{r.name}</h4>
-                        <span
-                          className={`px-2 py-0.5 rounded-full text-[10px] font-bold border bg-orange-900/20 text-orange-300 border-orange-400/30`}
-                        >
-                          {r._category || 'Web'}
-                        </span>
-                      </div>
-                      <p className="text-sm text-slate-300 mt-1">
-                        {r.description || 'No description provided.'}
-                      </p>
-                      {r.topics?.length > 0 && (
-                        <div className="mt-3 flex flex-wrap gap-1.5">
-                          {r.topics.slice(0, 6).map((topic) => (
-                            <span
-                              key={topic}
-                              className="px-2 py-1 rounded-full text-[11px] font-semibold bg-white/5 text-slate-200 border border-white/10"
-                            >
-                              {topic}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                    <ExternalLink className="text-slate-400 hover:text-orange-400 transition-colors flex-shrink-0" size={18} />
-                  </div>
-                </motion.a>
+                  <CaseStudyCard caseStudy={caseStudy} />
+                </motion.div>
               ))}
             </div>
 
-            {(filtered.length > visibleCount || visibleCount > pageSize) && (
+            {(reposAsCaseStudies.length > visibleCount || visibleCount > pageSize) && (
               <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
-                {filtered.length > visibleCount ? (
+                {reposAsCaseStudies.length > visibleCount ? (
                   <button
                     type="button"
-                    onClick={() => setVisibleCount((n) => Math.min(filtered.length, n + pageSize))}
+                    onClick={() => setVisibleCount((n) => Math.min(reposAsCaseStudies.length, n + pageSize))}
                     className="px-5 py-2.5 rounded-full bg-orange-400 text-white font-semibold hover:bg-orange-300 transition-colors shadow-sm"
                   >
                     Load more

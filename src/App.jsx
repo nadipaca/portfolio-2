@@ -1,4 +1,5 @@
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
+import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import DeferredSection from './components/DeferredSection';
@@ -12,12 +13,13 @@ const Certifications = lazy(() => import('./components/Certifications'));
 const Education = lazy(() => import('./components/Education'));
 const Footer = lazy(() => import('./components/Footer'));
 const ResumeChatDrawer = lazy(() => import('./components/ResumeChatDrawer'));
+const CaseStudyPage = lazy(() => import('./components/CaseStudyPage'));
 
 function SectionFallback({ label }) {
   return <div className="py-16 text-center text-slate-400">{label || 'Loading…'}</div>;
 }
 
-function App() {
+function HomePage() {
   const chatRef = useRef(null);
   const [forced, setForced] = useState(() => {
     const h = String(window.location.hash || '').replace(/^#/, '').trim();
@@ -30,7 +32,6 @@ function App() {
     }
     return initial;
   });
-  // Chat drawer always mounted; no conditional mounting
 
   useEffect(() => {
     const onHashChange = () => {
@@ -48,7 +49,6 @@ function App() {
   }, []);
 
   const openChat = () => {
-    // Drawer is always mounted; open immediately
     chatRef.current?.open?.();
   };
 
@@ -118,6 +118,19 @@ function App() {
         <ResumeChatDrawer ref={chatRef} />
       </Suspense>
     </div>
+  );
+}
+
+function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/case-studies/:slug" element={
+        <Suspense fallback={<div className="min-h-screen bg-slate-900 text-white flex items-center justify-center">Loading case study…</div>}>
+          <CaseStudyPage />
+        </Suspense>
+      } />
+    </Routes>
   );
 }
 
