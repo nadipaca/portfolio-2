@@ -82,11 +82,13 @@ function buildDocs({ githubRepos }) {
 
   // Skills
   Object.entries(portfolioData.skills || {}).forEach(([cat, items]) => {
+    // Supports both array style and { primary, secondary } style.
+    const skillData = items?.primary || items?.secondary || items;
     docs.push({
       id: `skills-${cat}`,
       source: `Skills: ${cat}`,
       url: '#skills',
-      text: `${cat}: ${(items || []).join(', ')}`,
+      text: `${cat}: ${(Array.isArray(skillData) ? skillData : []).join(', ')}`,
     });
   });
 
