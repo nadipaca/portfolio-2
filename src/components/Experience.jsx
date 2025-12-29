@@ -429,11 +429,13 @@ export default function Experience() {
   }, []);
 
   return (
-    <SectionWrapper id="experience" className="max-w-6xl">
+    <SectionWrapper id="experience">
       <SectionHeader
         title="Professional Experience"
         subtitle="Impact first. Details when you want (problem → approach → results)."
       />
+      
+      <div className="max-w-6xl mx-auto">
 
         {/* Timeline Container */}
         <div className="relative" ref={timelineRef}>
@@ -478,6 +480,7 @@ export default function Experience() {
             ))}
           </div>
         </div>
+      </div>
     </SectionWrapper>
   );
 }

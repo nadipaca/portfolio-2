@@ -405,7 +405,7 @@ export const caseStudies = [
       { label: "Scroll FPS", value: "60 FPS (2k-5k items)" },
       { label: "Initial Load", value: "< 1.5s" }
     ],
-    videoUrl: null,
+    videoUrl: "https://res.cloudinary.com/dlmpwxayb/video/upload/v1766972229/naruto_infinite_list_yeyuwb.mp4",
     
     problem: [
       "Large lists can destroy UX (slow renders, jank, memory spikes)",
@@ -467,7 +467,7 @@ export const caseStudies = [
       { label: "Review time reduction", value: "40-70%" },
       { label: "File size support", value: "Up to 200KB" }
     ],
-    videoUrl: null,
+    videoUrl: "https://res.cloudinary.com/dlmpwxayb/video/upload/v1766972146/Code-Review-Ai_jbfz2j.mp4",
     
     problem: [
       "Manual reviews are slow/inconsistent and miss issues under time pressure",
@@ -511,7 +511,7 @@ export const caseStudies = [
     ],
     
     links: {
-      demo: null,
+      demo: "https://res.cloudinary.com/dlmpwxayb/video/upload/v1766972146/Code-Review-Ai_jbfz2j.mp4",
       repo: "https://github.com/nadipaca/ai-code-review-assistant",
       caseStudy: "#ai-code-review"
     },
@@ -578,7 +578,7 @@ export const caseStudies = [
       { label: "p95 Latency", value: "~30-80ms" },
       { label: "Throughput", value: "~150-300 req/sec" }
     ],
-    videoUrl: null,
+    videoUrl: "https://res.cloudinary.com/dlmpwxayb/video/upload/v1766972512/Sentiment-Analyzer_mgod8u.mp4",
     
     problem: [
       "Need a simple, deployable HTTP API for sentiment classification usable by any client/service",
@@ -617,7 +617,7 @@ export const caseStudies = [
     ],
     
     links: {
-      demo: null,
+      demo: "https://res.cloudinary.com/dlmpwxayb/video/upload/v1766972512/Sentiment-Analyzer_mgod8u.mp4",
       repo: "https://github.com/charish37/spring-sentiment-analyzer",
       caseStudy: "#spring-sentiment"
     }
@@ -733,6 +733,125 @@ export const caseStudies = [
         { from: "fastapi-server", to: "agent" },
         { from: "agent", to: "github-api" },
         { from: "agent", to: "llm" }
+      ]
+    }
+  },
+  
+  {
+    id: "daily-weather-update",
+    slug: "daily-weather-update-automation",
+    title: "Daily Weather Update",
+    subtitle: "N8n Workflow Automation + API Integration",
+    category: "Web",
+    oneLiner: "Built an automated daily weather update system using N8n workflows that fetches weather data from APIs, processes it, and delivers personalized updates via email/SMS.",
+    readTime: "1 min read",
+    
+    role: "Repo Owner / Automation Engineer",
+    stack: ["N8n", "Weather API", "Workflow Automation", "Email/SMS Integration", "API Integration"],
+    impactChips: [
+      { label: "Automation reliability", value: "99%+" },
+      { label: "Time saved", value: "Daily manual task eliminated" }
+    ],
+    videoUrl: "https://res.cloudinary.com/dlmpwxayb/video/upload/v1766972518/Weather_N8n_Automation_wxu7ze.mp4",
+    
+    problem: [
+      "Manual daily weather checks are time-consuming and easy to forget",
+      "Users need reliable, automated weather updates delivered to their preferred channels (email/SMS)",
+      "Weather data from multiple sources needs to be aggregated and formatted for easy consumption"
+    ],
+    
+    myRole: [
+      "Repo owner; designed and implemented the N8n workflow automation, integrated weather APIs, and configured delivery channels"
+    ],
+    
+    architecture: {
+      description: "N8n workflow automation platform → Weather API integration → Data processing and formatting → Email/SMS delivery. Scheduled triggers run daily to fetch weather data, process it into user-friendly format, and deliver via configured channels.",
+      components: [
+        "N8n Workflow Automation Platform",
+        "Weather API Integration",
+        "Scheduled Triggers (Daily)",
+        "Data Processing & Formatting",
+        "Email Delivery Service",
+        "SMS Delivery Service (Optional)"
+      ]
+    },
+    
+    keyDecisions: [
+      "N8n for visual workflow automation to reduce code complexity and enable rapid iteration",
+      "API-first approach to integrate multiple weather data sources for reliability and redundancy",
+      "Flexible delivery channels (email/SMS) to accommodate user preferences"
+    ],
+    
+    results: [
+      { label: "Automation Reliability", value: "99%+" },
+      { label: "Daily Task Elimination", value: "100% (fully automated)" },
+      { label: "Setup Time", value: "< 30 minutes" },
+      { label: "Workflow Execution Time", value: "< 10 seconds" }
+    ],
+    
+    improvements: [
+      "N8n workflows are easy to build but can become complex with many nodes; needs clear documentation",
+      "API rate limits and costs need monitoring as usage scales",
+      "Error handling and retry logic could be enhanced for production-grade reliability"
+    ],
+    
+    links: {
+      demo: "https://res.cloudinary.com/dlmpwxayb/video/upload/v1766972518/Weather_N8n_Automation_wxu7ze.mp4",
+      repo: "https://github.com/nadipaca/daily_weather_update",
+      caseStudy: "#daily-weather-update"
+    },
+    architectureDiagram: {
+      title: "High-level overview",
+      nodes: [
+        { 
+          id: "scheduler", 
+          label: "Scheduler", 
+          description: "Daily Trigger", 
+          x: 50, 
+          y: 80
+        },
+        { 
+          id: "weather-api", 
+          label: "Weather API", 
+          description: "Data Source", 
+          x: 280, 
+          y: 80
+        },
+        { 
+          id: "n8n-workflow", 
+          label: "N8n Workflow", 
+          description: "Automation Engine", 
+          x: 510, 
+          y: 80
+        },
+        { 
+          id: "data-processor", 
+          label: "Data Processor", 
+          description: "Format & Transform", 
+          x: 510, 
+          y: 250
+        },
+        { 
+          id: "email-service", 
+          label: "Email Service", 
+          description: "Delivery", 
+          x: 740, 
+          y: 50
+        },
+        { 
+          id: "sms-service", 
+          label: "SMS Service", 
+          description: "Delivery (Optional)", 
+          x: 740, 
+          y: 250
+        }
+      ],
+      connections: [
+        { from: "scheduler", to: "n8n-workflow" },
+        { from: "n8n-workflow", to: "weather-api" },
+        { from: "weather-api", to: "data-processor" },
+        { from: "data-processor", to: "email-service" },
+        { from: "data-processor", to: "sms-service" }
       ]
     }
   }

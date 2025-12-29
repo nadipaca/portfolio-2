@@ -53,17 +53,18 @@ export default function Contact() {
   };
 
   return (
-    <SectionWrapper id="contact" className="max-w-4xl">
+    <SectionWrapper id="contact">
       <SectionHeader
         title="Get In Touch"
         subtitle="Have a question or want to work together? Send me a message!"
       />
 
-      <motion.div
-        {...fadeInUp}
-        transition={{ delay: 0.2 }}
-        className="bg-slate-900/90 rounded-3xl shadow-lg border border-orange-400/20 p-8 md:p-12"
-      >
+      <div className="max-w-4xl mx-auto">
+        <motion.div
+          {...fadeInUp}
+          transition={{ delay: 0.2 }}
+          className="bg-slate-900/90 rounded-3xl shadow-lg border border-orange-400/20 p-8 md:p-12"
+        >
         <form onSubmit={handleSubmit} className="space-y-6">
           <FormField
             label="Name"
@@ -130,7 +131,8 @@ export default function Contact() {
             {isSubmitting ? 'Sending...' : 'Send Message'}
           </Button>
         </form>
-      </motion.div>
+        </motion.div>
+      </div>
     </SectionWrapper>
   );
 }
