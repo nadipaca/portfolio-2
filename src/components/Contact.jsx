@@ -7,6 +7,7 @@ import FormField from './ui/FormField';
 import Button from './ui/Button';
 import { fadeInUp } from '../utils/animations';
 import { portfolioData } from '../constants';
+import { apiFetch } from '../utils/api';
 
 export default function Contact() {
   const email = portfolioData.profile.socials.email;
@@ -43,7 +44,7 @@ export default function Contact() {
     setStatus('sending');
 
     try {
-      const response = await fetch('/api/contact', {
+      const response = await apiFetch('/api/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -29,7 +29,7 @@ export default function Hero() {
                          radial-gradient(20vh circle at 80% 80%, rgba(234,88,12,0.10), transparent 25%)`,
           }}
         />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-[45vh] grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 sm:py-6 lg:px-8 min-h-[45vh] grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
           {/* Left Section */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -60,11 +60,11 @@ export default function Hero() {
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.6 }}
-              className="mt-8 flex flex-wrap items-center gap-4"
+              className="mt-8 flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center justify-center md:justify-start gap-3 sm:gap-4"
             >
               <a
                 href="#projects"
-                className="px-6 py-3 rounded-md bg-orange-400 text-white hover:bg-orange-300 transition-colors font-semibold"
+                className="w-full max-w-xs mx-auto sm:mx-0 sm:w-auto sm:max-w-none px-6 py-3 rounded-md bg-orange-400 text-white hover:bg-orange-300 transition-colors font-semibold text-center"
               >
                 View Projects
               </a>
@@ -72,7 +72,7 @@ export default function Hero() {
                 href={resumePdf}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-6 py-3 rounded-md bg-transparent border-2 border-orange-400 text-white hover:bg-orange-400/10 transition-colors font-semibold"
+                className="w-full max-w-xs mx-auto sm:mx-0 sm:w-auto sm:max-w-none px-6 py-3 rounded-md bg-transparent border-2 border-orange-400 text-white hover:bg-orange-400/10 transition-colors font-semibold text-center"
               >
                 View Resume
               </a>
@@ -81,7 +81,7 @@ export default function Hero() {
 
           {/* Right Section */}
           <div className="flex items-center justify-center md:justify-end relative z-0 mt-8 md:mt-0">
-            <div className="relative w-full max-w-lg h-[400px] md:h-[450px] flex items-center justify-center">
+            <div className="relative w-full max-w-lg h-[320px] md:h-[450px] flex items-center justify-center">
               
 
               {/* Image - centered exactly on top of circle with higher z-index */}
@@ -89,7 +89,7 @@ export default function Hero() {
                 <img
                   src={heroImage}
                   alt="Charishma Nadipalli portrait"
-                  className="w-[280px] h-[280px] md:w-[320px] md:h-[320px] rounded-full border-2 border-white/10 shadow-lg shadow-orange-400/20 object-cover"
+                  className="w-[280px] h-[280px] md:w-[320px] md:h-[300px] rounded-full border-2 border-white/10 shadow-lg shadow-orange-400/20 object-cover"
                 />
               </div>
 
@@ -113,4 +113,3 @@ export default function Hero() {
     </section>
   );
 }
-

@@ -1,12 +1,5 @@
-// Import MCESC images
-import MCESCAdminDashboard from './assets/MCESC-Admin dashboard.png';
-import MCESCCreateNoteForm from './assets/MCESC-Create Note Form.png';
-import MCESCDistrictProfile from './assets/MCESC-district-profile.png';
-import MCESCReferral from './assets/MCESC-Referral.png';
-import MonthlyView from './assets/MonthlyView.png';
-import ReferralStatus from './assets/referralStatus.png';
-import StudentHistory from './assets/student-history.png';
-import DistrictProviderView from './assets/District-provider-view.png';
+// Server-side portfolio data (without image imports)
+// This file is used by server.js for the chat API
 
 export const portfolioData = {
   profile: {
@@ -18,12 +11,10 @@ export const portfolioData = {
     socials: {
       github: "https://github.com/nadipaca",
       linkedin: "https://linkedin.com/in/charishma-nadipalli",
-      email: "charishmanadipalli99@gmail.com"
+      email: "nadipaca@mail.uc.edu"
     }
   },
   github: {
-    // Curate what you want recruiters/founders to see first (quality > quantity).
-    // These should match your GitHub repo names exactly.
     curatedRepos: [
       "ai-code-review-assistant",
       "healthcare-multi-agent",
@@ -34,14 +25,12 @@ export const portfolioData = {
       "daily_weather_update",
       "project_scout_hackathon"
     ],
-    // Hide repos you don’t want displayed (learning repos, forks, portfolio experiments, etc.)
     hiddenRepos: [
       "portfolio-2",
       "Sequelize-learn",
       "nodejs-databases",
       "OCAT-Charishma-2025"
     ],
-    // Optional per-repo owner overrides when curated repos live under other accounts
     repoOwners: {
       "spring-sentiment-analyzer": "charish37"
     },
@@ -72,7 +61,7 @@ export const portfolioData = {
     ]
   },
   certifications: [
-  {
+    {
       id: "oci-developer-professional-2025",
       title: "Oracle Cloud Infrastructure 2025 Certified Developer Professional",
       issuer: "Oracle",
@@ -105,50 +94,26 @@ export const portfolioData = {
       primary: ["React", "TypeScript"],
       secondary: ["Next.js", "Tailwind CSS"],
       isPrimary: true,
-      usedIn: [
-        { name: "Naruto Infinite List", slug: "naruto-infinite-list", tooltip: "Used for infinite scroll + API integration" },
-        { name: "Portfolio", slug: "#", tooltip: "Built with React + TypeScript" },
-        { name: "Work", slug: "#experience", tooltip: "Built Dashboard and Forms for 50k+ users" }
-      ]
     },
     backend: {
       primary: ["Node.js", "FastAPI", "Spring Boot"],
       secondary: ["Java", "Python", "Kafka"],
       isPrimary: false,
-      usedIn: [
-        { name: "NovaMart", slug: "novamart-ecommerce-platform", tooltip: "Event-driven microservices architecture" },
-        { name: "Healthcare Agent", slug: "healthcare-multi-agent-system", tooltip: "Multi-agent orchestration" },
-        { name: "AI Code Review", slug: "ai-code-review-assistant", tooltip: "FastAPI backend + RAG pipeline" },
-        { name: "Work", slug: "#experience", tooltip: "Built entire backend system from scratch" }
-      ]
     },
     cloud: {
       primary: ["AWS Lambda", "Docker", "Kubernetes"],
       secondary: ["Terraform", "CI/CD", "EventBridge"],
       isPrimary: false,
-      usedIn: [
-        { name: "NovaMart", slug: "novamart-ecommerce-platform", tooltip: "Serverless architecture on AWS" },
-        { name: "Work", slug: "#experience", tooltip: "Managed AWS infrastructure for 99.9% uptime" }
-      ]
     },
     ai_ml: {
       primary: ["LangChain", "OpenAI", "RAG Pipelines"],
       secondary: ["GenAI Agents", "Vector DBs", "Hugging Face"],
       isPrimary: false,
-      usedIn: [
-        { name: "Healthcare Agent", slug: "healthcare-multi-agent-system", tooltip: "Multi-agent system with RAG" },
-        { name: "AI Code Review", slug: "ai-code-review-assistant", tooltip: "GPT-4 + RAG for code analysis" },
-        { name: "ProjectScout", slug: "project-scout-hackathon", tooltip: "AI agent for project recommendations" }
-      ]
     },
     database: {
       primary: ["DynamoDB", "Firebase"],
       secondary: ["PostgreSQL", "Redis"],
       isPrimary: false,
-      usedIn: [
-        { name: "NovaMart", slug: "novamart-ecommerce-platform", tooltip: "DynamoDB for payments/refunds" },
-        { name: "Playground App", slug: "playground-app-realtime-chat", tooltip: "Firebase Firestore for real-time data" }
-      ]
     }
   },
   projects: [
@@ -166,28 +131,6 @@ export const portfolioData = {
       action: "Built an end-to-end multi-agent system using Python and FastAPI, implementing RAG pipelines with Pinecone vector database for accurate medical information retrieval. Used LangChain for agent orchestration and ensured safety protocols with human-in-the-loop oversight.",
       result: "Successfully reduced manual triage time by 40%, from 15 minutes to 9 minutes per patient. Achieved 95% retrieval accuracy with the RAG pipeline, significantly improving patient flow and reducing wait times while maintaining safety standards.",
       learning: "Learned the importance of safety and human oversight in healthcare AI systems. Gained expertise in multi-agent architectures, vector databases, and RAG pipelines for accurate information retrieval in critical domains.",
-      architectureDiagram: {
-        title: "Multi-Agent System Architecture",
-        nodes: [
-          { id: "patient", label: "Patient Interface", description: "Web/Mobile", x: 50, y: 160, color: "#e0f2fe", borderColor: "#0284c7" },
-          { id: "api", label: "API Gateway", description: "FastAPI", x: 220, y: 160, color: "#fef3c7", borderColor: "#d97706" },
-          { id: "orchestrator", label: "Agent Orchestrator", description: "LangChain", x: 390, y: 160, color: "#ddd6fe", borderColor: "#7c3aed" },
-          { id: "triage", label: "Triage Agent", description: "Symptom Analysis", x: 560, y: 80, color: "#fce7f3", borderColor: "#be185d" },
-          { id: "scheduling", label: "Scheduling Agent", description: "Appointments", x: 560, y: 160, color: "#dcfce7", borderColor: "#16a34a" },
-          { id: "insurance", label: "Insurance Agent", description: "Claims/Queries", x: 560, y: 240, color: "#ffe4e6", borderColor: "#e11d48" },
-          { id: "rag", label: "RAG Pipeline", description: "Pinecone Vector DB", x: 390, y: 280, color: "#f3f4f6", borderColor: "#374151" },
-          { id: "human", label: "Human Oversight", description: "Safety Layer", x: 220, y: 280, color: "#fed7aa", borderColor: "#ea580c" }
-        ],
-        connections: [
-          { from: "patient", to: "api" },
-          { from: "api", to: "orchestrator" },
-          { from: "orchestrator", to: "triage" },
-          { from: "orchestrator", to: "scheduling" },
-          { from: "orchestrator", to: "insurance" },
-          { from: "orchestrator", to: "rag" },
-          { from: "orchestrator", to: "human" }
-        ]
-      }
     },
     {
       id: "novamart",
@@ -218,24 +161,6 @@ export const portfolioData = {
       action: "Built a React Native mobile application with Firebase for backend services and real-time database. Implemented OAuth for secure authentication, Expo for cross-platform development, and geolocation API for location-based features. Integrated real-time socket connections for instant messaging and event updates.",
       result: "Successfully launched platform with 2,000+ weekly active users. Achieved sub-200ms latency for real-time updates, ensuring smooth user experience. Enabled community-driven event organization and social connections.",
       learning: "Gained expertise in React Native development and Firebase real-time capabilities. Learned optimization techniques for mobile applications, geolocation integration, and the importance of efficient state management in real-time mobile apps.",
-      architectureDiagram: {
-        title: "Mobile App Architecture",
-        nodes: [
-          { id: "mobile", label: "Mobile App", description: "React Native (iOS/Android)", x: 50, y: 160, color: "#e0f2fe", borderColor: "#0284c7" },
-          { id: "auth", label: "Firebase Auth", description: "OAuth & Email/Password", x: 220, y: 80, color: "#fef3c7", borderColor: "#d97706" },
-          { id: "firestore", label: "Firestore DB", description: "Real-time Database", x: 220, y: 160, color: "#dcfce7", borderColor: "#16a34a" },
-          { id: "storage", label: "Firebase Storage", description: "Media Files", x: 220, y: 240, color: "#fce7f3", borderColor: "#be185d" },
-          { id: "geolocation", label: "Geolocation API", description: "Map & Location", x: 390, y: 160, color: "#ddd6fe", borderColor: "#7c3aed" },
-          { id: "realtime", label: "Real-time Listeners", description: "Chat & Events", x: 560, y: 160, color: "#ffe4e6", borderColor: "#e11d48" }
-        ],
-        connections: [
-          { from: "mobile", to: "auth" },
-          { from: "mobile", to: "firestore" },
-          { from: "mobile", to: "storage" },
-          { from: "mobile", to: "geolocation" },
-          { from: "firestore", to: "realtime" }
-        ]
-      }
     },
     {
       id: "naruto-infinite-list",
@@ -256,7 +181,7 @@ export const portfolioData = {
   experience: [
     {
       id: "macys-map-central",
-      type: "architectural", // Uses Problem/Solution/Metrics layout
+      type: "architectural",
       company: "ITSC (Macy's Project)",
       role: "Software Engineer",
       period: "OCT 2024 - AUG 2025",
@@ -272,92 +197,11 @@ export const portfolioData = {
     },
     {
       id: "mcesc-platform",
-      type: "visual", // Uses Image Carousel layout
+      type: "visual",
       company: "ITSC (MCESC Project)",
       role: "Full Stack Developer",
       period: "AUG 2025 - Dec 2025",
       summary: "Modular Monolith platform modernizing educational therapy documentation.",
-      gallery: [
-        { 
-          src: MCESCAdminDashboard, 
-          caption: "Admin Dashboard with comprehensive overview",
-          metrics: [
-            { label: "Data Points", value: "10k+" },
-            { label: "Load Time", value: "<1s" },
-            { label: "Users", value: "500+" }
-          ],
-          demo: "https://res.cloudinary.com/dlmpwxayb/image/upload/v1766972652/MCESC-Admin_dashboard_p2y6ph.png"
-        },
-        { 
-          src: StudentHistory, 
-          caption: "Student History View (Aggregating 10k+ records)",
-          metrics: [
-            { label: "Records", value: "10k+" },
-            { label: "Query Time", value: "200ms" },
-            { label: "Cache Hit", value: "95%" }
-          ],
-          demo: "https://res.cloudinary.com/dlmpwxayb/image/upload/v1766972655/student-history_dkxov5.png"
-        },
-        { 
-          src: MCESCCreateNoteForm, 
-          caption: "Optimistic UI 'Add Note' Forms with validation",
-          metrics: [
-            { label: "Validation", value: "Zod" },
-            { label: "Response", value: "Instant" },
-            { label: "Offline", value: "Yes" }
-          ],
-          demo: "https://res.cloudinary.com/dlmpwxayb/image/upload/v1766972665/MCESC-Create_Note_Form_h2wtcf.png"
-        },
-        { 
-          src: MCESCDistrictProfile, 
-          caption: "District Profile Management",
-          metrics: [
-            { label: "Districts", value: "50+" },
-            { label: "Data Sync", value: "Real-time" },
-            { label: "Uptime", value: "99.9%" }
-          ],
-          demo: "https://res.cloudinary.com/dlmpwxayb/image/upload/v1766972667/MCESC-district-profile_vz5ds3.png"
-        },
-        { 
-          src: DistrictProviderView, 
-          caption: "District Provider View",
-          metrics: [
-            { label: "Providers", value: "200+" },
-            { label: "Search", value: "Instant" },
-            { label: "Filter", value: "Multi-criteria" }
-          ],
-          demo: "https://res.cloudinary.com/dlmpwxayb/image/upload/v1766972648/District-provider-view_dkmrjb.png"
-        },
-        { 
-          src: MCESCReferral, 
-          caption: "Referral Management System",
-          metrics: [
-            { label: "Referrals", value: "5k+/month" },
-            { label: "Processing", value: "Automated" },
-            { label: "Tracking", value: "100%" }
-          ]
-        },
-        { 
-          src: ReferralStatus, 
-          caption: "Referral Status Tracking",
-          metrics: [
-            { label: "Statuses", value: "Real-time" },
-            { label: "Updates", value: "Instant" },
-            { label: "Accuracy", value: "100%" }
-          ],
-          demo: "https://res.cloudinary.com/dlmpwxayb/image/upload/v1766972660/MCESC-Referral_lju530.png"
-        },
-        { 
-          src: MonthlyView, 
-          caption: "Monthly Calendar View",
-          metrics: [
-            { label: "Appointments", value: "1k+/month" },
-            { label: "Views", value: "Calendar/List" },
-            { label: "Performance", value: "Optimized" }
-          ],
-          demo: "https://res.cloudinary.com/dlmpwxayb/image/upload/v1766972662/MonthlyView_bwgqck.png"
-        }
-      ],
       features: [
         "Architected modular monolith migrating from legacy system, reducing technical debt by 60% and improving maintainability.",
         "Implemented server-side aggregation for 10k+ student records, reducing frontend load time from 8s to <1s with strategic caching layers.",

@@ -2,6 +2,12 @@
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
+## Local dev (chat + contact API)
+
+- Run everything: `npm run dev` (starts Vite on `:5173` and the API server on `:3001`)
+- Add `GROQ_API_KEY` (for chat) and `RESEND_API_KEY` (for contact) to `.env.local`
+- If you get `EADDRINUSE` on `3001`, either stop the process using it, or set `PORT=3002` in `.env.local` and set `VITE_API_PROXY_TARGET=http://localhost:3002` (or `VITE_API_BASE_URL=http://localhost:3002`)
+
 Currently, two official plugins are available:
 
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh

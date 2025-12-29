@@ -166,6 +166,9 @@ export default async function handler(req, res) {
     if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
     if (!process.env.GROQ_API_KEY) return res.status(500).json({ error: 'Missing GROQ_API_KEY' });
 
+    const portfolioName = portfolioData?.profile?.name || 'this developer';
+    const portfolioFirstName = String(portfolioName).split(' ').filter(Boolean)[0] || portfolioName;
+
     const ip = getClientIp(req);
     const rl = rateLimit(ip);
     if (!rl.allowed) {
@@ -208,7 +211,8 @@ export default async function handler(req, res) {
           .join('\n\n---\n\n')
       : 'No relevant context found.';
 
-    const system = `You are an assistant for a developer portfolio.
+    const system = `You are an assistant for ${portfolioFirstName}'s developer portfolio (${portfolioName}).
+If the user says "hello" or greets you, reply that you're here to help with ${portfolioFirstName}'s portfolio (not a generic developer portfolio greeting).
 You MUST answer using ONLY the provided CONTEXT.
 If the answer is not in the context, say: "I don't have enough information in this portfolio to answer that."
 

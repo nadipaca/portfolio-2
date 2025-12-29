@@ -557,7 +557,7 @@ export default function GitHubProjects() {
             {refreshing ? (
               <div className="text-center text-slate-400 text-xs -mt-2 mb-4">Updating from GitHub…</div>
             ) : null}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 md:gap-6">
               {reposAsCaseStudies.slice(0, visibleCount).map((caseStudy, idx) => (
                 <motion.div
                   key={caseStudy.id}
