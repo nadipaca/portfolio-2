@@ -7,6 +7,7 @@ import CaseStudyCard from './CaseStudyCard';
 import SectionWrapper from './ui/SectionWrapper';
 import SectionHeader from './ui/SectionHeader';
 import Button from './ui/Button';
+import { apiFetch } from '../utils/api';
 
 function normalizeText(s) {
   return String(s || '')
@@ -238,81 +239,23 @@ export default function GitHubProjects() {
       }
 
       try {
-        const res = await fetch(
-          `https://api.github.com/users/${encodeURIComponent(username)}/repos?per_page=100&sort=updated&type=owner`,
-          {
-            signal: controller.signal,
-            headers: {
-              Accept: 'application/vnd.github+json',
-            },
-          }
-        );
+        const res = await apiFetch(`/api/github?username=${encodeURIComponent(username)}`, {
+          signal: controller.signal,
+          headers: { Accept: 'application/json' },
+        });
 
         if (!res.ok) {
-          throw new Error(`GitHub API error (${res.status})`);
+          const payload = await res.json().catch(() => ({}));
+          throw new Error(payload?.error || `GitHub API error (${res.status})`);
         }
 
-        const data = await res.json();
-        const normalized = (Array.isArray(data) ? data : [])
-          .filter((r) => r && !r.private)
-          .map((r) => ({
-            id: r.id,
-            name: r.name,
-            full_name: r.full_name,
-            html_url: r.html_url,
-            description: r.description || 'No description provided.',
-            language: r.language || inferLanguageFromTopics(r.topics),
-            stargazers_count: r.stargazers_count,
-            forks_count: r.forks_count,
-            updated_at: r.updated_at,
-            topics: r.topics || [],
-            fork: r.fork,
-            archived: r.archived,
-          }));
+        const payload = await res.json().catch(() => ({}));
+        const normalized = Array.isArray(payload?.repos) ? payload.repos : [];
 
-        // Add missing curated repos that are under other owners
-        const curated = portfolioData?.github?.curatedRepos || [];
-        const owners = portfolioData?.github?.repoOwners || {};
-        const have = new Set(normalized.map((r) => String(r.name).toLowerCase()));
-
-        const missing = curated.filter((name) => !have.has(String(name).toLowerCase()));
-
-        if (missing.length) {
-          const extras = await Promise.all(
-            missing.map(async (name) => {
-              const owner = owners?.[name] || username;
-              try {
-                const resRepo = await fetch(
-                  `https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(name)}`,
-                  {
-                    signal: controller.signal,
-                    headers: { Accept: 'application/vnd.github+json' }
-                  }
-                );
-                if (!resRepo.ok) return null;
-                const r = await resRepo.json();
-                return {
-                  id: r.id,
-                  name: r.name,
-                  full_name: r.full_name,
-                  html_url: r.html_url,
-                  description: r.description || 'No description provided.',
-                  language: r.language || inferLanguageFromTopics(r.topics),
-                  stargazers_count: r.stargazers_count,
-                  forks_count: r.forks_count,
-                  updated_at: r.updated_at,
-                  topics: r.topics || [],
-                  fork: r.fork,
-                  archived: r.archived,
-                };
-              } catch {
-                return null;
-              }
-            })
-          );
-
-          extras.filter(Boolean).forEach((r) => normalized.push(r));
-        }
+        // Keep fallback language inference client-side in case the GitHub API omits topics/language
+        normalized.forEach((r) => {
+          if (!r.language) r.language = inferLanguageFromTopics(r.topics);
+        });
 
         if (isMounted) setRepos(normalized);
 

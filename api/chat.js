@@ -1,5 +1,5 @@
 import Groq from 'groq-sdk';
-import { portfolioData } from '../src/constants.js';
+import { portfolioData } from '../server-data.js';
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
