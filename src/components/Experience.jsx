@@ -326,25 +326,15 @@ function ArchitecturalCard({ experience, index, isActive, expanded, onToggle }) 
             </div>
           )}
 
-          {Array.isArray(experience.tech_stack_flow) && experience.tech_stack_flow.length > 0 && (
-            <div className="mt-4">
-              <div className="flex items-center justify-between gap-3 mb-2">
-                <div className="text-base mb-2 font-semibold text-slate-400">
-                  System Architecture Flow
-                </div>
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    setFlowOpen(true);
-                  }}
-                  className="text-xs font-semibold text-orange-400 hover:text-orange-300"
-                >
-                  View diagram
-                </button>
-              </div>
+        </button>
 
+        {/* Architecture Flow Section - Outside the toggle button to avoid nesting */}
+        {Array.isArray(experience.tech_stack_flow) && experience.tech_stack_flow.length > 0 && (
+          <div className="px-6 pb-4">
+            <div className="flex items-center justify-between gap-3 mb-2">
+              <div className="text-base mb-2 font-semibold text-slate-400">
+                System Architecture Flow
+              </div>
               <button
                 type="button"
                 onClick={(e) => {
@@ -352,42 +342,54 @@ function ArchitecturalCard({ experience, index, isActive, expanded, onToggle }) 
                   e.stopPropagation();
                   setFlowOpen(true);
                 }}
-                className="w-full rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 transition-colors px-3 py-3"
-                aria-label="Open architecture flow diagram"
+                className="text-xs font-semibold text-orange-400 hover:text-orange-300"
               >
-                <div className="flex flex-wrap items-center justify-center gap-2">
-                  {experience.tech_stack_flow.map((tech, idx) => {
-                    const isDone = idx < flowIndex;
-                    const isCurrent = idx === flowIndex;
-
-                    const chipClass = isDone
-                      ? 'bg-orange-400/10 border-orange-400/30 text-orange-300'
-                      : isCurrent
-                        ? 'bg-orange-400 border-orange-400 text-white'
-                        : 'bg-white/5 border-white/10 text-slate-300';
-
-                    const arrowClass = isDone || isCurrent ? 'text-orange-400' : 'text-slate-400';
-
-                    return (
-                      <div key={`${tech}-${idx}`} className="flex items-center gap-2">
-                        <span
-                          className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors ${chipClass}`}
-                        >
-                          {tech}
-                        </span>
-                        {idx < experience.tech_stack_flow.length - 1 && (
-                          <span className={`inline-flex ${arrowClass}`} aria-hidden="true">
-                            <ArrowRight size={16} />
-                          </span>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
+                View diagram
               </button>
             </div>
-          )}
-        </button>
+
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setFlowOpen(true);
+              }}
+              className="w-full rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 transition-colors px-3 py-3"
+              aria-label="Open architecture flow diagram"
+            >
+              <div className="flex flex-wrap items-center justify-center gap-2">
+                {experience.tech_stack_flow.map((tech, idx) => {
+                  const isDone = idx < flowIndex;
+                  const isCurrent = idx === flowIndex;
+
+                  const chipClass = isDone
+                    ? 'bg-orange-400/10 border-orange-400/30 text-orange-300'
+                    : isCurrent
+                      ? 'bg-orange-400 border-orange-400 text-white'
+                      : 'bg-white/5 border-white/10 text-slate-300';
+
+                  const arrowClass = isDone || isCurrent ? 'text-orange-400' : 'text-slate-400';
+
+                  return (
+                    <div key={`${tech}-${idx}`} className="flex items-center gap-2">
+                      <span
+                        className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors ${chipClass}`}
+                      >
+                        {tech}
+                      </span>
+                      {idx < experience.tech_stack_flow.length - 1 && (
+                        <span className={`inline-flex ${arrowClass}`} aria-hidden="true">
+                          <ArrowRight size={16} />
+                        </span>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </button>
+          </div>
+        )}
 
         <ArchitectureFlowModal
           open={flowOpen}
@@ -532,7 +534,7 @@ export default function Experience() {
   }, []);
 
   return (
-    <section className="py-20 bg-slate-900 relative overflow-hidden">
+    <section id="experience" className="py-20 bg-slate-900 relative overflow-hidden">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

@@ -45,9 +45,6 @@ export const portfolioData = {
     repoOwners: {
       "spring-sentiment-analyzer": "charish37"
     },
-    // Optional per-repo category overrides for the GitHub projects filter UI.
-    // Values: "AI/ML" | "Mobile" | "Web"
-    // (Used when GitHub topics/descriptions are missing or ambiguous.)
     repoCategories: {
       "ai-code-review-assistant": "AI/ML",
       "healthcare-multi-agent": "AI/ML",
@@ -75,30 +72,7 @@ export const portfolioData = {
     ]
   },
   certifications: [
-    /**
-     * By default, the UI uses brand icons from `react-icons` for common issuers
-     * (e.g., Oracle, Microsoft). If you want pixel-perfect logos, you can optionally
-     * add images and set `issuerLogo`.
-     *
-     * Optional images:
-     * - Put issuer logos in: /public/certifications/logos/
-     * - Set: issuerLogo: "/certifications/logos/<file-name>.png"
-     */
-    // Example shape (replace with your real certifications + URLs):
-    // {
-    //   id: "aws-developer-associate",
-    //   title: "AWS Certified Developer – Associate",
-    //   issuer: "Amazon Web Services (AWS)",
-    //   issued: "Oct 2025",
-    //   expires: "Oct 2027",
-    //   credentialId: "ABC123XYZ",
-    //   credentialUrl: "https://www.credly.com/badges/...",
-    //   // Optional override image logo
-    //   issuerLogo: "/certifications/logos/aws.webp"
-    // }
-
-    // --- Your current certifications (fill in credentialUrl values) ---
-    {
+  {
       id: "oci-developer-professional-2025",
       title: "Oracle Cloud Infrastructure 2025 Certified Developer Professional",
       issuer: "Oracle",
@@ -127,10 +101,55 @@ export const portfolioData = {
     },
   ],
   skills: {
-    backend: ["Java (8+)", "Spring Boot", "Node.js", "FastAPI", "Microservices", "Kafka"],
-    frontend: ["React", "TypeScript", "Next.js", "Tailwind CSS"],
-    cloud: ["AWS (EC2, EKS, S3)", "Docker", "Kubernetes", "Terraform", "CI/CD"],
-    ai_ml: ["GenAI Agents", "RAG Pipelines", "Vector DBs", "LangChain", "Vertex AI", "OpenAI", "Hugging Face"]
+    frontend: {
+      primary: ["React", "TypeScript"],
+      secondary: ["Next.js", "Tailwind CSS"],
+      isPrimary: true,
+      usedIn: [
+        { name: "Naruto Infinite List", slug: "naruto-infinite-list", tooltip: "Used for infinite scroll + API integration" },
+        { name: "Portfolio", slug: "#", tooltip: "Built with React + TypeScript" },
+        { name: "Work", slug: "#experience", tooltip: "Built Dashboard and Forms for 50k+ users" }
+      ]
+    },
+    backend: {
+      primary: ["Node.js", "FastAPI", "Spring Boot"],
+      secondary: ["Java", "Python", "Kafka"],
+      isPrimary: false,
+      usedIn: [
+        { name: "NovaMart", slug: "novamart-ecommerce-platform", tooltip: "Event-driven microservices architecture" },
+        { name: "Healthcare Agent", slug: "healthcare-multi-agent-system", tooltip: "Multi-agent orchestration" },
+        { name: "AI Code Review", slug: "ai-code-review-assistant", tooltip: "FastAPI backend + RAG pipeline" },
+        { name: "Work", slug: "#experience", tooltip: "Built entire backend system from scratch" }
+      ]
+    },
+    cloud: {
+      primary: ["AWS Lambda", "Docker", "Kubernetes"],
+      secondary: ["Terraform", "CI/CD", "EventBridge"],
+      isPrimary: false,
+      usedIn: [
+        { name: "NovaMart", slug: "novamart-ecommerce-platform", tooltip: "Serverless architecture on AWS" },
+        { name: "Work", slug: "#experience", tooltip: "Managed AWS infrastructure for 99.9% uptime" }
+      ]
+    },
+    ai_ml: {
+      primary: ["LangChain", "OpenAI", "RAG Pipelines"],
+      secondary: ["GenAI Agents", "Vector DBs", "Hugging Face"],
+      isPrimary: false,
+      usedIn: [
+        { name: "Healthcare Agent", slug: "healthcare-multi-agent-system", tooltip: "Multi-agent system with RAG" },
+        { name: "AI Code Review", slug: "ai-code-review-assistant", tooltip: "GPT-4 + RAG for code analysis" },
+        { name: "ProjectScout", slug: "project-scout-hackathon", tooltip: "AI agent for project recommendations" }
+      ]
+    },
+    database: {
+      primary: ["DynamoDB", "Firebase"],
+      secondary: ["PostgreSQL", "Redis"],
+      isPrimary: false,
+      usedIn: [
+        { name: "NovaMart", slug: "novamart-ecommerce-platform", tooltip: "DynamoDB for payments/refunds" },
+        { name: "Playground App", slug: "playground-app-realtime-chat", tooltip: "Firebase Firestore for real-time data" }
+      ]
+    }
   },
   projects: [
     {
