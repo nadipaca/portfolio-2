@@ -24,9 +24,9 @@ export default function About() {
   ];
 
   const metrics = [
-    { value: '50 +', label: 'Completed Projects' },
-    { value: '95 %', label: 'Client satisfaction' },
-    { value: '5 +', label: 'Years of experience' }
+    { value: '+40 %', label: 'Faster deployments' },
+    { value: '99 %', label: 'Uptime supported' },
+    { value: '-35 %', label: 'LCP reduced' },
   ];
 
   return (
@@ -67,13 +67,12 @@ export default function About() {
           <div>
             <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-6 tracking-tight">About me</h2>
             <p className="text-white leading-relaxed text-lg mb-8">
-              I started my software journey from photography. Through that, I learned to love the process of creating from scratch. Since then, this has led me to software development as it fulfills my love for learning and building things.
-            </p>
+              I’m a Full-Stack Engineer with 5+ years of experience building production-ready web and mobile systems using React/TypeScript, Node.js, and Java/Spring Boot. I build cloud-native services on AWS, focus on performance and reliability, and ship end-to-end features from UI to APIs and deployment. MS in Information Technology (Dec 2025), University of Cincinnati (GPA 4.0). Seeking SDE roles in frontend, backend, or full-stack engineering. </p>
             <div className="grid grid-cols-3 gap-4 justify-items-start">
               {metrics.map((m, index) => {
                 const [value, suffix] = m.value.split(' ');
                 return (
-                  <div key={index} className="text-center">
+                  <div key={index} className="">
                     <div className="text-2xl md:text-3xl font-bold text-white mb-1">
                       {value}
                       {suffix && <span className="text-orange-400"> {suffix}</span>}

@@ -543,7 +543,7 @@ export default function Experience() {
         >
           <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-4 tracking-tight">Professional Experience</h2>
           <p className="text-slate-300 max-w-2xl mx-auto">
-            Headline first. Deep-dive when you want (challenge → solution → architecture).
+          Impact first. Details when you want (problem → approach → results).
           </p>
         </motion.div>
 

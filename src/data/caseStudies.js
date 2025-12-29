@@ -16,11 +16,11 @@ export const caseStudies = [
     title: "NovaMart Commerce Platform",
     subtitle: "Event-Driven Payments + Zero-Trust",
     category: "Cloud Architecture",
-    oneLiner: "Built an Amazon/Walmart-style commerce platform using event-driven microservices on AWS Lambda with zero-trust security and a service mesh for in-cluster services.",
+    oneLiner: "Built an Amazon/Walmart-style commerce platform using event-driven serverless architecture on AWS Lambda with zero-trust security, idempotency, and comprehensive observability.",
     readTime: "2 min read",
     
     role: "Repo owner / Primary Implementer",
-    stack: ["AWS Lambda", "EventBridge", "DynamoDB", "Istio/Linkerd", "SAM", "CloudWatch", "X-Ray"],
+    stack: ["AWS Lambda", "EventBridge", "DynamoDB", "SQS (DLQ)", "SAM", "CloudWatch", "X-Ray"],
     impactChips: [
       { label: "Event processing", value: "99.9%+" },
       { label: "Lambda p95", value: "~200-500ms" }
@@ -37,12 +37,13 @@ export const caseStudies = [
     ],
     
     architecture: {
-      description: "EventBridge (domain events) → AWS Lambda handlers → DynamoDB (payments/refunds). Service mesh (Istio/Linkerd) for in-cluster services. Monitoring: CloudWatch logs/metrics + X-Ray tracing.",
+      description: "Order Service publishes domain events → EventBridge → Lambda handlers (payment/refund) → DynamoDB. Idempotency via conditional writes. Reliability: retries + DLQ (SQS) for poison events. Observability: CloudWatch logs/metrics + X-Ray tracing with correlation IDs.",
       components: [
+        "Order Service / Checkout API",
         "EventBridge (Domain Events)",
-        "AWS Lambda Handlers",
-        "DynamoDB (Payments/Refunds)",
-        "Service Mesh (Istio/Linkerd)",
+        "AWS Lambda Handlers (Payment/Refund)",
+        "DynamoDB (Payments/Refunds/Idempotency)",
+        "DLQ (SQS) for Failures",
         "CloudWatch Logs/Metrics",
         "X-Ray Tracing"
       ]
@@ -70,6 +71,88 @@ export const caseStudies = [
       demo: null,
       repo: "https://github.com/nadipaca/nova_mart",
       caseStudy: "#novamart"
+    },
+    architectureDiagram: {
+      title: "High-level overview",
+      nodes: [
+        { 
+          id: "order-service", 
+          label: "Order Service", 
+          description: "Checkout API", 
+          x: 50, 
+          y: 80
+        },
+        { 
+          id: "eventbridge", 
+          label: "EventBridge", 
+          description: "Domain Events", 
+          x: 280, 
+          y: 80
+        },
+        { 
+          id: "payment-lambda", 
+          label: "Payment Lambda", 
+          description: "Handler", 
+          x: 510, 
+          y: 50
+        },
+        { 
+          id: "refund-lambda", 
+          label: "Refund Lambda", 
+          description: "Handler", 
+          x: 510, 
+          y: 180
+        },
+        { 
+          id: "dynamodb-payments", 
+          label: "DynamoDB", 
+          description: "Payments", 
+          x: 740, 
+          y: 50
+        },
+        { 
+          id: "dynamodb-refunds", 
+          label: "DynamoDB", 
+          description: "Refunds", 
+          x: 740, 
+          y: 180
+        },
+        { 
+          id: "dlq", 
+          label: "DLQ", 
+          description: "SQS", 
+          x: 510, 
+          y: 310
+        },
+        { 
+          id: "cloudwatch", 
+          label: "CloudWatch", 
+          description: "Logs/Metrics", 
+          x: 280, 
+          y: 310
+        },
+        { 
+          id: "xray", 
+          label: "X-Ray", 
+          description: "Tracing", 
+          x: 50, 
+          y: 310
+        }
+      ],
+      connections: [
+        { from: "order-service", to: "eventbridge", label: "payment.requested" },
+        { from: "order-service", to: "eventbridge", label: "refund.requested" },
+        { from: "eventbridge", to: "payment-lambda", label: "payment.requested" },
+        { from: "eventbridge", to: "refund-lambda", label: "refund.requested" },
+        { from: "payment-lambda", to: "dynamodb-payments" },
+        { from: "refund-lambda", to: "dynamodb-refunds" },
+        { from: "payment-lambda", to: "dlq", label: "failures" },
+        { from: "refund-lambda", to: "dlq", label: "failures" },
+        { from: "payment-lambda", to: "cloudwatch" },
+        { from: "refund-lambda", to: "cloudwatch" },
+        { from: "payment-lambda", to: "xray" },
+        { from: "refund-lambda", to: "xray" }
+      ]
     }
   },
   
@@ -133,6 +216,68 @@ export const caseStudies = [
       demo: "https://res.cloudinary.com/dlmpwxayb/video/upload/v1766893329/healthcare-multi-agent_-_Made_with_Clipchamp_qp9u6y.mp4",
       repo: "https://github.com/nadipaca/healthcare-multi-agent",
       caseStudy: "#healthcare-agent"
+    },
+    architectureDiagram: {
+      title: "High-level overview",
+      nodes: [
+        { 
+          id: "frontend", 
+          label: "Frontend UI", 
+          description: "Web Interface", 
+          x: 50, 
+          y: 80
+        },
+        { 
+          id: "fastapi", 
+          label: "FastAPI", 
+          description: "Backend", 
+          x: 280, 
+          y: 80
+        },
+        { 
+          id: "orchestrator", 
+          label: "ADK Runner", 
+          description: "Orchestrator", 
+          x: 510, 
+          y: 80
+        },
+        { 
+          id: "triage-agent", 
+          label: "Triage Agent", 
+          description: "Symptom Analysis", 
+          x: 740, 
+          y: 50
+        },
+        { 
+          id: "appointment-agent", 
+          label: "Appointment Agent", 
+          description: "Scheduling", 
+          x: 740, 
+          y: 180
+        },
+        { 
+          id: "insurance-agent", 
+          label: "Insurance Agent", 
+          description: "Claims/Queries", 
+          x: 740, 
+          y: 310
+        },
+        { 
+          id: "hitl", 
+          label: "Human Oversight", 
+          description: "HITL Escalation", 
+          x: 510, 
+          y: 310
+        }
+      ],
+      connections: [
+        { from: "frontend", to: "fastapi", label: "/api/chat" },
+        { from: "fastapi", to: "orchestrator" },
+        { from: "orchestrator", to: "triage-agent" },
+        { from: "orchestrator", to: "appointment-agent" },
+        { from: "orchestrator", to: "insurance-agent" },
+        { from: "orchestrator", to: "hitl", label: "high-risk" }
+      ]
     }
   },
   
@@ -196,6 +341,52 @@ export const caseStudies = [
       demo: "https://res.cloudinary.com/dlmpwxayb/video/upload/v1766210847/Playground-App_cbwrgg.mp4",
       repo: "https://github.com/nadipaca/playground-app",
       caseStudy: "#playground-app"
+    },
+    architectureDiagram: {
+      title: "High-level overview",
+      nodes: [
+        { 
+          id: "mobile-app", 
+          label: "Mobile App", 
+          description: "React Native (iOS/Android)", 
+          x: 50, 
+          y: 80
+        },
+        { 
+          id: "firebase-auth", 
+          label: "Firebase Auth", 
+          description: "OAuth & Email/Password", 
+          x: 280, 
+          y: 50
+        },
+        { 
+          id: "firestore", 
+          label: "Firestore DB", 
+          description: "Real-time Database", 
+          x: 280, 
+          y: 180
+        },
+        { 
+          id: "firebase-storage", 
+          label: "Firebase Storage", 
+          description: "Media Files", 
+          x: 280, 
+          y: 310
+        },
+        { 
+          id: "geolocation", 
+          label: "Geolocation API", 
+          description: "Map & Location", 
+          x: 510, 
+          y: 180
+        }
+      ],
+      connections: [
+        { from: "mobile-app", to: "firebase-auth" },
+        { from: "mobile-app", to: "firestore" },
+        { from: "mobile-app", to: "firebase-storage" },
+        { from: "mobile-app", to: "geolocation" }
+      ]
     }
   },
   
@@ -323,6 +514,52 @@ export const caseStudies = [
       demo: null,
       repo: "https://github.com/nadipaca/ai-code-review-assistant",
       caseStudy: "#ai-code-review"
+    },
+    architectureDiagram: {
+      title: "High-level overview",
+      nodes: [
+        { 
+          id: "react-spa", 
+          label: "React SPA", 
+          description: "Frontend", 
+          x: 50, 
+          y: 80
+        },
+        { 
+          id: "fastapi-backend", 
+          label: "FastAPI", 
+          description: "Backend", 
+          x: 280, 
+          y: 80
+        },
+        { 
+          id: "chakra-vite", 
+          label: "Chakra UI Vite Dev", 
+          description: "Dev Tools", 
+          x: 50, 
+          y: 250
+        },
+        { 
+          id: "github-api", 
+          label: "GitHub API", 
+          description: "OAuth 2.0", 
+          x: 280, 
+          y: 250
+        },
+        { 
+          id: "openai-api", 
+          label: "OpenAI GPT-4 API", 
+          description: "RAG Pipeline", 
+          x: 280, 
+          y: 420
+        }
+      ],
+      connections: [
+        { from: "react-spa", to: "fastapi-backend", label: "HTTPS/WSS", bidirectional: true },
+        { from: "react-spa", to: "chakra-vite" },
+        { from: "fastapi-backend", to: "github-api" },
+        { from: "github-api", to: "openai-api" }
+      ]
     }
   },
   
@@ -451,6 +688,52 @@ export const caseStudies = [
       demo: "https://res.cloudinary.com/dlmpwxayb/video/upload/v1766892842/project_Scout_qj0kpf.mp4",
       repo: "https://github.com/nadipaca/project_scout_hackathon",
       caseStudy: "#project-scout"
+    },
+    architectureDiagram: {
+      title: "High-level overview",
+      nodes: [
+        { 
+          id: "web-ui", 
+          label: "Web UI", 
+          description: "Client", 
+          x: 50, 
+          y: 80
+        },
+        { 
+          id: "fastapi-server", 
+          label: "FastAPI Server", 
+          description: "Backend", 
+          x: 280, 
+          y: 80
+        },
+        { 
+          id: "agent", 
+          label: "ProjectScoutAgent", 
+          description: "Agent Logic", 
+          x: 510, 
+          y: 80
+        },
+        { 
+          id: "github-api", 
+          label: "GitHub API", 
+          description: "Repo Search", 
+          x: 510, 
+          y: 250
+        },
+        { 
+          id: "llm", 
+          label: "LLM", 
+          description: "Roadmap Generation", 
+          x: 740, 
+          y: 80
+        }
+      ],
+      connections: [
+        { from: "web-ui", to: "fastapi-server", label: "/run-agent" },
+        { from: "fastapi-server", to: "agent" },
+        { from: "agent", to: "github-api" },
+        { from: "agent", to: "llm" }
+      ]
     }
   }
 ];

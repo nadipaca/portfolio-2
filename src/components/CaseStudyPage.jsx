@@ -6,6 +6,7 @@ import { getCaseStudyBySlug } from '../data/caseStudies';
 import ArchitectureDiagram from './ArchitectureDiagram';
 import MobileDeviceFrame from './MobileDeviceFrame';
 import Navbar from './Navbar';
+import CaseStudyTOC from './CaseStudyTOC';
 
 export default function CaseStudyPage() {
   const { slug } = useParams();
@@ -38,7 +39,15 @@ export default function CaseStudyPage() {
       <Navbar onOpenChat={() => {}} />
       
       <div className="pt-24 pb-20">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex gap-12">
+            {/* Table of Contents - Desktop only */}
+            <div className="hidden lg:block w-64 flex-shrink-0">
+              <CaseStudyTOC />
+            </div>
+            
+            {/* Main Content */}
+            <div className="flex-1 max-w-4xl">
           {/* Back Button */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -111,10 +120,11 @@ export default function CaseStudyPage() {
 
           {/* Problem */}
           <motion.section
+            id="problem"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="mb-12"
+            className="mb-12 scroll-mt-24"
           >
             <h2 className="text-2xl font-bold text-white mb-4">Problem</h2>
             <ul className="space-y-3">
@@ -129,10 +139,11 @@ export default function CaseStudyPage() {
 
           {/* My Role */}
           <motion.section
+            id="my-role"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="mb-12"
+            className="mb-12 scroll-mt-24"
           >
             <h2 className="text-2xl font-bold text-white mb-4">My Role</h2>
             <ul className="space-y-3">
@@ -147,27 +158,16 @@ export default function CaseStudyPage() {
 
           {/* Architecture */}
           <motion.section
+            id="architecture"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="mb-12"
+            className="mb-12 scroll-mt-24"
           >
             <h2 className="text-2xl font-bold text-white mb-4">Architecture</h2>
             <p className="text-slate-300 mb-6 leading-relaxed">
               {caseStudy.architecture.description}
             </p>
-            
-            {/* Architecture Components */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
-              {caseStudy.architecture.components.map((component, idx) => (
-                <div
-                  key={idx}
-                  className="px-4 py-3 bg-slate-800/50 rounded-lg border border-white/10 text-sm text-slate-300"
-                >
-                  {component}
-                </div>
-              ))}
-            </div>
 
             {/* Architecture Diagram */}
             {caseStudy.architectureDiagram && (
@@ -183,10 +183,11 @@ export default function CaseStudyPage() {
 
           {/* Key Decisions */}
           <motion.section
+            id="key-decisions"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
-            className="mb-12"
+            className="mb-12 scroll-mt-24"
           >
             <h2 className="text-2xl font-bold text-white mb-4">Key Decisions</h2>
             <ul className="space-y-4">
@@ -201,10 +202,11 @@ export default function CaseStudyPage() {
 
           {/* Results */}
           <motion.section
+            id="results"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6 }}
-            className="mb-12"
+            className="mb-12 scroll-mt-24"
           >
             <h2 className="text-2xl font-bold text-white mb-4">Results</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -224,10 +226,11 @@ export default function CaseStudyPage() {
 
           {/* What I'd Improve Next */}
           <motion.section
+            id="improvements"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7 }}
-            className="mb-12"
+            className="mb-12 scroll-mt-24"
           >
             <h2 className="text-2xl font-bold text-white mb-4">What I'd Improve Next</h2>
             <ul className="space-y-3">
@@ -242,10 +245,11 @@ export default function CaseStudyPage() {
 
           {/* Links */}
           <motion.section
+            id="links"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.8 }}
-            className="pt-8 border-t border-white/10"
+            className="pt-8 border-t border-white/10 scroll-mt-24"
           >
             <h2 className="text-2xl font-bold text-white mb-4">Links</h2>
             <div className="flex flex-wrap gap-4">
@@ -274,6 +278,8 @@ export default function CaseStudyPage() {
               )}
             </div>
           </motion.section>
+            </div>
+          </div>
         </div>
       </div>
     </div>

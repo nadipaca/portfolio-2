@@ -8,10 +8,10 @@ import playgroundThumbnail from '../assets/thumbnails/playground.png';
 function CaseStudyCard({ caseStudy }) {
   const navigate = useNavigate();
   const categoryColors = {
-    'AI/ML': 'bg-orange-900/20 text-orange-300 border-orange-400/30',
-    'Mobile': 'bg-orange-900/20 text-orange-300 border-orange-400/30',
-    'Cloud Architecture': 'bg-orange-900/20 text-orange-300 border-orange-400/30',
-    'Web': 'bg-orange-900/20 text-orange-300 border-orange-400/30',
+    'AI/ML': 'text-orange-300 border-orange-400/30',
+    'Mobile': 'text-orange-300 border-orange-400/30',
+    'Cloud Architecture': 'text-orange-300 border-orange-400/30',
+    'Web': 'text-orange-300 border-orange-400/30',
   };
 
   const handleClick = () => {
@@ -53,7 +53,7 @@ function CaseStudyCard({ caseStudy }) {
               {/* Overlay Badge and Arrow */}
               <div className="absolute top-0 left-0 right-0 flex items-center justify-between p-3 z-10">
                 <span
-                  className={`px-2.5 py-1 text-xs font-semibold rounded-full border backdrop-blur-sm bg-black/30 ${
+                  className={`px-2.5 py-1 text-xs font-semibold rounded-full border backdrop-blur-sm bg-black ${
                     categoryColors[caseStudy.category] || 'bg-slate-800 text-slate-300 border-white/10'
                   }`}
                 >
@@ -115,7 +115,7 @@ function CaseStudyCard({ caseStudy }) {
               {/* Overlay Badge and Arrow */}
               <div className="absolute top-0 left-0 right-0 flex items-center justify-between p-3 z-10">
                 <span
-                  className={`px-2.5 py-1 text-xs font-semibold rounded-full border backdrop-blur-sm bg-black/30 ${
+                  className={`px-2.5 py-1 text-xs font-semibold rounded-full border backdrop-blur-sm bg-black ${
                     categoryColors[caseStudy.category] || 'bg-slate-800 text-slate-300 border-white/10'
                   }`}
                 >
@@ -167,7 +167,7 @@ function CaseStudyCard({ caseStudy }) {
               {/* Overlay Badge and Arrow */}
               <div className="absolute top-0 left-0 right-0 flex items-center justify-between p-3 z-10">
                 <span
-                  className={`px-2.5 py-1 text-xs font-semibold rounded-full border backdrop-blur-sm bg-black/30 ${
+                  className={`px-2.5 py-1 text-xs font-semibold rounded-full border backdrop-blur-sm bg-black ${
                     categoryColors[caseStudy.category] || 'bg-slate-800 text-slate-300 border-white/10'
                   }`}
                 >

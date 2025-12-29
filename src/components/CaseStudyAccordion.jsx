@@ -64,18 +64,6 @@ export default function CaseStudyAccordion({ caseStudy, isExpanded, onClose }) {
               <p className="text-slate-300 mb-4 leading-relaxed">
                 {caseStudy.architecture.description}
               </p>
-              
-              {/* Architecture Components */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
-                {caseStudy.architecture.components.map((component, idx) => (
-                  <div
-                    key={idx}
-                    className="px-4 py-2 bg-slate-800/50 rounded-lg border border-white/10 text-sm text-slate-300"
-                  >
-                    {component}
-                  </div>
-                ))}
-              </div>
 
               {/* Architecture Diagram */}
               {caseStudy.architectureDiagram && (

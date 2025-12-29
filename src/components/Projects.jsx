@@ -23,7 +23,7 @@ function Projects() {
             Case Studies
           </h2>
           <p className="text-slate-300 max-w-2xl mx-auto">
-            Engineering solutions that deliver measurable impact
+          Architecture, decisions, and measurable outcomes.
           </p>
 
           <div className="mt-6 flex justify-center">

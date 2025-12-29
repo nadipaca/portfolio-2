@@ -2,15 +2,19 @@ import React from 'react';
 
 /**
  * ArchitectureDiagram Component
- * Renders clean, professional architecture diagrams for projects
+ * Simple, clean architecture diagrams with rectangular nodes and arrows
  */
 export default function ArchitectureDiagram({ nodes, connections, title = "System Architecture" }) {
   if (!nodes || !connections) return null;
 
-  const width = 800;
-  const height = 400;
-  const nodeWidth = 140;
-  const nodeHeight = 80;
+  // Calculate canvas size based on node positions
+  const maxX = Math.max(...nodes.map(n => n.x)) + 200;
+  const maxY = Math.max(...nodes.map(n => n.y)) + 120;
+  const width = Math.max(800, maxX);
+  const height = Math.max(400, maxY);
+  
+  const nodeWidth = 160;
+  const nodeHeight = 90;
 
   return (
     <div className="w-full bg-slate-800/70 rounded-lg border border-white/10 p-6">
@@ -23,12 +27,7 @@ export default function ArchitectureDiagram({ nodes, connections, title = "Syste
           viewBox={`0 0 ${width} ${height}`}
           xmlns="http://www.w3.org/2000/svg"
         >
-          {/* Background */}
           <defs>
-            {/* Grid pattern */}
-            <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
-              <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#475569" strokeWidth="0.5" />
-            </pattern>
             {/* Arrow marker */}
             <marker
               id="arrowhead"
@@ -38,25 +37,23 @@ export default function ArchitectureDiagram({ nodes, connections, title = "Syste
               refY="3"
               orient="auto"
             >
-              <polygon points="0 0, 10 3, 0 6" fill="#fb923c" />
+              <polygon points="0 0, 10 3, 0 6" fill="#64748b" />
             </marker>
-            {/* Drop shadow filter */}
-            <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
-              <feGaussianBlur in="SourceAlpha" stdDeviation="2"/>
-              <feOffset dx="2" dy="2" result="offsetblur"/>
-              <feComponentTransfer>
-                <feFuncA type="linear" slope="0.3"/>
-              </feComponentTransfer>
-              <feMerge>
-                <feMergeNode/>
-                <feMergeNode in="SourceGraphic"/>
-              </feMerge>
-            </filter>
+            {/* Bidirectional arrow marker (reversed) */}
+            <marker
+              id="arrowhead-start"
+              markerWidth="10"
+              markerHeight="10"
+              refX="1"
+              refY="3"
+              orient="auto"
+            >
+              <polygon points="10 0, 0 3, 10 6" fill="#64748b" />
+            </marker>
           </defs>
           
-          {/* Background rectangle with grid */}
+          {/* Background */}
           <rect width={width} height={height} fill="#0f172a" rx="8" />
-          <rect width={width} height={height} fill="url(#grid)" opacity="0.15" rx="8" />
 
           {/* Draw connections (arrows) - Draw before nodes so they appear behind */}
           {connections.map((conn, idx) => {
@@ -70,86 +67,98 @@ export default function ArchitectureDiagram({ nodes, connections, title = "Syste
             const toX = toNode.x + nodeWidth / 2;
             const toY = toNode.y + nodeHeight / 2;
 
+            const isBidirectional = conn.bidirectional || false;
+            const labelX = (fromX + toX) / 2;
+            const labelY = (fromY + toY) / 2 - 8;
+
             return (
-              <line
-                key={`conn-${idx}`}
-                x1={fromX}
-                y1={fromY}
-                x2={toX}
-                y2={toY}
-                stroke="#fb923c"
-                strokeWidth="2.5"
-                markerEnd="url(#arrowhead)"
-                opacity="0.8"
-                filter="url(#shadow)"
-              />
+              <g key={`conn-${idx}`}>
+                <line
+                  x1={fromX}
+                  y1={fromY}
+                  x2={toX}
+                  y2={toY}
+                  stroke="#64748b"
+                  strokeWidth="2"
+                  markerEnd="url(#arrowhead)"
+                  markerStart={isBidirectional ? "url(#arrowhead-start)" : undefined}
+                  opacity="0.8"
+                />
+                {/* Label on arrow */}
+                {conn.label && (
+                  <g>
+                    <rect
+                      x={labelX - (conn.label.length * 3.5)}
+                      y={labelY - 8}
+                      width={conn.label.length * 7}
+                      height={14}
+                      fill="#0f172a"
+                      opacity="0.9"
+                      rx="3"
+                    />
+                    <text
+                      x={labelX}
+                      y={labelY}
+                      textAnchor="middle"
+                      fill="#94a3b8"
+                      fontSize="10"
+                      fontWeight="500"
+                      fontFamily="system-ui, -apple-system, sans-serif"
+                    >
+                      {conn.label}
+                    </text>
+                  </g>
+                )}
+              </g>
             );
           })}
 
           {/* Draw nodes */}
           {nodes.map((node, idx) => {
-            // Use node color if provided, otherwise use a dark background with good contrast
-            const nodeFill = node.color || "#1e293b"; // slate-800
-            const nodeBorder = node.borderColor || "#475569"; // slate-600
-            const textColor = "#ffffff"; // White text for visibility
-            const descColor = "#cbd5e1"; // Light gray for description
+            const nodeFill = node.color || "#1e293b";
+            const nodeBorder = node.borderColor || "#475569";
+            const textColor = "#ffffff";
+            const descColor = "#cbd5e1";
 
             return (
-              <g key={`node-${idx}`} filter="url(#shadow)">
-                {/* Node rectangle with better contrast */}
+              <g key={`node-${idx}`}>
+                {/* Simple rectangle node */}
                 <rect
                   x={node.x}
                   y={node.y}
                   width={nodeWidth}
                   height={nodeHeight}
-                  rx="10"
+                  rx="8"
                   fill={nodeFill}
                   stroke={nodeBorder}
-                  strokeWidth="2.5"
-                  className="drop-shadow-lg"
+                  strokeWidth="2"
                 />
                 
-                {/* Node label - White text with text shadow for better visibility */}
+                {/* Node label */}
                 <text
                   x={node.x + nodeWidth / 2}
-                  y={node.y + nodeHeight / 2 - 10}
+                  y={node.y + nodeHeight / 2 - 8}
                   textAnchor="middle"
                   fill={textColor}
-                  fontSize="13"
-                  fontWeight="700"
+                  fontSize="14"
+                  fontWeight="600"
                   fontFamily="system-ui, -apple-system, sans-serif"
                 >
-                  <tspan
-                    fill="none"
-                    stroke="#000000"
-                    strokeWidth="0.5"
-                    strokeOpacity="0.5"
-                  >
-                    {node.label}
-                  </tspan>
-                  <tspan>{node.label}</tspan>
+                  {node.label}
                 </text>
                 
-                {/* Node tech/description */}
+                {/* Node description */}
                 {node.description && (
                   <text
                     x={node.x + nodeWidth / 2}
-                    y={node.y + nodeHeight / 2 + 12}
+                    y={node.y + nodeHeight / 2 + 14}
                     textAnchor="middle"
                     fill={descColor}
                     fontSize="11"
-                    fontWeight="500"
+                    fontWeight="400"
                     fontFamily="system-ui, -apple-system, sans-serif"
                   >
-                    <tspan
-                      fill="none"
-                      stroke="#000000"
-                      strokeWidth="0.5"
-                      strokeOpacity="0.5"
-                    >
-                      {node.description}
-                    </tspan>
-                    <tspan>{node.description}</tspan>
+                    {node.description}
                   </text>
                 )}
               </g>

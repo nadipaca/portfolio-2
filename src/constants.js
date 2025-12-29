@@ -174,16 +174,16 @@ export const portfolioData = {
       id: "novamart",
       title: "NovaMart E-Commerce Platform",
       category: "Cloud Architecture",
-      tech: ["Node.js", "JavaScript", "Python", "Java", "Docker", "Kubernetes", "AWS Lambda", "Istio/Linkerd", "Event-Driven Architecture"],
-      summary: "Amazon/Walmart-style commerce platform with event-driven architecture, zero-trust security, and serverless microservices on AWS Lambda.",
-      results: ["99.99% uptime with microservices", "40% cost reduction via serverless"],
+      tech: ["Node.js", "JavaScript", "Python", "Java", "AWS Lambda", "EventBridge", "DynamoDB", "SQS", "Event-Driven Architecture"],
+      summary: "Amazon/Walmart-style commerce platform with event-driven serverless architecture, zero-trust security, idempotency, and comprehensive observability.",
+      results: ["99.9%+ event processing success", "Lambda p95: ~200-500ms"],
       github: "https://github.com/nadipaca/nova_mart",
       demo: "#",
       situation: "Enterprise e-commerce platforms require high availability, scalability, and cost efficiency to handle peak traffic loads and maintain profitability.",
       task: "Design and implement a scalable e-commerce platform with event-driven architecture, zero-trust security, and serverless microservices capable of handling enterprise-level traffic.",
-      action: "Architected an event-driven microservices platform using Node.js, Python, and Java. Implemented zero-trust security architecture and deployed serverless microservices on AWS Lambda. Used service mesh (Istio/Linkerd) for in-cluster service communication and Docker/Kubernetes for container orchestration.",
-      result: "Achieved 99.99% uptime through robust microservices architecture and Kubernetes orchestration. Reduced infrastructure costs by 40% using serverless components. Established zero-trust security model ensuring secure service-to-service communication.",
-      learning: "Mastered event-driven architecture patterns and serverless microservices design. Learned the importance of service mesh for secure in-cluster communication and cost optimization strategies in cloud environments."
+      action: "Architected an event-driven serverless platform using Node.js, Python, and Java. Implemented zero-trust security architecture and deployed serverless microservices on AWS Lambda. Used EventBridge for domain events, DynamoDB for data persistence with idempotency, and SQS DLQ for reliability. Established comprehensive observability with CloudWatch and X-Ray.",
+      result: "Achieved 99.9%+ event processing success rate with Lambda p95 latency of ~200-500ms. Reduced infrastructure costs by 40% using serverless components. Established zero-trust security model and comprehensive observability with correlation IDs for end-to-end tracing.",
+      learning: "Mastered event-driven architecture patterns and serverless microservices design. Learned the importance of idempotency, DLQ patterns for reliability, and correlation IDs for distributed tracing in cloud environments."
     },
     {
       id: "playground-app",
@@ -239,8 +239,8 @@ export const portfolioData = {
       id: "macys-map-central",
       type: "architectural", // Uses Problem/Solution/Metrics layout
       company: "ITSC (Macy's Project)",
-      role: "Technical Lead (Node.js)",
-      period: "Dec 2024 - Present",
+      role: "Software Engineer",
+      period: "OCT 2024 - AUG 2025",
       summary: "High-performance 'Backend-for-Frontend' (BFF) for store floor-plan management.",
       problem: "Synchronous processing of 'Change Requests' caused UI timeouts (800ms+), and client-side token handling posed security risks.",
       solution: "Architected a Node.js BFF with Redis (BullMQ) for async event queues and a Proxy Middleware pattern to secure legacy Spring Boot tokens.",
@@ -256,7 +256,7 @@ export const portfolioData = {
       type: "visual", // Uses Image Carousel layout
       company: "ITSC (MCESC Project)",
       role: "Full Stack Developer",
-      period: "May 2025 - Dec 2025",
+      period: "AUG 2025 - Dec 2025",
       summary: "Modular Monolith platform modernizing educational therapy documentation.",
       gallery: [
         { 
