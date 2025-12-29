@@ -1,29 +1,21 @@
 import { motion } from 'framer-motion';
 import { GraduationCap } from 'lucide-react';
 import { portfolioData } from '../constants';
+import SectionWrapper from './ui/SectionWrapper';
+import SectionHeader from './ui/SectionHeader';
+import TechChip from './ui/TechChip';
+import { fadeInUp } from '../utils/animations';
 
 export default function Education() {
   const edu = portfolioData.education;
   if (!edu) return null;
 
   return (
-    <section id="education" className="py-10 bg-slate-900 relative overflow-hidden">
-      <div className="absolute inset-0 section-glow pointer-events-none" />
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-12"
-        >
-          <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-4 tracking-tight">
-            Education
-          </h2>
-          <p className="text-slate-300 max-w-2xl mx-auto">
-            Academic background and coursework
-          </p>
-        </motion.div>
+    <SectionWrapper id="education" className="py-10">
+      <SectionHeader
+        title="Education"
+        subtitle="Academic background and coursework"
+      />
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -62,12 +54,7 @@ export default function Education() {
                   </div>
                   <div className="flex flex-wrap gap-3">
                     {edu.coursework.map((c) => (
-                      <span
-                        key={c}
-                        className="px-4 py-2 rounded-lg text-sm font-medium bg-white/5 text-slate-200 border border-white/10 hover:border-orange-400/30 transition-colors"
-                      >
-                        {c}
-                      </span>
+                      <TechChip key={c} tech={c} variant="primary" className="px-4 py-2 text-sm font-medium" />
                     ))}
                   </div>
                 </div>
@@ -75,7 +62,6 @@ export default function Education() {
             </div>
           </div>
         </motion.div>
-      </div>
-    </section>
+    </SectionWrapper>
   );
 }

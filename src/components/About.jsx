@@ -3,6 +3,9 @@ import { portfolioData } from '../constants';
 import softwareIcon from '../assets/icons/software.png';
 import appDevelopmentIcon from '../assets/icons/app-development.png';
 import serverIcon from '../assets/icons/server.png';
+import SectionWrapper from './ui/SectionWrapper';
+import MetricsCard from './ui/MetricsCard';
+import { fadeInUp } from '../utils/animations';
 
 export default function About() {
   const services = [
@@ -30,15 +33,11 @@ export default function About() {
   ];
 
   return (
-    <section id="about" className="py-20 bg-slate-900 relative overflow-hidden">
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start"
-        >
+    <SectionWrapper id="about">
+      <motion.div
+        {...fadeInUp}
+        className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start"
+      >
           {/* Left: Services rail with vertical line and dots */}
           <div className="relative">
             <div className="absolute left-4 top-5 bottom-8 w-0.5 bg-orange-400" aria-hidden="true" />
@@ -69,22 +68,17 @@ export default function About() {
             <p className="text-white leading-relaxed text-lg mb-8">
               I’m a Full-Stack Engineer with 5+ years of experience building production-ready web and mobile systems using React/TypeScript, Node.js, and Java/Spring Boot. I build cloud-native services on AWS, focus on performance and reliability, and ship end-to-end features from UI to APIs and deployment. MS in Information Technology (Dec 2025), University of Cincinnati (GPA 4.0). Seeking SDE roles in frontend, backend, or full-stack engineering. </p>
             <div className="grid grid-cols-3 gap-4 justify-items-start">
-              {metrics.map((m, index) => {
-                const [value, suffix] = m.value.split(' ');
-                return (
-                  <div key={index} className="">
-                    <div className="text-2xl md:text-3xl font-bold text-white mb-1">
-                      {value}
-                      {suffix && <span className="text-orange-400"> {suffix}</span>}
-                    </div>
-                    <div className="text-slate-300 text-sm">{m.label}</div>
-                  </div>
-                );
-              })}
+              {metrics.map((m, index) => (
+                <MetricsCard
+                  key={index}
+                  value={m.value}
+                  label={m.label}
+                  variant="default"
+                />
+              ))}
             </div>
           </div>
-        </div>
-      </div>
-    </section>
+        </motion.div>
+    </SectionWrapper>
   );
 }

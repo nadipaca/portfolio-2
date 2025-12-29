@@ -1,6 +1,11 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Send, Mail, User, MessageSquare } from 'lucide-react';
+import SectionWrapper from './ui/SectionWrapper';
+import SectionHeader from './ui/SectionHeader';
+import FormField from './ui/FormField';
+import Button from './ui/Button';
+import { fadeInUp } from '../utils/animations';
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -48,85 +53,58 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" className="py-20 bg-slate-900 relative overflow-hidden">
-      <div className="absolute inset-0 section-glow pointer-events-none" />
-      <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-12"
-        >
-          <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-4 tracking-tight">
-            Get In Touch
-          </h2>
-          <p className="text-slate-300 max-w-2xl mx-auto">
-            Have a question or want to work together? Send me a message!
-          </p>
-        </motion.div>
+    <SectionWrapper id="contact" className="max-w-4xl">
+      <SectionHeader
+        title="Get In Touch"
+        subtitle="Have a question or want to work together? Send me a message!"
+      />
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="bg-slate-900/90 rounded-3xl shadow-lg border border-orange-400/20 p-8 md:p-12"
-        >
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Name Field */}
-            <div>
-              <label htmlFor="name" className="block text-sm font-medium text-slate-300 mb-2">
-                <User size={16} className="inline mr-2" />
-                Name
-              </label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                required
-                value={formData.name}
-                onChange={handleChange}
-                className="w-full px-4 py-3 bg-slate-800/50 border border-white/10 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-400/50 focus:border-orange-400/50 transition-colors"
-                placeholder="Your name"
-              />
-            </div>
+      <motion.div
+        {...fadeInUp}
+        transition={{ delay: 0.2 }}
+        className="bg-slate-900/90 rounded-3xl shadow-lg border border-orange-400/20 p-8 md:p-12"
+      >
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <FormField
+            label="Name"
+            icon={<User size={16} />}
+            type="text"
+            id="name"
+            name="name"
+            required
+            value={formData.name}
+            onChange={handleChange}
+            placeholder="Your name"
+          />
 
-            {/* Email Field */}
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-slate-300 mb-2">
-                <Mail size={16} className="inline mr-2" />
-                Email
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                required
-                value={formData.email}
-                onChange={handleChange}
-                className="w-full px-4 py-3 bg-slate-800/50 border border-white/10 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-400/50 focus:border-orange-400/50 transition-colors"
-                placeholder="your.email@example.com"
-              />
-            </div>
+          <FormField
+            label="Email"
+            icon={<Mail size={16} />}
+            type="email"
+            id="email"
+            name="email"
+            required
+            value={formData.email}
+            onChange={handleChange}
+            placeholder="your.email@example.com"
+          />
 
-            {/* Message Field */}
-            <div>
-              <label htmlFor="message" className="block text-sm font-medium text-slate-300 mb-2">
-                <MessageSquare size={16} className="inline mr-2" />
-                Message
-              </label>
-              <textarea
-                id="message"
-                name="message"
-                required
-                rows={6}
-                value={formData.message}
-                onChange={handleChange}
-                className="w-full px-4 py-3 bg-slate-800/50 border border-white/10 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-400/50 focus:border-orange-400/50 transition-colors resize-none"
-                placeholder="Your message..."
-              />
-            </div>
+          <div>
+            <label htmlFor="message" className="block text-sm font-medium text-slate-300 mb-2">
+              <MessageSquare size={16} className="inline mr-2" />
+              Message
+            </label>
+            <textarea
+              id="message"
+              name="message"
+              required
+              rows={6}
+              value={formData.message}
+              onChange={handleChange}
+              className="w-full px-4 py-3 bg-slate-800/50 border border-white/10 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-400/50 focus:border-orange-400/50 transition-colors resize-none"
+              placeholder="Your message..."
+            />
+          </div>
 
             {/* Status Message */}
             {status.message && (
@@ -141,21 +119,19 @@ export default function Contact() {
               </div>
             )}
 
-            {/* Submit Button */}
-            <motion.button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-orange-400 hover:bg-orange-300 text-white font-semibold rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
-              whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
-            >
-              <Send size={18} />
-              {isSubmitting ? 'Sending...' : 'Send Message'}
-            </motion.button>
-          </form>
-        </motion.div>
-      </div>
-    </section>
+          <Button
+            type="submit"
+            variant="primary"
+            size="lg"
+            disabled={isSubmitting}
+            className="w-full flex items-center justify-center gap-2"
+          >
+            <Send size={18} />
+            {isSubmitting ? 'Sending...' : 'Send Message'}
+          </Button>
+        </form>
+      </motion.div>
+    </SectionWrapper>
   );
 }
 

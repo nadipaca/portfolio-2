@@ -1,6 +1,9 @@
 import { motion } from 'framer-motion';
 import { portfolioData } from '../constants';
 import { useNavigate } from 'react-router-dom';
+import SectionWrapper from './ui/SectionWrapper';
+import SectionHeader from './ui/SectionHeader';
+import TechChip from './ui/TechChip';
 import {
   // Frontend
   SiReact,
@@ -129,25 +132,11 @@ export default function Skills() {
   };
 
   return (
-    <section id="skills" className="py-20 bg-slate-900 relative overflow-hidden">
-      {/* Background Glow */}
-      <div className="absolute inset-0 section-glow pointer-events-none" />
-      
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-12"
-        >
-          <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-4 tracking-tight">
-            Skills & Technologies
-          </h2>
-          <p className="text-slate-300 max-w-2xl mx-auto text-lg">
-            What I use most — and where you can see it in my work.
-          </p>
-        </motion.div>
+    <SectionWrapper id="skills">
+      <SectionHeader
+        title="Skills & Technologies"
+        subtitle="What I use most — and where you can see it in my work."
+      />
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {Object.entries(portfolioData.skills).map(([category, skillData], categoryIndex) => {
@@ -242,7 +231,6 @@ export default function Skills() {
             );
           })}
         </div>
-      </div>
-    </section>
+    </SectionWrapper>
   );
 }

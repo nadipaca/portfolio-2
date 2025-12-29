@@ -4,6 +4,9 @@ import { ExternalLink, Search, X } from 'lucide-react';
 import { portfolioData } from '../constants';
 import { caseStudies } from '../data/caseStudies';
 import CaseStudyCard from './CaseStudyCard';
+import SectionWrapper from './ui/SectionWrapper';
+import SectionHeader from './ui/SectionHeader';
+import Button from './ui/Button';
 
 function normalizeText(s) {
   return String(s || '')
@@ -467,20 +470,10 @@ export default function GitHubProjects() {
   }, [filtered]);
 
   return (
-    <section aria-label="Projects" className="py-20 bg-slate-900 relative overflow-hidden">
-      <div className="absolute inset-0 section-glow pointer-events-none" />
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 14 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="text-center mb-8"
-        >
-          <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-4 tracking-tight">
-            More Projects
-          </h2>
-        </motion.div>
+    <SectionWrapper id="all-projects" aria-label="Projects">
+      <SectionHeader
+        title="More Projects"
+      />
 
         {/* Controls */}
         <div className="bg-slate-900/90 rounded-2xl p-4 md:p-5 mb-6 shadow-sm border border-orange-400/20">
@@ -581,30 +574,33 @@ export default function GitHubProjects() {
             {(reposAsCaseStudies.length > visibleCount || visibleCount > pageSize) && (
               <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
                 {reposAsCaseStudies.length > visibleCount ? (
-                  <button
+                  <Button
                     type="button"
+                    variant="primary"
+                    size="md"
                     onClick={() => setVisibleCount((n) => Math.min(reposAsCaseStudies.length, n + pageSize))}
-                    className="px-5 py-2.5 rounded-full bg-orange-400 text-white font-semibold hover:bg-orange-300 transition-colors shadow-sm"
+                    className="rounded-full shadow-sm"
                   >
                     Load more
-                  </button>
+                  </Button>
                 ) : null}
 
                 {visibleCount > pageSize ? (
-                  <button
+                  <Button
                     type="button"
+                    variant="secondary"
+                    size="md"
                     onClick={() => setVisibleCount(pageSize)}
-                    className="px-5 py-2.5 rounded-full bg-transparent text-white font-semibold border border-orange-400/40 hover:bg-orange-400/10 hover:border-orange-400 transition-colors shadow-sm"
+                    className="rounded-full shadow-sm"
                   >
                     Show less
-                  </button>
+                  </Button>
                 ) : null}
               </div>
             )}
           </>
         )}
-      </div>
-    </section>
+    </SectionWrapper>
   );
 }
 

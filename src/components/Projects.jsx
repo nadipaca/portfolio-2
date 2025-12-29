@@ -2,6 +2,9 @@ import { memo } from 'react';
 import { motion } from 'framer-motion';
 import CaseStudyCard from './CaseStudyCard';
 import { caseStudies } from '../data/caseStudies';
+import SectionWrapper from './ui/SectionWrapper';
+import SectionHeader from './ui/SectionHeader';
+import Button from './ui/Button';
 
 function Projects() {
   // Memoize filtered case studies to prevent re-filtering on re-renders
@@ -10,31 +13,21 @@ function Projects() {
   );
 
   return (
-    <section id="projects" className="py-20 bg-slate-900 relative overflow-hidden">
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-12"
+    <SectionWrapper id="projects">
+      <SectionHeader
+        title="Case Studies"
+        subtitle="Architecture, decisions, and measurable outcomes."
+      >
+        <Button
+          as="a"
+          href="#all-projects"
+          variant="primary"
+          size="md"
+          className="rounded-full shadow-sm"
         >
-          <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-4 tracking-tight">
-            Case Studies
-          </h2>
-          <p className="text-slate-300 max-w-2xl mx-auto">
-          Architecture, decisions, and measurable outcomes.
-          </p>
-
-          <div className="mt-6 flex justify-center">
-            <a
-              href="#all-projects"
-              className="inline-flex items-center justify-center px-5 py-2.5 rounded-full bg-orange-400 text-white font-semibold hover:bg-orange-300 transition-colors shadow-sm"
-            >
-              See all projects
-            </a>
-          </div>
-        </motion.div>
+          See all projects
+        </Button>
+      </SectionHeader>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {featuredCaseStudies.map((caseStudy, index) => (
@@ -49,8 +42,7 @@ function Projects() {
             </motion.div>
           ))}
         </div>
-      </div>
-    </section>
+    </SectionWrapper>
   );
 }
 

@@ -1,6 +1,9 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { ExternalLink, Github, ChevronUp } from 'lucide-react';
 import ArchitectureDiagram from './ArchitectureDiagram';
+import ListItem from './ui/ListItem';
+import MetricsCard from './ui/MetricsCard';
+import Button from './ui/Button';
 
 export default function CaseStudyAccordion({ caseStudy, isExpanded, onClose }) {
   if (!caseStudy) return null;
@@ -37,10 +40,9 @@ export default function CaseStudyAccordion({ caseStudy, isExpanded, onClose }) {
               <h4 className="text-xl font-bold text-white mb-4">Problem</h4>
               <ul className="space-y-2">
                 {caseStudy.problem.map((item, idx) => (
-                  <li key={idx} className="flex items-start gap-3 text-slate-300">
-                    <span className="text-orange-400 mt-1">•</span>
-                    <span>{item}</span>
-                  </li>
+                  <ListItem key={idx} variant="bullet">
+                    {item}
+                  </ListItem>
                 ))}
               </ul>
             </div>
@@ -50,10 +52,9 @@ export default function CaseStudyAccordion({ caseStudy, isExpanded, onClose }) {
               <h4 className="text-xl font-bold text-white mb-4">My Role</h4>
               <ul className="space-y-2">
                 {caseStudy.myRole.map((item, idx) => (
-                  <li key={idx} className="flex items-start gap-3 text-slate-300">
-                    <span className="text-orange-400 mt-1">•</span>
-                    <span>{item}</span>
-                  </li>
+                  <ListItem key={idx} variant="bullet">
+                    {item}
+                  </ListItem>
                 ))}
               </ul>
             </div>
@@ -82,10 +83,9 @@ export default function CaseStudyAccordion({ caseStudy, isExpanded, onClose }) {
               <h4 className="text-xl font-bold text-white mb-4">Key Decisions</h4>
               <ul className="space-y-3">
                 {caseStudy.keyDecisions.map((decision, idx) => (
-                  <li key={idx} className="flex items-start gap-3 text-slate-300">
-                    <span className="text-orange-400 mt-1 font-bold">✓</span>
-                    <span>{decision}</span>
-                  </li>
+                  <ListItem key={idx} variant="check">
+                    {decision}
+                  </ListItem>
                 ))}
               </ul>
             </div>
@@ -95,15 +95,12 @@ export default function CaseStudyAccordion({ caseStudy, isExpanded, onClose }) {
               <h4 className="text-xl font-bold text-white mb-4">Results</h4>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {caseStudy.results.map((result, idx) => (
-                  <div
+                  <MetricsCard
                     key={idx}
-                    className="bg-slate-800/50 rounded-lg p-4 border border-orange-400/20"
-                  >
-                    <div className="text-2xl font-bold text-orange-400 mb-1">
-                      {result.value}
-                    </div>
-                    <div className="text-sm text-slate-300">{result.label}</div>
-                  </div>
+                    value={result.value}
+                    label={result.label}
+                    variant="default"
+                  />
                 ))}
               </div>
             </div>
@@ -113,10 +110,9 @@ export default function CaseStudyAccordion({ caseStudy, isExpanded, onClose }) {
               <h4 className="text-xl font-bold text-white mb-4">What I'd Improve Next</h4>
               <ul className="space-y-2">
                 {caseStudy.improvements.map((improvement, idx) => (
-                  <li key={idx} className="flex items-start gap-3 text-slate-300">
-                    <span className="text-slate-500 mt-1">→</span>
-                    <span>{improvement}</span>
-                  </li>
+                  <ListItem key={idx} variant="arrow">
+                    {improvement}
+                  </ListItem>
                 ))}
               </ul>
             </div>
@@ -126,27 +122,33 @@ export default function CaseStudyAccordion({ caseStudy, isExpanded, onClose }) {
               <h4 className="text-xl font-bold text-white mb-4">Links</h4>
               <div className="flex flex-wrap gap-4">
                 {caseStudy.links.repo && (
-                  <a
+                  <Button
+                    as="a"
                     href={caseStudy.links.repo}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-orange-400/10 hover:bg-orange-400/20 text-orange-400 rounded-lg border border-orange-400/30 transition-colors"
+                    variant="outline"
+                    size="sm"
+                    className="bg-orange-400/10 hover:bg-orange-400/20 text-orange-400 border-orange-400/30"
                   >
                     <Github size={18} />
                     <span>View Repository</span>
-                  </a>
+                  </Button>
                 )}
                 
                 {caseStudy.links.demo && caseStudy.links.demo !== '#' && (
-                  <a
+                  <Button
+                    as="a"
                     href={caseStudy.links.demo}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-orange-400/10 hover:bg-orange-400/20 text-orange-400 rounded-lg border border-orange-400/30 transition-colors"
+                    variant="outline"
+                    size="sm"
+                    className="bg-orange-400/10 hover:bg-orange-400/20 text-orange-400 border-orange-400/30"
                   >
                     <ExternalLink size={18} />
                     <span>View Demo</span>
-                  </a>
+                  </Button>
                 )}
               </div>
             </div>

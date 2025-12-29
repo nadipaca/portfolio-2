@@ -4,6 +4,9 @@ import { ExternalLink } from 'lucide-react';
 import { SiOracle } from 'react-icons/si';
 import { FaMicrosoft } from 'react-icons/fa';
 import { portfolioData } from '../constants';
+import SectionWrapper from './ui/SectionWrapper';
+import SectionHeader from './ui/SectionHeader';
+import Button from './ui/Button';
 
 function normalize(s) {
   return String(s || '').trim();
@@ -91,20 +94,29 @@ function CertificationCard({ cert, index }) {
 
             <div className="mt-5 flex flex-col sm:flex-row gap-3">
               {credentialUrl ? (
-                <a
+                <Button
+                  as="a"
                   href={credentialUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-orange-400 text-white font-semibold hover:bg-orange-300 transition-colors"
+                  variant="primary"
+                  size="md"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl"
                 >
                   <ExternalLink size={16} />
                   Show credential
-                </a>
+                </Button>
               ) : (
-                <span className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800 text-slate-400 font-semibold border border-orange-400/20">
+                <Button
+                  as="span"
+                  variant="outline"
+                  size="md"
+                  disabled
+                  className="inline-flex items-center justify-center gap-2 rounded-xl"
+                >
                   <ExternalLink size={16} />
                   Add credential URL
-                </span>
+                </Button>
               )}
             </div>
           </div>
@@ -118,21 +130,11 @@ export default function Certifications() {
   const certs = useMemo(() => (Array.isArray(portfolioData?.certifications) ? portfolioData.certifications : []), []);
 
   return (
-    <section className="py-20 bg-slate-900 relative overflow-hidden">
-      <div className="absolute inset-0 section-glow pointer-events-none" />
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 14 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="text-center mb-10"
-        >
-          <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-4 tracking-tight">Certifications</h2>
-          <p className="text-slate-300 max-w-2xl mx-auto">
-            Proof is one click away — verify credentials instantly.
-          </p>
-        </motion.div>
+    <SectionWrapper id="certifications">
+      <SectionHeader
+        title="Certifications"
+        subtitle="Proof is one click away — verify credentials instantly."
+      />
 
         {certs.length ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -149,8 +151,7 @@ export default function Certifications() {
             </div>
           </div>
         )}
-      </div>
-    </section>
+    </SectionWrapper>
   );
 }
 

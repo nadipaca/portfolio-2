@@ -7,6 +7,10 @@ import ArchitectureDiagram from './ArchitectureDiagram';
 import MobileDeviceFrame from './MobileDeviceFrame';
 import Navbar from './Navbar';
 import CaseStudyTOC from './CaseStudyTOC';
+import ListItem from './ui/ListItem';
+import MetricsCard from './ui/MetricsCard';
+import Button from './ui/Button';
+import Badge from './ui/Badge';
 
 export default function CaseStudyPage() {
   const { slug } = useParams();
@@ -70,9 +74,9 @@ export default function CaseStudyPage() {
             className="mb-8"
           >
             <div className="flex items-center justify-between mb-4">
-              <span className="px-3 py-1 text-xs font-semibold rounded-full border bg-orange-900/20 text-orange-300 border-orange-400/30">
+              <Badge variant="orange" size="md">
                 {caseStudy.category}
-              </span>
+              </Badge>
               {caseStudy.readTime && (
                 <span className="text-sm text-slate-400">{caseStudy.readTime}</span>
               )}
@@ -129,10 +133,9 @@ export default function CaseStudyPage() {
             <h2 className="text-2xl font-bold text-white mb-4">Problem</h2>
             <ul className="space-y-3">
               {caseStudy.problem.map((item, idx) => (
-                <li key={idx} className="flex items-start gap-3 text-slate-300">
-                  <span className="text-orange-400 mt-1">•</span>
-                  <span className="leading-relaxed">{item}</span>
-                </li>
+                <ListItem key={idx} variant="bullet">
+                  {item}
+                </ListItem>
               ))}
             </ul>
           </motion.section>
@@ -148,10 +151,9 @@ export default function CaseStudyPage() {
             <h2 className="text-2xl font-bold text-white mb-4">My Role</h2>
             <ul className="space-y-3">
               {caseStudy.myRole.map((item, idx) => (
-                <li key={idx} className="flex items-start gap-3 text-slate-300">
-                  <span className="text-orange-400 mt-1">•</span>
-                  <span className="leading-relaxed">{item}</span>
-                </li>
+                <ListItem key={idx} variant="bullet">
+                  {item}
+                </ListItem>
               ))}
             </ul>
           </motion.section>
@@ -192,10 +194,9 @@ export default function CaseStudyPage() {
             <h2 className="text-2xl font-bold text-white mb-4">Key Decisions</h2>
             <ul className="space-y-4">
               {caseStudy.keyDecisions.map((decision, idx) => (
-                <li key={idx} className="flex items-start gap-3 text-slate-300">
-                  <span className="text-orange-400 mt-1 font-bold text-lg">✓</span>
-                  <span className="leading-relaxed">{decision}</span>
-                </li>
+                <ListItem key={idx} variant="check" className="text-base">
+                  {decision}
+                </ListItem>
               ))}
             </ul>
           </motion.section>
@@ -211,15 +212,12 @@ export default function CaseStudyPage() {
             <h2 className="text-2xl font-bold text-white mb-4">Results</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {caseStudy.results.map((result, idx) => (
-                <div
+                <MetricsCard
                   key={idx}
-                  className="bg-slate-800/50 rounded-lg p-6 border border-orange-400/20"
-                >
-                  <div className="text-3xl font-bold text-orange-400 mb-2">
-                    {result.value}
-                  </div>
-                  <div className="text-sm text-slate-300">{result.label}</div>
-                </div>
+                  value={result.value}
+                  label={result.label}
+                  variant="default"
+                />
               ))}
             </div>
           </motion.section>
@@ -235,10 +233,9 @@ export default function CaseStudyPage() {
             <h2 className="text-2xl font-bold text-white mb-4">What I'd Improve Next</h2>
             <ul className="space-y-3">
               {caseStudy.improvements.map((improvement, idx) => (
-                <li key={idx} className="flex items-start gap-3 text-slate-300">
-                  <span className="text-slate-500 mt-1">→</span>
-                  <span className="leading-relaxed">{improvement}</span>
-                </li>
+                <ListItem key={idx} variant="arrow">
+                  {improvement}
+                </ListItem>
               ))}
             </ul>
           </motion.section>
@@ -254,27 +251,33 @@ export default function CaseStudyPage() {
             <h2 className="text-2xl font-bold text-white mb-4">Links</h2>
             <div className="flex flex-wrap gap-4">
               {caseStudy.links.repo && (
-                <a
+                <Button
+                  as="a"
                   href={caseStudy.links.repo}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-orange-400/10 hover:bg-orange-400/20 text-orange-400 rounded-lg border border-orange-400/30 transition-colors"
+                  variant="outline"
+                  size="md"
+                  className="bg-orange-400/10 hover:bg-orange-400/20 text-orange-400 border-orange-400/30"
                 >
                   <Github size={20} />
                   <span>View Repository</span>
-                </a>
+                </Button>
               )}
               
               {caseStudy.links.demo && caseStudy.links.demo !== '#' && (
-                <a
+                <Button
+                  as="a"
                   href={caseStudy.links.demo}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-orange-400/10 hover:bg-orange-400/20 text-orange-400 rounded-lg border border-orange-400/30 transition-colors"
+                  variant="outline"
+                  size="md"
+                  className="bg-orange-400/10 hover:bg-orange-400/20 text-orange-400 border-orange-400/30"
                 >
                   <ExternalLink size={20} />
                   <span>View Demo</span>
-                </a>
+                </Button>
               )}
             </div>
           </motion.section>

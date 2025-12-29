@@ -1,32 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { CheckCircle2, ArrowRight, ChevronDown, ChevronLeft, ChevronRight, AlertTriangle, CheckCircle } from 'lucide-react';
+import { CheckCircle2, ArrowRight, ChevronDown, AlertTriangle, CheckCircle } from 'lucide-react';
 import { portfolioData } from '../constants';
 import ArchitectureFlowModal from './ArchitectureFlowModal';
+import SectionWrapper from './ui/SectionWrapper';
+import SectionHeader from './ui/SectionHeader';
+import ImageCarousel from './ui/ImageCarousel';
+import ListItem from './ui/ListItem';
 
 // Visual Card Component (for MCESC)
 function VisualCard({ experience, index, isActive, expanded, onToggle }) {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
-
-  const nextImage = () => {
-    setCurrentImageIndex((prev) => (prev + 1) % experience.gallery.length);
-  };
-
-  const prevImage = () => {
-    setCurrentImageIndex((prev) => (prev - 1 + experience.gallery.length) % experience.gallery.length);
-  };
-
-  // Auto-play carousel (advance every 4 seconds, pauses on hover)
-  useEffect(() => {
-    if (!expanded || experience.gallery.length <= 1 || isPaused) return;
-    
-    const interval = setInterval(() => {
-      setCurrentImageIndex((prev) => (prev + 1) % experience.gallery.length);
-    }, 4000); // Change slide every 4 seconds
-
-    return () => clearInterval(interval);
-  }, [expanded, experience.gallery.length, isPaused]);
 
   return (
     <motion.div
@@ -91,10 +74,9 @@ function VisualCard({ experience, index, isActive, expanded, onToggle }) {
               <div className="text-base mb-2 font-semibold text-slate-400">Highlights</div>
               <ul className="space-y-2">
                 {experience.features.slice(0, 3).map((feature, idx) => (
-                  <li key={idx} className="flex items-start gap-2 text-sm text-slate-300">
-                    <CheckCircle2 className="text-emerald-400 mt-0.5 flex-shrink-0" size={16} />
-                    <span className="leading-relaxed">{feature}</span>
-                  </li>
+                  <ListItem key={idx} variant="check" className="text-sm">
+                    {feature}
+                  </ListItem>
                 ))}
               </ul>
             </div>
@@ -115,99 +97,13 @@ function VisualCard({ experience, index, isActive, expanded, onToggle }) {
             >
               {/* Full-width Carousel at Top */}
               <div className="mb-6">
-                {/* Image Carousel */}
-                <div 
-                  className="relative"
-                  onMouseEnter={() => setIsPaused(true)}
-                  onMouseLeave={() => setIsPaused(false)}
-                >
-                  <div className="relative bg-slate-800 rounded-xl overflow-hidden aspect-video shadow-lg">
-                    {/* Image Display */}
-                    {experience.gallery[currentImageIndex]?.src ? (
-                      <img
-                        src={experience.gallery[currentImageIndex].src}
-                        alt={experience.gallery[currentImageIndex].caption || `Gallery image ${currentImageIndex + 1}`}
-                        className="w-full h-full object-cover"
-                        loading={currentImageIndex === 0 ? "eager" : "lazy"}
-                        decoding="async"
-                      />
-                    ) : (
-                      <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gray-200 to-gray-300">
-                        <div className="text-center p-8">
-                          <div className="w-16 h-16 bg-gray-400 rounded-lg mx-auto mb-3 flex items-center justify-center">
-                            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                              />
-                            </svg>
-                          </div>
-                          <p className="text-gray-600 text-sm font-medium mb-1">Image Placeholder</p>
-                          <p className="text-gray-400 text-xs">{experience.gallery[currentImageIndex]?.src || 'Add image path'}</p>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Glassmorphism Navigation Buttons */}
-                    {experience.gallery.length > 1 && (
-                      <>
-                        <button
-                          onClick={prevImage}
-                          className="absolute left-3 top-1/2 -translate-y-1/2 bg-slate-900/60 backdrop-blur-md hover:bg-slate-900/70 rounded-full p-2.5 shadow-lg border border-white/10 transition-all z-10"
-                          aria-label="Previous image"
-                        >
-                          <ChevronLeft className="text-white" size={20} />
-                        </button>
-                        <button
-                          onClick={nextImage}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 bg-slate-900/60 backdrop-blur-md hover:bg-slate-900/70 rounded-full p-2.5 shadow-lg border border-white/10 transition-all z-10"
-                          aria-label="Next image"
-                        >
-                          <ChevronRight className="text-white" size={20} />
-                        </button>
-                      </>
-                    )}
-
-                    {/* Image Indicators */}
-                    {experience.gallery.length > 1 && (
-                      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
-                        {experience.gallery.map((_, idx) => (
-                          <button
-                            key={idx}
-                            onClick={() => setCurrentImageIndex(idx)}
-                            className={`h-2 rounded-full transition-all ${
-                              idx === currentImageIndex ? 'w-8 bg-orange-400' : 'w-2 bg-slate-600'
-                            }`}
-                            aria-label={`Go to image ${idx + 1}`}
-                          />
-                        ))}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Caption and Metrics */}
-                  <div className="mt-3">
-                    <p className="text-sm text-slate-400 text-center font-medium mb-2">
-                      {experience.gallery[currentImageIndex]?.caption}
-                    </p>
-                    {/* Metrics */}
-                    {experience.gallery[currentImageIndex]?.metrics && (
-                      <div className="flex flex-wrap justify-center gap-3 mt-3">
-                        {experience.gallery[currentImageIndex].metrics.map((metric, idx) => (
-                          <div
-                            key={idx}
-                            className="px-3 py-1.5 bg-orange-400/10 border border-orange-400/30 rounded-lg"
-                          >
-                            <div className="text-xs font-semibold text-orange-300">{metric.label}</div>
-                            <div className="text-sm font-bold text-orange-400">{metric.value}</div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </div>
+                <ImageCarousel
+                  images={experience.gallery}
+                  autoPlay={expanded}
+                  autoPlayInterval={4000}
+                  showIndicators={true}
+                  showNavigation={true}
+                />
 
                 {/* Features Section Below Carousel */}
                 {Array.isArray(experience.features) && experience.features.length > 0 && (
@@ -215,10 +111,9 @@ function VisualCard({ experience, index, isActive, expanded, onToggle }) {
                     <div className="text-lg font-semibold text-white mb-4">Key Features</div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {experience.features.map((feature, idx) => (
-                        <div key={idx} className="flex items-start gap-3 text-sm text-slate-300">
-                          <CheckCircle2 className="text-emerald-400 mt-0.5 flex-shrink-0" size={18} />
-                          <span className="leading-relaxed">{feature}</span>
-                        </div>
+                        <ListItem key={idx} variant="check" className="text-sm">
+                          {feature}
+                        </ListItem>
                       ))}
                     </div>
                   </div>
@@ -534,20 +429,11 @@ export default function Experience() {
   }, []);
 
   return (
-    <section id="experience" className="py-20 bg-slate-900 relative overflow-hidden">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
-          <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-4 tracking-tight">Professional Experience</h2>
-          <p className="text-slate-300 max-w-2xl mx-auto">
-          Impact first. Details when you want (problem → approach → results).
-          </p>
-        </motion.div>
+    <SectionWrapper id="experience" className="max-w-6xl">
+      <SectionHeader
+        title="Professional Experience"
+        subtitle="Impact first. Details when you want (problem → approach → results)."
+      />
 
         {/* Timeline Container */}
         <div className="relative" ref={timelineRef}>
@@ -592,7 +478,6 @@ export default function Experience() {
             ))}
           </div>
         </div>
-      </div>
-    </section>
+    </SectionWrapper>
   );
 }
