@@ -1,13 +1,3 @@
-// Import MCESC images
-import MCESCAdminDashboard from './assets/MCESC-Admin dashboard.png';
-import MCESCCreateNoteForm from './assets/MCESC-Create Note Form.png';
-import MCESCDistrictProfile from './assets/MCESC-district-profile.png';
-import MCESCReferral from './assets/MCESC-Referral.png';
-import MonthlyView from './assets/MonthlyView.png';
-import ReferralStatus from './assets/referralStatus.png';
-import StudentHistory from './assets/student-history.png';
-import DistrictProviderView from './assets/District-provider-view.png';
-
 export const portfolioData = {
   profile: {
     name: "Charishma Nadipalli",
@@ -279,83 +269,76 @@ export const portfolioData = {
       summary: "Modular Monolith platform modernizing educational therapy documentation.",
       gallery: [
         { 
-          src: MCESCAdminDashboard, 
+          src: "https://res.cloudinary.com/dlmpwxayb/image/upload/v1766972652/MCESC-Admin_dashboard_p2y6ph.png", 
           caption: "Admin Dashboard with comprehensive overview",
           metrics: [
             { label: "Data Points", value: "10k+" },
             { label: "Load Time", value: "<1s" },
             { label: "Users", value: "500+" }
           ],
-          demo: "https://res.cloudinary.com/dlmpwxayb/image/upload/v1766972652/MCESC-Admin_dashboard_p2y6ph.png"
         },
         { 
-          src: StudentHistory, 
+          src: "https://res.cloudinary.com/dlmpwxayb/image/upload/v1766972655/student-history_dkxov5.png", 
           caption: "Student History View (Aggregating 10k+ records)",
           metrics: [
             { label: "Records", value: "10k+" },
             { label: "Query Time", value: "200ms" },
             { label: "Cache Hit", value: "95%" }
           ],
-          demo: "https://res.cloudinary.com/dlmpwxayb/image/upload/v1766972655/student-history_dkxov5.png"
         },
         { 
-          src: MCESCCreateNoteForm, 
+          src: "https://res.cloudinary.com/dlmpwxayb/image/upload/v1766972665/MCESC-Create_Note_Form_h2wtcf.png", 
           caption: "Optimistic UI 'Add Note' Forms with validation",
           metrics: [
             { label: "Validation", value: "Zod" },
             { label: "Response", value: "Instant" },
             { label: "Offline", value: "Yes" }
           ],
-          demo: "https://res.cloudinary.com/dlmpwxayb/image/upload/v1766972665/MCESC-Create_Note_Form_h2wtcf.png"
         },
         { 
-          src: MCESCDistrictProfile, 
+          src: "https://res.cloudinary.com/dlmpwxayb/image/upload/v1766972667/MCESC-district-profile_vz5ds3.png", 
           caption: "District Profile Management",
           metrics: [
             { label: "Districts", value: "50+" },
             { label: "Data Sync", value: "Real-time" },
             { label: "Uptime", value: "99.9%" }
           ],
-          demo: "https://res.cloudinary.com/dlmpwxayb/image/upload/v1766972667/MCESC-district-profile_vz5ds3.png"
         },
         { 
-          src: DistrictProviderView, 
+          src: "https://res.cloudinary.com/dlmpwxayb/image/upload/v1766972648/District-provider-view_dkmrjb.png", 
           caption: "District Provider View",
           metrics: [
             { label: "Providers", value: "200+" },
             { label: "Search", value: "Instant" },
             { label: "Filter", value: "Multi-criteria" }
           ],
-          demo: "https://res.cloudinary.com/dlmpwxayb/image/upload/v1766972648/District-provider-view_dkmrjb.png"
         },
         { 
-          src: MCESCReferral, 
+          src: "https://res.cloudinary.com/dlmpwxayb/image/upload/v1766972660/MCESC-Referral_lju530.png", 
           caption: "Referral Management System",
           metrics: [
             { label: "Referrals", value: "5k+/month" },
             { label: "Processing", value: "Automated" },
             { label: "Tracking", value: "100%" }
-          ]
+          ],
         },
         { 
-          src: ReferralStatus, 
+          src: "https://res.cloudinary.com/dlmpwxayb/image/upload/v1766972660/MCESC-Referral_lju530.png", 
           caption: "Referral Status Tracking",
           metrics: [
             { label: "Statuses", value: "Real-time" },
             { label: "Updates", value: "Instant" },
             { label: "Accuracy", value: "100%" }
           ],
-          demo: "https://res.cloudinary.com/dlmpwxayb/image/upload/v1766972660/MCESC-Referral_lju530.png"
         },
         { 
-          src: MonthlyView, 
+          src: "https://res.cloudinary.com/dlmpwxayb/image/upload/v1766972662/MonthlyView_bwgqck.png", 
           caption: "Monthly Calendar View",
           metrics: [
             { label: "Appointments", value: "1k+/month" },
             { label: "Views", value: "Calendar/List" },
             { label: "Performance", value: "Optimized" }
           ],
-          demo: "https://res.cloudinary.com/dlmpwxayb/image/upload/v1766972662/MonthlyView_bwgqck.png"
         }
       ],
       features: [
@@ -383,4 +366,3 @@ export const portfolioData = {
     }
   ]
 };
-
