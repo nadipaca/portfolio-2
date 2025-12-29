@@ -23,8 +23,8 @@ const FormField = forwardRef(function FormField(
 
   return (
     <div>
-      <label className="block text-sm font-medium text-slate-300 mb-2">
-        {icon && <span className="inline mr-2">{icon}</span>}
+      <label className="flex items-center text-sm font-medium text-slate-300 mb-2">
+        {icon && <span className="inline-flex items-center mr-2">{icon}</span>}
         {label}
       </label>
       <input

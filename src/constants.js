@@ -18,7 +18,7 @@ export const portfolioData = {
     socials: {
       github: "https://github.com/nadipaca",
       linkedin: "https://linkedin.com/in/charishma-nadipalli",
-      email: "nadipaca@mail.uc.edu"
+      email: "charishmanadipalli99@gmail.com"
     }
   },
   github: {
