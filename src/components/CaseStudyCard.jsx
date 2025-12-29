@@ -99,11 +99,9 @@ function CaseStudyCard({ caseStudy }) {
                         className="w-full h-full object-cover"
                         muted
                         playsInline
-                        onMouseEnter={(e) => e.target.play()}
-                        onMouseLeave={(e) => {
-                          e.target.pause();
-                          e.target.currentTime = 0;
-                        }}
+                        autoPlay
+                        loop
+                        preload="metadata"
                       />
                     </div>
                     
@@ -144,11 +142,9 @@ function CaseStudyCard({ caseStudy }) {
                   className="w-full h-full object-cover"
                   muted
                   playsInline
-                  onMouseEnter={(e) => e.target.play()}
-                  onMouseLeave={(e) => {
-                    e.target.pause();
-                    e.target.currentTime = 0;
-                  }}
+                  autoPlay
+                  loop
+                  preload="metadata"
                 />
               ) : (
                 <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-slate-800 to-slate-900">

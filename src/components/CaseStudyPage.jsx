@@ -116,6 +116,8 @@ export default function CaseStudyPage() {
                     controls
                     autoPlay
                     muted
+                    playsInline
+                    preload="metadata"
                   />
                 </div>
               )}
