@@ -54,7 +54,7 @@ export default function Contact() {
 
       const data = await response.json();
 
-      if (response.ok && data.ok) {
+      if (response.ok && (data.ok || data.success)) {
         setStatus('sent');
         setFormData({ name: '', email: '', company: '', message: '', website: '' });
       } else {

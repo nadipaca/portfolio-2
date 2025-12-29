@@ -1,70 +1,74 @@
-// Contact form API endpoint
-// This endpoint handles contact form submissions and sends emails
+import { Resend } from 'resend';
 
-export default async function handler(req, res) {
-  // Only allow POST requests
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+async function readJsonBody(req) {
+  if (req.body && typeof req.body === 'object') return req.body;
+  if (typeof req.body === 'string' && req.body.length) {
+    try {
+      return JSON.parse(req.body);
+    } catch {
+      return {};
+    }
   }
 
+  // Some runtimes may not populate req.body; fall back to reading the stream.
+  let raw = '';
+  for await (const chunk of req) raw += chunk;
+  if (!raw) return {};
   try {
-    const { name, email, message } = req.body;
+    return JSON.parse(raw);
+  } catch {
+    return {};
+  }
+}
 
-    // Validate required fields
+export default async function handler(req, res) {
+  if (req.method !== 'POST') return res.status(405).json({ ok: false, error: 'Method not allowed' });
+
+  try {
+    const { name, email, message, company, website } = await readJsonBody(req);
+
+    // Honeypot: if filled, it's a bot - silently return success
+    if (website && String(website).trim().length > 0) {
+      return res.status(200).json({ ok: true });
+    }
+
     if (!name || !email || !message) {
-      return res.status(400).json({ error: 'All fields are required' });
+      return res.status(400).json({ ok: false, error: 'All fields are required' });
     }
 
-    // Basic email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return res.status(400).json({ error: 'Invalid email address' });
+    if (!emailRegex.test(String(email))) {
+      return res.status(400).json({ ok: false, error: 'Invalid email address' });
     }
 
-    // TODO: Replace with your email sending service
-    // Options:
-    // 1. SendGrid: https://sendgrid.com
-    // 2. Resend: https://resend.com
-    // 3. Nodemailer with SMTP
-    // 4. AWS SES
-    // 5. Mailgun
-    
-    // Example with Resend (uncomment and configure):
-    /*
-    const { Resend } = require('resend');
+    if (!process.env.RESEND_API_KEY) {
+      return res.status(500).json({ ok: false, error: 'Missing RESEND_API_KEY' });
+    }
+
     const resend = new Resend(process.env.RESEND_API_KEY);
-    
+    const to =
+      process.env.CONTACT_TO_EMAIL ||
+      process.env.CONTACT_EMAIL ||
+      process.env.EMAIL_USER ||
+      'nadipaca@mail.uc.edu';
+    const from = process.env.CONTACT_FROM_EMAIL || 'Portfolio <onboarding@resend.dev>';
+
     await resend.emails.send({
-      from: 'Contact Form <onboarding@resend.dev>',
-      to: process.env.CONTACT_EMAIL || 'your-email@example.com',
-      subject: `New Contact Form Submission from ${name}`,
-      html: `
-        <h2>New Contact Form Submission</h2>
-        <p><strong>Name:</strong> ${name}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Message:</strong></p>
-        <p>${message.replace(/\n/g, '<br>')}</p>
-      `,
-    });
-    */
-
-    // For now, log the submission (replace with actual email sending)
-    console.log('Contact form submission:', { name, email, message });
-
-    // If you want to use a service like Resend, uncomment the code above
-    // and add your API key to environment variables
-
-    // Return success response
-    return res.status(200).json({ 
-      success: true, 
-      message: 'Message sent successfully' 
+      from,
+      to,
+      replyTo: String(email),
+      subject: `Portfolio Contact: ${String(name)}${company ? ` (${company})` : ''}`,
+      text:
+        `Name: ${String(name)}\n` +
+        `Email: ${String(email)}\n` +
+        (company ? `Company: ${String(company)}\n` : '') +
+        `\nMessage:\n${String(message)}\n`,
     });
 
+    return res.status(200).json({ ok: true });
   } catch (error) {
     console.error('Contact form error:', error);
-    return res.status(500).json({ 
-      error: 'Failed to send message. Please try again later.' 
-    });
+    return res.status(500).json({ ok: false, error: 'Failed to send message. Please try again later.' });
   }
 }
 
