@@ -44,9 +44,9 @@ export default function CaseStudyPage() {
       
       <div className="pt-24 pb-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex gap-12">
-            {/* Table of Contents - Desktop only */}
-            <div className="hidden lg:block w-64 flex-shrink-0">
+          <div className="flex flex-col md:flex-row gap-8 md:gap-12">
+            {/* Table of Contents - Desktop */}
+            <div className="hide-below-lg w-64 flex-shrink-0">
               <CaseStudyTOC />
             </div>
             
@@ -95,6 +95,11 @@ export default function CaseStudyPage() {
               <span className="text-white font-medium">{caseStudy.role}</span>
             </p>
           </motion.div>
+
+          {/* Table of Contents - Mobile */}
+          <div className="md:hidden mb-8">
+            <CaseStudyTOC mode="mobile" title="Content" />
+          </div>
 
           {/* Video / Architecture Preview */}
           {caseStudy.videoUrl && (
