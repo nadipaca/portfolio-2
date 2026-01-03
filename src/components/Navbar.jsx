@@ -2,15 +2,16 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Github, Linkedin, Mail, Menu, MessageCircle, X } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { portfolioData } from '../constants';
 
 export default function Navbar({ onOpenChat }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navItems = [
-    { label: 'Home', href: '#home' },
-    { label: 'Projects', href: '#projects' },
-    { label: 'Contacts', href: '#footer' },
+    { label: 'Home', to: '/#home' },
+    { label: 'Projects', to: '/#projects' },
+    { label: 'Contact', to: '/#contact' },
   ];
 
   return (
@@ -18,9 +19,9 @@ export default function Navbar({ onOpenChat }) {
       <div className="px-8 sm:px-6 lg:px-12">
         <div className="flex items-center justify-between h-16">
           <div className="flex-shrink-0">
-            <a href="/" className="text-white font-extrabold text-xl tracking-tight">
+            <Link to="/#home" className="text-white font-extrabold text-xl tracking-tight">
               <span className="bg-gradient-to-r from-white via-orange-300 to-orange-400 bg-clip-text text-transparent">Charishma Nadipalli</span>
-            </a>
+            </Link>
           </div>
 
           {/* Desktop/Tablet Navigation (visible ≥ sm, avoids Tailwind `hidden`) */}
@@ -28,13 +29,13 @@ export default function Navbar({ onOpenChat }) {
             {/* Links */}
             <div className="flex items-center gap-6">
               {navItems.map((item) => (
-                <a
+                <Link
                   key={item.label}
-                  href={item.href}
+                  to={item.to}
                   className="text-slate-300 hover:text-white transition-colors font-medium relative after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-0 after:bg-orange-400 after:transition-all hover:after:w-full"
                 >
                   {item.label}
-                </a>
+                </Link>
               ))}
             </div>
 
@@ -77,14 +78,14 @@ export default function Navbar({ onOpenChat }) {
             className="sm:hidden py-4 space-y-4"
           >
             {navItems.map((item) => (
-              <a
+              <Link
                 key={item.label}
-                href={item.href}
+                to={item.to}
                 className="block text-slate-300 hover:text-white transition-colors"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 {item.label}
-              </a>
+              </Link>
             ))}
             <button
               type="button"

@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import DeferredSection from './components/DeferredSection';
@@ -16,6 +16,32 @@ const Contact = lazy(() => import('./components/Contact'));
 const Footer = lazy(() => import('./components/Footer'));
 const ResumeChatDrawer = lazy(() => import('./components/ResumeChatDrawer'));
 const CaseStudyPage = lazy(() => import('./components/CaseStudyPage'));
+
+function ScrollToHashOnHome() {
+  const { pathname, hash } = useLocation();
+
+  useEffect(() => {
+    if (pathname !== '/' || !hash) return;
+    const id = String(hash).replace(/^#/, '').trim();
+    if (!id) return;
+
+    const start = Date.now();
+    const tryScroll = () => {
+      const el = document.getElementById(id);
+      if (el) {
+        const top = el.getBoundingClientRect().top + window.scrollY - 90;
+        window.scrollTo({ top, behavior: 'smooth' });
+        return;
+      }
+      if (Date.now() - start > 2500) return;
+      window.setTimeout(tryScroll, 100);
+    };
+
+    window.setTimeout(tryScroll, 0);
+  }, [pathname, hash]);
+
+  return null;
+}
 
 function HomePage() {
   const chatRef = useRef(null);
@@ -128,14 +154,17 @@ function HomePage() {
 
 function App() {
   return (
-    <Routes>
+    <>
+      <ScrollToHashOnHome />
+      <Routes>
       <Route path="/" element={<HomePage />} />
       <Route path="/case-studies/:slug" element={
         <Suspense fallback={<div className="min-h-screen bg-slate-900 text-white flex items-center justify-center">Loading case study…</div>}>
           <CaseStudyPage />
         </Suspense>
       } />
-    </Routes>
+      </Routes>
+    </>
   );
 }
 
