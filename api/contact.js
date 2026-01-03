@@ -51,21 +51,30 @@ export default async function handler(req, res) {
       process.env.CONTACT_EMAIL ||
       process.env.EMAIL_USER ||
       'nadipaca@mail.uc.edu';
-    const from = process.env.CONTACT_FROM_EMAIL || 'Portfolio <onboarding@resend.dev>';
 
-    await resend.emails.send({
+    // Use a verified sender from your domain in production
+    const from = process.env.CONTACT_FROM_EMAIL || 'contact@charishmanadipalli.site';
+
+      const result = await resend.emails.send({
       from,
       to,
-      replyTo: String(email),
+      reply_to: String(email),
       subject: `Portfolio Contact: ${String(name)}${company ? ` (${company})` : ''}`,
       text:
         `Name: ${String(name)}\n` +
         `Email: ${String(email)}\n` +
         (company ? `Company: ${String(company)}\n` : '') +
         `\nMessage:\n${String(message)}\n`,
+      headers: { 'X-Contact-Source': 'portfolio-site' },
     });
 
-    return res.status(200).json({ ok: true });
+    if (result && result.error) {
+      console.error('Resend send error:', result.error);
+      return res.status(502).json({ ok: false, error: 'Email send failed' });
+    }
+
+    console.log('Resend email queued:', result?.id, 'from:', from, 'to:', to);
+    return res.status(200).json({ ok: true, id: result?.id || null });
   } catch (error) {
     console.error('Contact form error:', error);
     return res.status(500).json({ ok: false, error: 'Failed to send message. Please try again later.' });

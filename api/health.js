@@ -3,6 +3,7 @@ export default async function handler(req, res) {
   return res.status(200).json({
     ok: true,
     hasGroqKey: Boolean(process.env.GROQ_API_KEY),
+    hasResendKey: Boolean(process.env.RESEND_API_KEY),
     runtime: 'vercel-node',
     ts: Date.now(),
   });
