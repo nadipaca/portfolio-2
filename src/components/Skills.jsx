@@ -126,7 +126,7 @@ export default function Skills() {
         }
       } else {
         // Navigate to case study
-        navigate(`/case-study/${slug}`);
+        navigate(`/case-studies/${slug}`);
       }
     }
   };
