@@ -53,7 +53,7 @@ export default async function handler(req, res) {
       'nadipaca@mail.uc.edu';
 
     // Use a verified sender from your domain in production
-    const from = process.env.CONTACT_FROM_EMAIL || 'contact@charishmanadipalli.site';
+    const from = process.env.CONTACT_FROM_EMAIL || (process.env.RESEND_API_KEY ? 'Portfolio <onboarding@resend.dev>' : 'Portfolio <onboarding@resend.dev>');
 
       const result = await resend.emails.send({
       from,
